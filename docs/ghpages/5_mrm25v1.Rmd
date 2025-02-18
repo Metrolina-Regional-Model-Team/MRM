@@ -121,7 +121,7 @@ df[] <- lapply(df, function(x) {
 
 ```
 
-## MRM25v1 Projects Database
+## Projects Database
 ```{r, echo=FALSE, warning=FALSE, message=FALSE} 
 
 # Select only the relevant columns

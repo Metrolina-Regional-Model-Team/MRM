@@ -40,7 +40,7 @@ navbar:
       menu:
        - text: "Household Synthesis"
          href: 3_hhsynth.html
-       - text: "Tour Purpose"
+       - text: "Tour Purpose & Frequency"
          href: 3_purpose.html
        - text: "Destination Choice"
          href: 3_dc.html
@@ -52,6 +52,8 @@ navbar:
       menu:
        - text: "Externals"
          href: 4_ext.html
+       - text: "Freight"
+         href: 4_freight.html
        - text: "Assignment"
          href: 4_assignment.html
        - text: "Feedback"

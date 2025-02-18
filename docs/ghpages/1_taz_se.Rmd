@@ -41,7 +41,7 @@ invisible(capture.output({
 }))
 ```
 
-The map belows the changes made in the TAZ structure moving from 3,578 TAZs in MRM22v1.0 to 3,896 TAZs in MRM25v1.0 
+The map below shows the changes made in the TAZ structure moving from 3,578 TAZs in MRM22v1.0 to 3,896 TAZs in MRM25v1.0 
 
 ```{r create-map}
 # Create the interactive map
