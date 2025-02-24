@@ -217,17 +217,21 @@ Macro "CreateDir" (Args)
     dm.AddDataSource("rts", {FileName: MRMpath + "transys.rts", DataType: "RS"})
     route_file = DirUser + "\\" + "transys.rts"
     dm.CopyRouteSystem("rts", {TargetRS: route_file})
+    
     //net_file = Args.[Offpeak Hwy Name]
-    net_file = Args.[Hwy Name]
+    /*net_file = Args.[Hwy Name]
     {, , netname, } = SplitPath(net_file)
     ModifyRouteSystem(route_file, {{"Geography", net_file, netname},{"Link ID", "ID"}})
-
+    */
     // need to add year onto extsta vol files	
 
     YearTwo = Right(YearUser,2)
     rundir_files = 
-        {"station_database.dbf", "transit_corridor_id.dbf", "Track_ID.dbf"}
-    rundir_files = rundir_files + {"Ext\\extstavol" + YearTwo + ".asc"} + {"Ext\\extstavol" + YearTwo + ".dct"}   
+			{"station_database.dbf", "Track_ID.dbf", "transit_corridor_id.dbf", "transys.rtg", "transys.rts",
+             "transysL.bin", "transysL.BXU", "transysL.DCB",  "transysR.BXU", "transysR.DCB", "transysR.bin", 
+             "transysS.bin", "transysS.BXU", "transysS.cdd", "transysS.cdk", "transysS.dbd", "transysS.DCB", "transysS.dsc",		
+			 "transysS.dsk","transysS.grp", "transysS.lok", "transysS.pnk", "transysS.r0"}
+    rundir_files = rundir_files + {"Ext\\extstavol" + YearTwo + ".asc"} + {"Ext\\extstavol" + YearTwo + ".dct"}  
 
     //Standard runyear files
     MRMpath = MRMUser + "\\" + YearUser + "\\"

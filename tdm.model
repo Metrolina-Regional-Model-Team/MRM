@@ -163,3 +163,21 @@ Macro "Summaries" (Args,Result)
     }
 EndMacro
 
+
+Macro "Telecommute" (Args,Result)
+    Attributes = {
+        {"Class", {"GISDK"}},
+        {"MacroNames", {"Telecommute"}}
+    }
+EndMacro
+
+
+Macro "Drive Sheds" (Args,Result)
+    Attributes = {
+        {"Class", {"GISDK"}},
+        {"MacroNames", {"Drivesheds"}},
+        {"Text", "15 min to Activity Centers"}
+    }
+    Return(True)
+EndMacro
+

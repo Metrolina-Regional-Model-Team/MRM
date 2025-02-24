@@ -1,60 +1,25 @@
-	Section = "Files and Folders"
-	
-        Args.[Base Folder] = {
-            "Type":"Folder",
-            "Value":null
-        }
-        Args.[MRM Directory] = {
-            "Type":"Folder",
-            "Value":"%Model Folder%"
-        }
-        Args.[MET Directory] = {
-            "Type":"Folder",
-            "Value":"%Base Folder%\\Metrolina"
-        }
-        Args.[Run Year] = {
-            "Type":"string",
-            "Value":"2022"
-        }
-        Args.[Run Directory] = {
-            "Type":"Folder",
-            "Value":"%MET Directory%\\%Run Year%"
-        }
-        Args.InputFolder = {
-            "Type":"Folder",
-            "Value":"%Run Directory%\\Input"
-        }
-        Args.[MRM TAZ File] = {
-            "Type":"file",
-            "Value":"%MRM Directory%\\TAZ\\TAZ3896.dbd"
-        }
-        Args.[TAZ File] = {
-            "Type":"file",
-            "Value":"%MET Directory%\\TAZ\\TAZ3896.dbd"
-        }
-        Args.[LandUse File] = {
-            "Type":"file",
-            "Value":"%MET Directory%\\%Run Year%\\Landuse\\SE_%Run Year%.bin"
-        }
+	Section = "Run Folders"
+
+        Args.[Base Folder] = { "Type":"Folder" , "Value": null, "Description":"Root model folder" }
+        Args.[MRM Directory] = { "Type":"Folder","Value":"%Model Folder%", "Description":"Root model folder"}
+        Args.[MET Directory] = { "Type":"Folder", "Value":"%Base Folder%\\Metrolina", "Description":"Root model run folder"}
+        Args.[Run Directory] = {"Type":"Folder", "Value":"%MET Directory%\\%Scenario%", "Description":"User's run directory"}
+        Args.[Run Year] = { "Type":"string", "Value":"" }
+        Args.[Scenario] = {  "Type":"string", "Value":"" }
+     
+     Section = "Land Use"
+     
+        Args.[MRM TAZ File] = { "Type":"file", "Value":"%MRM Directory%\\TAZ\\TAZ3896.dbd", "Description":"Master TAZ file"}
+        Args.[TAZ File] = { "Type":"file", "Value":"%MET Directory%\\TAZ\\TAZ3896.dbd", "Description":"Model TAZ file"}
+        Args.[LandUse File] = { "Type":"file","Value":"%MET Directory%\\%Run Year%\\Landuse\\SE_%Run Year%.bin", "Description":"Land Use file"}
+    
 	
 	Section = "Networks"
 	
-        Args.ProjectFile = {
-            "Type":"file",
-            "Value":"%MRM Directory%\\MasterNet\\Projects.bin"
-        }
-        Args.MasterHwyFile = {
-            "Type":"file",
-            "Value":"%MRM Directory%\\MasterNet\\MasterLinks.dbd"
-        }
-        Args.TollFile = {
-            "Type":"file",
-            "Value":"%MRM Directory%\\MasterNet\\Tolls.bin"
-        }
-        
-        Args.[Hwy Name] = {
-            "Type":"file",
-            "Value":"%Run Directory%\\RegNet.dbd"
+        Args.ProjectFile = {"Type":"file", "Value":"%MRM Directory%\\MasterNet\\Projects.bin" }
+        Args.MasterHwyFile = { "Type":"file", "Value":"%MRM Directory%\\MasterNet\\MasterLinks.dbd"}
+        Args.TollFile = { "Type":"file", "Value":"%MRM Directory%\\MasterNet\\Tolls.bin" }
+        Args.[Hwy Name] = { "Type":"file", "Value":"%Run Directory%\\RegNet.dbd"
         }
   
 	Section = "Mode Split"

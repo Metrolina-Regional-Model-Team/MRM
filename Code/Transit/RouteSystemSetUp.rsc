@@ -13,6 +13,7 @@ Macro "RouteSystemSetUp" (Args)
 	routename = "transys"
 	route_file = Dir + "\\"+routename+".rts"
 	{, , netname, } = SplitPath(net_file)
+	ModifyRouteSystem(route_file, {{"Geography", net_file, netname},{"Link ID", "ID"}})
 	map = CreateObject("Map", {FileName: route_file})
 
 	// Get the scope of a geographic file
@@ -38,9 +39,9 @@ Macro "RouteSystemSetUp" (Args)
 			vals = GetRecordsValues("Vehicle Routes|Drop", rh, {"[Route_Name]"},,,,) 
 			for n = 1 to num_recs do
 				delete_array[n] = vals[1][n] // 1st element is field, 2nd element is value another day!
-				ShowArray(vals)
+				//ShowArray(vals)
 			end
-			ShowArray(delete_array)
+			//ShowArray(delete_array)
 		DeleteRoutes("Vehicle Routes", delete_array)
 	end
 
