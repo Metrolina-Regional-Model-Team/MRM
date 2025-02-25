@@ -4,45 +4,46 @@ Scenario "Base Year"
     
     [Run Year] = "2022"
     Scenario = "Official_2022"
+    [Output Folder] = "%Model Folder%\\Output\\2022"
 EndScenario
-    
+
     
 Scenario "2025"
-    [Scenario Folder] = "%Scenarios Folder%\\2025"
-    [Master SE] = "%Scenarios Folder%\\landuse\\se_2025.bin"
+    
     [Run Year] = "2025"
     Scenario = "Official_2025"
+    [Output Folder] = "%Model Folder%\\Output\\2025"
 EndScenario
     
     
 Scenario "2026"
     
-    [Output Folder] = "%Model Folder%\\Output\\2026"
     [Run Year] = "2026"
     Scenario = "Official_2026"
+    [Output Folder] = "%Model Folder%\\Output\\2026"
 EndScenario
     
     
 Scenario "2035"
-    [Scenario Folder] = "%Scenarios Folder%\\2035"
-    [Master SE] = "%Scenarios Folder%\\landuse\\se_2035.bin"
+    
     [Run Year] = "2035"
     Scenario = "Official_2035"
+    [Output Folder] = "%Model Folder%\\Output\\2035"
 EndScenario
     
     
 Scenario "2045"
-    [Scenario Folder] = "%Scenarios Folder%\\2045"
-    [Master SE] = "%Scenarios Folder%\\landuse\\se_2045.bin"
+    
     [Run Year] = "2045"
     Scenario = "Official_2045"
+    [Output Folder] = "%Model Folder%\\Output\\2045"
 EndScenario
     
     
 Scenario "2055"
-    [Scenario Folder] = "%Scenarios Folder%\\2055"
-    [Master SE] = "%Scenarios Folder%\\landuse\\se_2055.bin"
+    
     [Run Year] = "2055"
-    Scenario = "Official_2025"
+    Scenario = "Official_2055"
+    [Output Folder] = "%Model Folder%\\Output\\2055"
 EndScenario
     

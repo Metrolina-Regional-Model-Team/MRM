@@ -11,7 +11,7 @@
      
         Args.[MRM TAZ File] = { "Type":"file", "Value":"%MRM Directory%\\TAZ\\TAZ3896.dbd", "Description":"Master TAZ file"}
         Args.[TAZ File] = { "Type":"file", "Value":"%MET Directory%\\TAZ\\TAZ3896.dbd", "Description":"Model TAZ file"}
-        Args.[LandUse File] = { "Type":"file","Value":"%MET Directory%\\%Run Year%\\Landuse\\SE_%Run Year%.bin", "Description":"Land Use file"}
+        Args.[LandUse File] = { "Type":"file","Value":"%MET Directory%\\%Scenario%\\Landuse\\SE_%Run Year%.bin", "Description":"Land Use file"}
     
 	
 	Section = "Networks"
