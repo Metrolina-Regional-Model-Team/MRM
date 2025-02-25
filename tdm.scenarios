@@ -1,47 +1,49 @@
     
     
 Scenario "Base Year"
-EndScenario
     
+    [Run Year] = "2022"
+    Scenario = "Official_2022"
+    [Output Folder] = "%Model Folder%\\Output\\2022"
+EndScenario
+
     
 Scenario "2025"
     
-    [Output Folder] = "%Model Folder%\\Output\\2025"
     [Run Year] = "2025"
+    Scenario = "Official_2025"
+    [Output Folder] = "%Model Folder%\\Output\\2025"
 EndScenario
     
     
 Scenario "2026"
     
-    [Output Folder] = "%Model Folder%\\Output\\2026"
     [Run Year] = "2026"
+    Scenario = "Official_2026"
+    [Output Folder] = "%Model Folder%\\Output\\2026"
 EndScenario
     
     
 Scenario "2035"
     
-    [Output Folder] = "%Model Folder%\\Output\\2035"
     [Run Year] = "2035"
-EndScenario
-    
-    
-Scenario "2036"
-    
-    [Output Folder] = "%Model Folder%\\Output\\2036"
-    [Run Year] = "2036"
+    Scenario = "Official_2035"
+    [Output Folder] = "%Model Folder%\\Output\\2035"
 EndScenario
     
     
 Scenario "2045"
     
-    [Output Folder] = "%Model Folder%\\Output\\2045"
     [Run Year] = "2045"
+    Scenario = "Official_2045"
+    [Output Folder] = "%Model Folder%\\Output\\2045"
 EndScenario
     
     
 Scenario "2055"
     
-    [Output Folder] = "%Model Folder%\\Output\\2055"
     [Run Year] = "2055"
+    Scenario = "Official_2055"
+    [Output Folder] = "%Model Folder%\\Output\\2055"
 EndScenario
     

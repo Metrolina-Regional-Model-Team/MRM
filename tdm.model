@@ -25,8 +25,6 @@ Body:
     FlowChartNode(model,"Transit Assignment",,,)
     FlowChartNode(model,"HOT",,,)
     FlowChartNode(model,"Summaries",,,)
-    FlowChartNode(model,"Telecommute",,,)
-    FlowChartNode(model,"Drive Sheds",,,)
     //
     // Links
     //

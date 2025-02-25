@@ -1,0 +1,40 @@
+
+300 binary
+"ID1",I,1,4,0,10,0
+"AB_Flow_PCE",R,5,8,0,15,4,,,Link AB Flow
+"BA_Flow_PCE",R,13,8,0,15,4,,,Link BA Flow
+"TOT_Flow_PCE",R,21,8,0,15,4,,,Link Total Flow
+"AB_Time",R,29,8,0,15,4,,,AB Loaded Travel Time
+"BA_Time",R,37,8,0,15,4,,,BA Loaded Travel Time
+"MAX_Time",R,45,8,0,15,4,,,Maximum Loaded Time
+"AB_voc",R,53,8,0,15,4,,,AB Volume to Capacity Ratio
+"BA_voc",R,61,8,0,15,4,,,BA Volume to Capacity Ratio
+"MAX_voc",R,69,8,0,15,4,,,Maximum Volume to Capacity Ratio
+"AB_vmt",R,77,8,0,15,4,,,AB vehicle miles of travel
+"BA_vmt",R,85,8,0,15,4,,,BA vehicle miles of travel
+"TOT_vmt",R,93,8,0,15,4,,,Total vehicle miles of travel
+"AB_vht",R,101,8,0,15,4,,,AB vehicle hours of travel
+"BA_vht",R,109,8,0,15,4,,,BA vehicle hours of travel
+"TOT_vht",R,117,8,0,15,4,,,Total vehicle hours of travel
+"AB_speed",R,125,8,0,15,4,,,AB Loaded Speed
+"BA_speed",R,133,8,0,15,4,,,BA Loaded Speed
+"AB_VDF",R,141,8,0,15,4,,,Link AB Volume Delay Function
+"BA_VDF",R,149,8,0,15,4,,,Link BA Volume Delay Function
+"MAX_VDF",R,157,8,0,15,4,,,Maximum Link Volume Delay Function Value
+"AB_Flow_SOV",R,165,8,0,15,4,,,AB Flow for  SOV
+"BA_Flow_SOV",R,173,8,0,15,4,,,BA Flow for SOV
+"AB_Flow_Pool2",R,181,8,0,15,4,,,AB Flow for  Pool2
+"BA_Flow_Pool2",R,189,8,0,15,4,,,BA Flow for Pool2
+"AB_Flow_Pool3",R,197,8,0,15,4,,,AB Flow for  Pool3
+"BA_Flow_Pool3",R,205,8,0,15,4,,,BA Flow for Pool3
+"AB_Flow_COM",R,213,8,0,15,4,,,AB Flow for  COM
+"BA_Flow_COM",R,221,8,0,15,4,,,BA Flow for COM
+"AB_Flow_MTK",R,229,8,0,15,4,,,AB Flow for  MTK
+"BA_Flow_MTK",R,237,8,0,15,4,,,BA Flow for MTK
+"AB_Flow_HTK",R,245,8,0,15,4,,,AB Flow for  HTK
+"BA_Flow_HTK",R,253,8,0,15,4,,,BA Flow for HTK
+"AB_Flow_HOT",R,261,8,0,15,4,,,AB Flow for  HOT
+"BA_Flow_HOT",R,269,8,0,15,4,,,BA Flow for HOT
+"AB_Flow",R,277,8,0,15,4,,,Link AB Veh Flow
+"BA_Flow",R,285,8,0,15,4,,,Link BA Veh Flow
+"Tot_Flow",R,293,8,0,15,4,,,Link Total Veh Flow

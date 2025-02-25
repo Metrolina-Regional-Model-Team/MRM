@@ -170,7 +170,7 @@ RandSeed = 111
 		strct = strct + {{"SL_AP5", "Integer", 5,,,,,,,,,}}
 		strct = strct + {{"SL_AP6", "Integer", 5,,,,,,,,,}}
 		strct = strct + {{"SL_AP7", "Integer", 5,,,,,,,,,}}
-		strct = strct + {{"", "Real", 8,2,,,,,,,,}}
+		strct = strct + {{"TourTT_PA", "Real", 8,2,,,,,,,,}}
 		strct = strct + {{"TourTT_AP", "Real", 8,2,,,,,,,,}}
 		ModifyTable(purpfile[p], strct)
 

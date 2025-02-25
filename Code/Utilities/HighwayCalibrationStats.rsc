@@ -17,8 +17,11 @@ Macro "HighwayCalibrationStats" (Args)
 
 	Dir = Args.[Run Directory]
 	MetDir = Args.[MET Directory]
+	Year = Args.[Run Year]
 	msg = null
 	HwyCalibStatsOK = 1
+
+	if Year <> "2022" then goto Skip
 
 	datentime = GetDateandTime()
 	AppendToLogFile(1, "Enter HighwayCalibrationStats: " + datentime)
@@ -88,7 +91,6 @@ Macro "HighwayCalibrationStats" (Args)
 	ScrLineSelect = "Select * where SCRLN <> null and CNTFLAG = 1"
 	nlnks = SelectbyQuery("ScrLineLinks", "Several", ScrLineSelect,)
 
-	//	if nlnks < 1 then goto NoScreen
 	ExportView("TotAssn"+"|ScrLineLinks", "CSV", Dir + "\\hwyassn\\ScreenLineLinks.csv", 
 		{"SCRLN", "ID", "LENGTH", "DIR", "FUNCL", "AREATP", "COUNTY","Strname", "A_CrossStr", "B_CrossStr", 
 		 "CALIB", "TOT_VOL", "CNTFLAG", "CNTMCSQ"},
@@ -150,10 +152,7 @@ Macro "HighwayCalibrationStats" (Args)
 
 	CloseView(TotAssn)
 
-	goto quit
-
-	
-	quit: 
+	Skip: 
 
 	datentime = GetDateandTime()
 	AppendToLogFile(1, "Exit HighwayCalibrationStats: " + datentime)
