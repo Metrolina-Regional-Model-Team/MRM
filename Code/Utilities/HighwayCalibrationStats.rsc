@@ -42,8 +42,8 @@ Macro "HighwayCalibrationStats" (Args)
 	mtkflag  = CreateExpression("TotAssn", "MTKFlag", "if MTK <> null then 1 else 0",)
 	htkflag  = CreateExpression("TotAssn", "HTKFlag", "if HTK <> null then 1 else 0",)
 	assnvol  = CreateExpression("TotAssn", "AssnVol", "if CALIB <> null then TOT_VOL else 0",)
-	assnmtk  = CreateExpression("TotAssn", "AssnMTK", "if MTK     <> null then TOT_VOL else 0",)
-	assnhtk  = CreateExpression("TotAssn", "AssnHTK", "if HTK     <> null then TOT_VOL else 0",)
+	assnmtk  = CreateExpression("TotAssn", "AssnMTK", "if MTK <> null then TOT_MTK else 0",)
+	assnhtk  = CreateExpression("TotAssn", "AssnHTK", "if HTK <> null then TOT_HTK else 0",)
 
 	atfun = CreateExpression("TotAssn", "ATFUN", "AREATP * 100 + funcl",)
 	coatfun = CreateExpression("TotAssn", "COATFUN", "IF COUNTY = 119 THEN (10000 + (AREATP * 100) + FUNCL) ELSE (20000 + (AREATP * 100) + FUNCL) ",)
@@ -122,11 +122,14 @@ Macro "HighwayCalibrationStats" (Args)
 	// runstats_dwnldVol.csv
 	join_vol =  JoinViews("Counts", "ATFUNID.ATFUN", "TotAssn.ATFUN", 
         	           {{"A",}, 
-    			    {"Fields",{{"CNTFLAG", {{"Sum"}}}, {"CALIB", {{"Sum"}}}, {"AssnVol",  {{"Sum"}}}, {"CNTMCSQ", {{"Sum"}}}   		       
+    			    {"Fields",{{"CNTFLAG", {{"Sum"}}}, {"CALIB", {{"Sum"}}}, {"AssnVol",  {{"Sum"}}}, {"CNTMCSQ", {{"Sum"}}},
+				 {"MTKFLAG", {{"Sum"}}}, {"MTK", {{"Sum"}}}, {"AssnMTK",  {{"Sum"}}}, {"MTKMCSQ", {{"Sum"}}},
+				{"HTKFLAG", {{"Sum"}}}, {"HTK", {{"Sum"}}}, {"AssnHTK",  {{"Sum"}}}, {"HTKMCSQ", {{"Sum"}}}   
    			       }}})
 
 	ExportView("Counts|", "CSV", Dir + "\\report\\runstats_dwnldVOL.csv", 
-		{"ATFUN", "CNTFLAG", "CALIB", "AssnVol", "CNTMCSQ"},
+		{"ATFUN", "CNTFLAG", "CALIB", "AssnVol", "CNTMCSQ", "MTKFLAG", "MTK", "AssnMTK", "MTKMCSQ",
+		 "HTKFLAG", "HTK", "AssnHTK", "HTKMCSQ"},
 		{
 			{"CSV Header", "True"},
 		})
@@ -137,11 +140,14 @@ Macro "HighwayCalibrationStats" (Args)
 	// runstats_dwnldcoatfun.csv
 	join_vol2 =  JoinViews("Counts2", "COATFUNID.COATFUN", "TotAssn.COATFUN", 
         	           {{"A",}, 
-    			    {"Fields",{{"CNTFLAG", {{"Sum"}}}, {"CALIB", {{"Sum"}}}, {"AssnVol",  {{"Sum"}}}, {"CNTMCSQ", {{"Sum"}}}   		       
+    			    {"Fields",{{"CNTFLAG", {{"Sum"}}}, {"CALIB", {{"Sum"}}}, {"AssnVol",  {{"Sum"}}}, {"CNTMCSQ", {{"Sum"}}},   
+		        	{"MTKFLAG", {{"Sum"}}}, {"MTK", {{"Sum"}}}, {"AssnMTK",  {{"Sum"}}}, {"MTKMCSQ", {{"Sum"}}},
+				{"HTKFLAG", {{"Sum"}}}, {"HTK", {{"Sum"}}}, {"AssnHTK",  {{"Sum"}}}, {"HTKMCSQ", {{"Sum"}}}   		       
    			       }}})
 
 	ExportView("Counts2|", "CSV", Dir + "\\report\\runstats_dwnldCOATFUN.csv", 
-		{"ORDER", "COATFUN", "CNTFLAG", "CALIB", "AssnVol", "CNTMCSQ"},
+		{"ORDER", "COATFUN", "CNTFLAG", "CALIB", "AssnVol", "CNTMCSQ", "MTKFLAG", "MTK", "AssnMTK", "MTKMCSQ",
+		 "HTKFLAG", "HTK", "AssnHTK", "HTKMCSQ"},
 		{
 			{"CSV Header", "True"},
 		})
