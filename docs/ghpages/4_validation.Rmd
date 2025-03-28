@@ -101,7 +101,7 @@ In addition to these summary-level validation checks, Caliper also checked for l
 * Green links: the model is close to counts 
 
 ```{r, echo=FALSE, out.width="65%", fig.align="center"}
-knitr::include_graphics("C:/MRM/docs/ghpages/other/png/RegNetAM.png")
+knitr::include_graphics("C:/MRM/docs/other/png/RegNetAM.png")
 ```
 
 The table below shows observed unlinked transit boardings compared to the model. The model is matching the observed data well. 

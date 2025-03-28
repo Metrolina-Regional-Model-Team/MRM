@@ -26,6 +26,178 @@ The DC model is a logit model estimated from home interview travel survey data. 
 
 The Metrolina’s DC model is a doubly-constrained model. Attractions for each zone is determined using the previous Metrolina trip-based model’s conventional trip attraction model. Once a tour’s destination to a particular zone is determined, an attraction is then subtracted from the destination zone. As a zone “fills up” with attractions, it gradually becomes less and less “attractive” until at some point the model says no one can go there and the remaining tours are sent to other zones. In order to remove bias, the households are sorted in random order. In addition, there are at least 1% more total attractions than total tours for each purpose so that the last remaining households are not left with only unreasonable choices. 
 
+During the model update phase, the coefficients of the existing destination choice model specifications were re-estimated. Rather than develop an entire new framework for destination choice and use TransCAD’s in-built procedures for both Multinomial and Nested DC, the current specifications were updated owing to budgetary and time constraints. 
+
+The following tables presents the estimation results for destination choice across various tour purposes, including work, school, university, shopping, other, and at-work tours.
+
+#### Work Tours
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(knitr)
+library(kableExtra)
+library(scales)
+library(dplyr)
+
+data <- data.frame(
+  Variable = c("Size: Ln(Total Employment)", "Auto Time", "CBD Dummy (Income 1-3)", "CDB Dummy (Income 4)", 
+               "IntraZonal (Income 1-3)", "IntraZonal (Income 4)", "IntraCounty (Income 1-3)", 
+               "IntraCounty (Income 4)", "Total Employment Density @ Dest"),
+  Coefficient = c(0.949, -0.0862, 0.525, 1.14, 2.14, 1.13, 0.944, 0.479, 0.0025),
+  T_Stat = c(-3.02, -45.43, 2.56, 17.02, 8.76, 7.82, 6.28, 7.82, 2.38)
+)
+
+# Format the Coefficient column
+data$Coefficient <- sapply(data$Coefficient, function(x) {
+  if (x == -0.0862) {
+    return(sprintf("%.4f", x))  # Show 8 decimals for this specific value
+  } else {
+    return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
+  }
+})
+
+# Create the table with kable
+table_model <- kable(data, 
+                      col.names = c("Variable", "Coefficient", "t-Statistic"),
+                      align = c("l", "r", "r"),
+                      na = "") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>%
+  add_footnote("Rho² = 0.148", notation = "none")
+
+# Print the table
+table_model
+
+```
+
+#### School Tours
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data.frame(
+  Variable = c("Size: Ln(K12_Enrollment)", "Auto Time", "IntraZonal", "IntraCounty"),
+  Coefficient = c(0.807, -0.268, -0.253, 1.38),
+  T_Stat = c(-4.21, -35.19, -1.45, 9.06)
+)
+
+
+
+# Create the table with kable
+table_model <- kable(data, 
+                      col.names = c("Variable", "Coefficient", "t-Statistic"),
+                      align = c("l", "r", "r"),
+                      na = "") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>%
+  add_footnote("Rho² = 0.47", notation = "none")
+
+# Print the table
+table_model
+
+```
+
+#### Unviersity Tours
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data.frame(
+  Variable = c("Size: Ln(STUCU)", "Auto Time", "IntraCounty"),
+  Coefficient = c(1, -0.122, 1.39),
+  T_Stat = c("Fixed", -6.51, 2.92)
+)
+
+
+
+# Create the table with kable
+table_model <- kable(data, 
+                      col.names = c("Variable", "Coefficient", "t-Statistic"),
+                      align = c("l", "r", "r"),
+                      na = "") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>%
+  add_footnote("Rho² = 0.448", notation = "none") %>% 
+  add_footnote("Adjusted Auto Time Coefficient -0.15", notation = "none")
+
+# Print the table
+table_model
+
+```
+
+
+#### Shop Tours
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data.frame(
+  Variable = c("Size: Ln(RTL + HWY)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "CBD Dummy", "Intrazonal (Income 4)", "IntraCounty", "Area Type @ Dest (Income 4)", "Retail Employment Density @ Dest)"),
+  Coefficient = c(0.93, -0.294, -0.282, -0.763, -0.268, 0.232, -0.155, 0.0649),
+  T_Stat = c(-3.47, -29.04, -57.63, -1.77, -2.06, 1.23, -4.01, -4.01)
+)
+
+# Create the table with kable
+table_model <- kable(data, 
+                      col.names = c("Variable", "Coefficient", "t-Statistic"),
+                      align = c("l", "r", "r"),
+                      na = "") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>%
+  add_footnote("Rho² = 0.371", notation = "none") 
+
+# Print the table
+table_model
+
+```
+
+#### Other Tours
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data.frame(
+  Variable = c("Size: Ln(TotalEmp + 0.1108*Pop)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "Auto Time Squared", "CBD Dummy", "IntraZonal (Income 1-3)", "IntraZonal (Income 4)", "AreaType @ Dest (Income 1-3)", "AreaType @ Dest (Income 4)", "IntraCounty", "Employment within 15 min by composite time (Income 1-3)", "Employment within 15 min by composite time (Income 4)", "Total Employment Density @ Dest"),
+  Coefficient = c(0.742, -0.301, -0.294, 0.002, -0.102, 0.874, 0.656, -0.194, -0.235, 0.329, -0.00000378, -0.00000229, 0.0078),
+  T_Stat = c(-14.83, -57.77, -88.42, 46.65, -1.4, 8.29, 12.31, -4.1, -10.15, 7.94, -2.72, -3.73, 8.53)
+)
+
+# Create the table with kable
+table_model <- kable(data, 
+                      col.names = c("Variable", "Coefficient", "t-Statistic"),
+                      align = c("l", "r", "r"),
+                      na = "") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>%
+  add_footnote("Rho² = 0.294", notation = "none") 
+
+# Print the table
+table_model
+
+```
+
+#### At Work
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data.frame(
+  Variable = c("Size: Ln(TotalEmp + 0.1108*Pop)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "Auto Time Squared", "CBD Dummy", "IntraZonal (Income 1-3)"),
+  Coefficient = c(0.801, -0.312, 0.902, 0.536, 0.289, -0.00000681),
+  T_Stat = c(-4.04, -21.11, 3.64, 2.86, 1.2, -2.67)
+)
+
+# Create the table with kable
+table_model <- kable(data, 
+                      col.names = c("Variable", "Coefficient", "t-Statistic"),
+                      align = c("l", "r", "r"),
+                      na = "") %>% 
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>%
+  add_footnote("Rho² = 0.413", notation = "none") 
+
+# Print the table
+table_model
+
+```
+
+
 ### Friction Factors  
 
 Friction factors are functions of travel time that describe the trips travelling between two zones. Friction factors were developed for each purpose using observed trips from the home interview survey and calibrated to the observed trip lengths. As with most models, the friction factors for the MRM vary by trip purpose. The friction factors for Metrolina are entered in the TransCAD modeling process as a gamma function equation. Each trip purpose has a unique set of friction factors that were developed through an iterative process to replicate the average trip length and trip distribution profile of the travel survey data. The benefit of the gamma function is that it produces a smooth, continuous trip distribution curve that can be calibrated using mathematical functions. This has been used in many other urban areas with success and is generally considered the most advanced procedure to calculate F factors.  

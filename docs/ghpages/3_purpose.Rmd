@@ -129,8 +129,6 @@ table_model <- kable(data,
 table_model
 
 
-
-
 ```
 
 

@@ -34,9 +34,7 @@ navbar:
       menu:
         - text: "Surveys"
           href: 2_surveys.html
-        - text: "Travel Data"
-          href: 2_traveldata.html
-    - text: "Models"
+    - text: "Resident Models"
       menu:
        - text: "Household Synthesis"
          href: 3_hhsynth.html
@@ -54,6 +52,8 @@ navbar:
          href: 4_ext.html
        - text: "Freight"
          href: 4_freight.html
+       - text: "TOD"
+         href: 4_TOD.html
        - text: "Assignment"
          href: 4_assignment.html
        - text: "Feedback"

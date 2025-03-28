@@ -13,4 +13,584 @@ output:
     css: "styles.css"
 ---
 
-This section to be updated when we receive documentation from Caliper
+The mode choice model for the MRM was estimated based on the household survey records for 6 tour purposes: Work, Other, Shop, University, Sub-Tour and School tours. These models are estimated as nested logit models. Note that the previous Metrolina model did not have a mode choice model for school tours since it was based on a fixed shares model. In the context of application, the tour mode choice model is applied after the tour destinations and tour time of day are determined.
+
+The survey records were scanned for frequency of observations, shown in the table below:
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+library(knitr)
+library(kableExtra)
+library(scales)
+library(dplyr)
+
+data <- data.frame(
+  Mode = c("SOV", "HOV2", "HOV3", "Walk", "Bike", "Walk Bus", "Walk Rail (Premium)", "Drive Bus", "Drive Rail (Premium)", "School Bus", "Taxi", "TNC", "LD passenger", "Micromobility", "Missing", "Total Observations"),
+  Work = c(2157, 364, 171, 75, 27, 34, 36, 21, 21, 3, 0, 19, 1, 2, 0, 2931),
+  Other = c(2904, 2167, 1458, 756, 58, 36, 28, 14, 17, 7, 4, 22, 3, 3, 5, 7482),
+  School = c(45, 265, 483, 24, 5, 12, 0, 5, 0, 371, 0, 1, 0, 0, 0, 1211),
+  Shop = c(1259, 746, 253, 79, 14, 8, 4, 4, 0, 0, 0, 11, 0, 3, 1, 2382),
+  SubTour = c(238, 44, 19, 114, 1, 1, 2, 0, 0, 0, 0, 0, 1, 1, 2, 423),
+  University = c(82, 32, 18, 14, 1, 5, 3, 2, 3, 2, 0, 1, 0, 0, 0, 163))
+
+# Create the table with kable
+table_data <- kable(data, col.names = c("Mode","Work", "Other", "School", "Shop", "SubTour", "University")) %>%
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14)
+
+# Print the table
+table_data
+```
+
+The number of observations for each tour purpose determines the alternative set of modes that can be estimated. Some highlights from the above table are:
+
+* Observations with chosen modes micromobility and LD passenger are ignored since there are very few records. Missing mode records are obviously dropped.
+* Taxi is combined with TNC (Transport Network Company) during estimation and only estimated for the ‘Work’, ‘Other’ and ‘Shop’ purposes.
+* School Bus is an alternative only for the ‘School’ purpose. Records with school bus choice for ‘Work’ and ‘Other’ purpose are ignored.
+* The full set of transit modes (Walk Access to Bus, Walk Access to Rail, Drive Access to Bus, Drive Access to Rail) are alternatives only for the ‘Work’ and ‘Other’ tour purpose.
+*	Only Walk Access transit modes are considered as alternatives for the ‘Shop’ purpose. The drive access to bus is typically ignored for shopping trips as it is unlikely in practice, although very few respondents chose this mode.
+* Walk Access to Bus is the only transit alternative for the school purpose.
+* The Subtour mode choice set comprises only of the Auto modes and the Walk mode.
+
+# General Estimation Notes
+* Nested Logit (NL) models are estimated for various purposes, which have significant advantages over Multinomial (MNL) mode choice models, especially if there are similar alternatives (such as SOV, HOV2, HOV3). 
+* The nesting structure can vary by purpose and do have multiple levels. Each alternative in a higher nest has a nest coefficient or theta that is typically estimated if possible. However, for the Metrolina model, estimation was possible only if these nesting coefficients were fixed. Values of 0.7 for the upper nests and 0.5 for the lower nest alternative are typical values and yielded successful estimation of other parameters.
+* Since the model is applied in a disaggregate fashion, household variables such as income can be directly used in the model utility specification. There is no need to split data/productions into market segments before applying the models.
+* The utility terms and relationships between the various parameters are similar to the previous model.
+* T-stats of estimated coefficients are shown.
+
+# Estimation Results
+For each of the purposes, the nesting structure, the utility table along with estimated model coefficients and expressions, values of parameters and nest coefficients are shown. The rho-sq is shown at the bottom of the utility table. In the utility table, an X in a particular column (each alternative is a column) indicates that the utility term (row) is active for that alternative. If a cell in any column does not have an X, then that term does not apply to that column (alternative).
+
+## Constants Table
+The constants in the table below are common to all estimated models.
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+data <- data.frame(
+  Parameter = c("vot1", "vot2", "vot3", "vot4", "AOC (Auto Operating Cost)", 
+                "OCC (Occupancies SOV, POOL2, POOL3)", "Walk Rail (Premium IVTT Discount)"),
+  ValueDesc = c("6.70 c/min (4 $/hr)", "13.35 c/min (8 $/hr)", "24.74 c/min (14.8 $/hr)", 
+                "31.45 c/min (18.9 $/hr)", "10 c/mile", "1.0, 2.0, 3.3", "0.3"),
+  Coeffs = c("Level 1", "Level 2", NA, NA, NA, NA, NA),
+  CoeffValue = c(0.7, 0.5, NA, NA, NA, NA, NA)
+)
+
+data[is.na(data)] <- ""
+
+table_data <- kable(data, 
+                   col.names = c("Parameter", "Value", "Nest Coefficient", "Coefficient Value"),
+                   align = c("l", "l", "c", "c")) %>%
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14) %>% 
+  footnote(general = c("VOT = Value of Time; ", 
+                      "IVTT = In Vehicle Travel Time"),
+          general_title = "Note:",
+          footnote_as_chunk = TRUE)
+
+table_data
+```
+
+## Work Tour Purpose
+
+**Tree Structure**
+```{r, echo=FALSE, fig.align="center"}
+knitr::include_graphics("C:/MRM/docs/other/png/work.png") 
+```
+
+**Utility Table**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Create the data frame
+model_table <- data.frame(
+  Variable = c(
+    "Constant (SOV)", "Constant (POOL2)", "Constant (POOL3)", "Constant (WALK)", 
+    "Constant (BIKE)", "Constant (WalkBus)", "Constant (WalkPremium)", 
+    "Constant (DriveBus)", "Constant (DrivePremium)", "Auto Time", 
+    "Auto Time TNC", "ParkCost (Income 1)", "ParkCost (Income 2)", 
+    "ParkCost (Income 3)", "ParkCost (Income 4)", "Auto Distance (Income1)", 
+    "Auto Distance (Income2)", "Auto Distance (Income3)", "Auto Distance (Income4)", 
+    "Low Income (IncCat <= 2): NM", "IntraZonal Trip (Walk)", "Walk/Bike Time", 
+    "Low Income (IncCat <= 2): Transit", "CBD Destination (Drive Transit)", 
+    "IVTT", "IVTT - 0.3*IVTT_PremiumLeg", "Fare (Income1)", "Fare (Income2)", 
+    "Fare (Income3)", "Fare (Income4)", "Access + Egress + Transfer Walk", 
+    "Drive Access Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time"
+  ),
+  Formula = c(
+    "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "IVTT", 
+    "NA", "IVTT/(2 x vot1 x occ)", "IVTT/(2 x vot2 x occ)", "IVTT/(2 x vot2 x occ)", 
+    "IVTT/(2 x vot2 x occ)", "IVTT x AOC/(vot1 x occ)", "IVTT x AOC/(vot2 x occ)", 
+    "IVTT x AOC/(vot3 x occ)", "IVTT x AOC/(vot4 x occ)", "NA", "NA", "IVTT", 
+    "NA", "NA", "IVTT", "IVTT", "IVTT/vot1", "IVTT/vot2", "IVTT/vot3", 
+    "IVTT/vot4", "IVTT x 2.5", "IVTT", "IVTT  x  1.5", "IVTT  x  2", "IVTT"
+  ),
+  'Derived Coefficient' = c(
+    "1.79", "0.564", "0.145", "-0.219", "-1.45", "1.45", "1.65", 
+    "-2.46", "-2.08", "-0.021", "-0.091", "NA", "NA", "NA", "NA", 
+    "NA", "NA", "NA", "NA", "0.537", "1.55", "NA", "1.03", "1.73", 
+    "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
+  ),
+  't-Stat' = c(
+    "5.31", "1.66", "0.43", "-0.58", "-3.86", "3.52", "4.11", 
+    "-4.38", "-3.69", "-10.96", "-5.17", "NA", "NA", "NA", "NA", 
+    "NA", "NA", "NA", "NA", "1", "5.32", "NA", "2.91", "3.7", 
+    "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA"
+  )
+)
+
+# Define the modes
+modes <- c("SOV", "POOL2", "POOL3", "TNC", "Walk", "Bike", "WalkBus", 
+           "WalkPremium", "DriveBus", "DrivePremium")
+
+# Create empty mode columns
+for (mode in modes) {
+  model_table[[mode]] <- ""
+}
+
+# Create a mapping of variables to modes where they apply
+mode_mapping <- list(
+  "Constant (SOV)" = c("SOV"),
+  "Constant (POOL2)" = c("POOL2"),
+  "Constant (POOL3)" = c("POOL3"),
+  "Constant (WALK)" = c("Walk"),
+  "Constant (BIKE)" = c("Bike"),
+  "Constant (WalkBus)" = c("WalkBus"),
+  "Constant (WalkPremium)" = c("WalkPremium"),
+  "Constant (DriveBus)" = c("DriveBus"),
+  "Constant (DrivePremium)" = c("DrivePremium"),
+  "Auto Time" = c("SOV", "POOL2", "POOL3"),
+  "Auto Time TNC" = c("TNC"),
+  "ParkCost (Income 1)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 2)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 3)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 4)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income1)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income2)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income3)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income4)" = c("SOV", "POOL2", "POOL3"),
+  "Low Income (IncCat <= 2): NM" = c("Walk", "Bike"),
+  "IntraZonal Trip (Walk)" = c("Walk"),
+  "Walk/Bike Time" = c("Walk", "Bike"),
+  "Low Income (IncCat <= 2): Transit" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "CBD Destination (Drive Transit)" = c("DriveBus", "DrivePremium"),
+  "IVTT" = c("WalkBus", "DriveBus"),
+  "IVTT - 0.3 x IVTT_PremiumLeg" = c("WalkPremium", "DrivePremium"),
+  "Fare (Income1)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Fare (Income2)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Fare (Income3)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Fare (Income4)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Access + Egress + Transfer Walk" = c("WalkBus", "WalkPremium"),
+  "Drive Access Time" = c("DriveBus", "DrivePremium"),
+  "Initial Wait Time" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Transfer Wait Time" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Transfer Penalty Time" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium")
+)
+
+# Populate the mode columns using the mapping
+for (i in 1:nrow(model_table)) {
+  var_name <- model_table$Variable[i]
+  if (var_name %in% names(mode_mapping)) {
+    applicable_modes <- mode_mapping[[var_name]]
+    model_table[i, applicable_modes] <- "X"
+  }
+}
+
+# Replace all "NA" with empty strings
+model_table[model_table == "NA"] <- ""
+num_cols <- ncol(model_table)
+align_v <-  c("l", rep("c", num_cols - 1))
+
+# Create the kable table with appropriate formatting
+kable_output <- kable(model_table, format = "html", align = align_v) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = TRUE, font_size = 12,
+                position = "left", fixed_thead = TRUE) %>%  # Fixed header
+  column_spec(1, bold = TRUE, width = "15em", extra_css = "position: sticky; left: 0; background-color: #fff; z-index: 1;") %>%  # Sticky first column
+  column_spec(2, width = "12em") %>%
+  column_spec(3:4, width = "8em") %>%
+  column_spec(5:14, width = "5em") %>%
+  scroll_box(width = "100%", height = "500px") %>% # Make the table scrollable with fixed height 
+  footnote(general = "Rho²: 0.577",
+          footnote_as_chunk = TRUE)
+
+# Output the table
+kable_output
+
+```
+
+## Features of the Utility Specification:
+* The ‘Variable’ column in the above table indicates the utility variable. During application, the appropriate variable from the skims matrix or the TAZ layer will be used. A ‘Constant’ indicates that the term is an alternative specific constant typically applicable to one of the alternatives.
+
+* The ‘Derived Coefficient Formula’ indicates any derived coefficients. For example, the ‘Fare (Income 1)’ variable has a derived coefficient of IVTT/vot1. The IVTT coefficient from an earlier row can be seen as -0.0210. The value of time for the first income class, i.e., vot1 value from the constant’s parameter table is 6.7 c/min. Thus the ‘Fare (Income 1)’ has a coefficient of -0.0210/6.7 = -0.003134. Note that for certain derived coefficients, the values of the parameter will vary based on the alternative. For example, the occ parameter in the ‘Auto Distance (Income1)’ term is 1.0 for the SOV alternative, 2.0 for the HOV2 alternative and 3.3 for the HOV3 alternative.
+
+* The estimated coefficient and the t-statistic are shown in the columns ‘Coefficient’ and ‘t-statistic’. Only estimated coefficients (and not derived ones) will have an associated t-statistic. Typically, an absolute t-statistic of over 1.96 indicates a 95% confidence in the estimate. Some coefficients such as alternate specific constants (ASCs) may be retained even though they have poor t-stats. Note that it is expected that these ASCs are adjusted during model calibration.
+
+* The remainder of the columns form the alternatives and an X for any row indicates that the variable (row) is applicable to that alternative. The partial utility term in this case is the coefficient (or derived coefficient) multiplied by the variable value. For example, the utility equation for TNC is -0.0910 x ’Auto Time TNC’. The utility specification for the ‘Walk’ alternative is -0.2190 + 0.5370 x’Low Income Dummy’ + 1.55 x ’Intrazonal Dummy’ -0.0210*’WalkTime’. Note that the ASC term is simply multiplied by 1 and added. 
+
+* It may be easier to look at a particular column (alternative), find the rows marked X and determine the partial utility term by multiplying the variable with the coefficient. 
+
+
+## Model Estimation Notes
+* The model is Nested Logit with main nests for the Auto, Non-Motorized and Transit modes. The nest coefficient at this level is asserted to be 0.7. The HOV nest has children POOL2 and POOL3. The transit nest is further split based on access mode. The nest coefficients at all these levels are asserted to be 0.5. Note that similar alternatives (or alternatives that can be more easily substituted with each other) form a nesting group.
+
+* The Auto modes are sensitive to travel time, travel distance (that affects the auto operation cost) and parking. The relationships between the coefficients of the parking terms, auto operation costs (AOC) and time are consistent with the previous Metrolina model including the values of the vot, aoc parameters.
+
+* Transit alternatives included both walk and drive access to Bus and Premium modes. The relationships between various transit skims such as In-Vehicle Travel Time (IVTT) and Fare etc. were borrowed from the previous model. Note that the IVTT on any premium transit leg is discounted by 30%. The previous model had further discounts to the premium modes, which we eliminated.
+
+* Intrazonal effects are strong for the non-motorized modes.
+
+* Low Income has a positive effect on transit choice.
+
+* CBD destination has a positive impact on choice of transit.
+
+* Since the mode choice is now applied in a disaggregate fashion (as opposed to aggregate before), the income designation is available for each record. Thus, there is no need to split the data by income class and apply different models to each class. The appropriate utility term pertaining to the income class will be used directly.
+
+* The model rho-sq is a very good 0.577 with small ASCs. This typically indicates an excellent fit.
+
+# Other Tour Purpose
+
+**Tree Structure**
+```{r, echo=FALSE, fig.align="center"}
+knitr::include_graphics("C:/MRM/docs/other/png/other.png") 
+```
+
+**Utility Table**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Create the data frame
+model_table <- data.frame(
+  Variable = c(
+    "Constant (SOV)", "Constant (POOL2)", "Constant (POOL3)", "Constant (WALK)", 
+    "Constant (BIKE)", "Constant (WalkBus)", "Constant (WalkPremium)", 
+    "Constant (DriveBus)", "Constant (DrivePremium)", "Auto Time", 
+    "Auto Time TNC", "ParkCost (Income 1)", "ParkCost (Income 2)", 
+    "ParkCost (Income 3)", "ParkCost (Income 4)", "Auto Distance (Income1)", 
+    "Auto Distance (Income2)", "Auto Distance (Income3)", "Auto Distance (Income4)", 
+    "Low Income (IncCat <= 2): NM", "IntraZonal Trip (Walk)", "Walk/Bike Time", 
+    "Low Income (IncCat <= 2): Transit", "CBD Destination (Drive Transit)", 
+    "IVTT", "IVTT - 0.3*IVTT_PremiumLeg", "Fare (Income1)", "Fare (Income2)", 
+    "Fare (Income3)", "Fare (Income4)", "Access + Egress + Transfer Walk", 
+    "Drive Access Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time"
+  ),
+  Formula = c(
+    "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "IVTT", 
+    "NA", "IVTT/(2 x vot1 x occ)", "IVTT/(2 x vot2 x occ)", "IVTT/(2 x vot2 x occ)", 
+    "IVTT/(2 x vot2 x occ)", "IVTT x AOC/(vot1 x occ)", "IVTT x AOC/(vot2 x occ)", 
+    "IVTT x AOC/(vot3 x occ)", "IVTT x AOC/(vot4 x occ)", "NA", "NA", "IVTT", 
+    "NA", "NA", "IVTT", "IVTT", "IVTT/vot1", "IVTT/vot2", "IVTT/vot3", 
+    "IVTT/vot4", "IVTT x 2.5", "IVTT", "IVTT  x  1.5", "IVTT  x  2", "IVTT" ),
+  'Derived Coefficient' = c("3.47", "3.3", "3.09", "2.91", "0.542", "2.84", "2.85", "-2.47", "-0.687", "-0.0304", "-0.034", "NA", "NA", 
+                            "NA", "NA", "NA", "NA", "NA", "NA", "1.65", "1.24", "NA", "2.65", "1.22", "NA", "NA", "NA", "NA", "NA", "NA", 
+                            "NA", "NA", "NA", "NA", "NA"),
+  't-Stat' = c("11.96", "11.4", "10.65", "9.68", "1.74", "7.33", "7.08", "-3.62", "-1.24", "-18.17", "-3.05", "NA", "NA", "NA", "NA", 
+               "NA", "NA", "NA", "NA", "16.47", "5.12", "NA", "8.87", "2.25", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", "NA", 
+               "NA")
+)
+
+# Define the modes
+modes <- c("SOV", "POOL2", "POOL3", "TNC", "Walk", "Bike", "WalkBus", 
+           "WalkPremium", "DriveBus", "DrivePremium")
+
+# Create empty mode columns
+for (mode in modes) {
+  model_table[[mode]] <- ""
+}
+
+# Create a mapping of variables to modes where they apply
+mode_mapping <- list(
+  "Constant (SOV)" = c("SOV"),
+  "Constant (POOL2)" = c("POOL2"),
+  "Constant (POOL3)" = c("POOL3"),
+  "Constant (WALK)" = c("Walk"),
+  "Constant (BIKE)" = c("Bike"),
+  "Constant (WalkBus)" = c("WalkBus"),
+  "Constant (WalkPremium)" = c("WalkPremium"),
+  "Constant (DriveBus)" = c("DriveBus"),
+  "Constant (DrivePremium)" = c("DrivePremium"),
+  "Auto Time" = c("SOV", "POOL2", "POOL3"),
+  "Auto Time TNC" = c("TNC"),
+  "ParkCost (Income 1)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 2)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 3)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 4)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income1)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income2)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income3)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income4)" = c("SOV", "POOL2", "POOL3"),
+  "Low Income (IncCat <= 2): NM" = c("Walk", "Bike"),
+  "IntraZonal Trip (Walk)" = c("Walk"),
+  "Walk/Bike Time" = c("Walk", "Bike"),
+  "Low Income (IncCat <= 2): Transit" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "CBD Destination (Drive Transit)" = c("DriveBus", "DrivePremium"),
+  "IVTT" = c("WalkBus", "WalkPremium"),
+  "IVTT - 0.3 x IVTT_PremiumLeg" = c("WalkPremium", "DrivePremium"),
+  "Fare (Income1)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Fare (Income2)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Fare (Income3)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Fare (Income4)" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Access + Egress + Transfer Walk" = c("WalkBus", "WalkPremium"),
+  "Drive Access Time" = c("DriveBus", "DrivePremium"),
+  "Initial Wait Time" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Transfer Wait Time" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium"),
+  "Transfer Penalty Time" = c("WalkBus", "WalkPremium", "DriveBus", "DrivePremium")
+)
+
+# Populate the mode columns using the mapping
+for (i in 1:nrow(model_table)) {
+  var_name <- model_table$Variable[i]
+  if (var_name %in% names(mode_mapping)) {
+    applicable_modes <- mode_mapping[[var_name]]
+    model_table[i, applicable_modes] <- "X"
+  }
+}
+
+# Replace all "NA" with empty strings
+model_table[model_table == "NA"] <- ""
+num_cols <- ncol(model_table)
+align_v <-  c("l", rep("c", num_cols - 1))
+
+# Create the kable table with appropriate formatting
+kable_output <- kable(model_table, format = "html", align = align_v) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = TRUE, font_size = 12,
+                position = "left", fixed_thead = TRUE) %>%  # Fixed header
+  column_spec(1, bold = TRUE, width = "15em", extra_css = "position: sticky; left: 0; background-color: #fff; z-index: 1;") %>%  # Sticky first column
+  column_spec(2, width = "12em") %>%
+  column_spec(3:4, width = "8em") %>%
+  column_spec(5:14, width = "5em") %>%
+  scroll_box(width = "100%", height = "500px") %>% # Make the table scrollable with fixed height 
+  footnote(general = "Rho²: 0.384",
+          footnote_as_chunk = TRUE)
+
+# Output the table
+kable_output
+```
+
+## Model Estimation Notes
+* The model has a very similar structure to the Work model.
+
+* Like the work model, Intrazonal effects are significant for non-motorized modes, low-income effect is associated with higher transit usage probability and CDB destinations have a positive effect on transit choice.
+
+* The model rho-sq 0.384 and indicates a good fit.
+
+* All values of constants such as vot1, occ etc. are unchanged from those used in the ‘Work’ model.
+
+# University Tour Purpose
+
+**Tree Structure**
+```{r, echo=FALSE, fig.align="center"}
+knitr::include_graphics("C:/MRM/docs/other/png/uni.png") 
+```
+
+**Utility Table**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Create the data frame
+model_table <- data.frame(
+  Variable = c(
+    "Constant (SOV)", "Constant (POOL2)", "Constant (POOL3)", "Constant (WALK)", 
+     "Constant (WalkBus)", "Auto Time", 
+    "ParkCost (Income 1)", "ParkCost (Income 2)", 
+    "ParkCost (Income 3)", "ParkCost (Income 4)", "Auto Distance (Income1)", 
+    "Auto Distance (Income2)", "Auto Distance (Income3)", "Auto Distance (Income4)", 
+    "Walk Time", "Low Income (IncCat <= 2): Transit", "CBD (Transit)", 
+    "IVTT", "IVTT - 0.3*IVTT_PremiumLeg", "Fare (Income1)", "Fare (Income2)", 
+    "Fare (Income3)", "Fare (Income4)", "Access + Egress + Transfer Walk", 
+    "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time"
+  ),
+  Formula = c(
+    "NA", "NA", "NA", "NA", "NA", "IVTT", 
+    "IVTT/(2 x vot1 x occ)", "IVTT/(2 x vot2 x occ)", "IVTT/(2 x vot2 x occ)", 
+    "IVTT/(2 x vot2 x occ)", "IVTT x AOC/(vot1 x occ)", "IVTT x AOC/(vot2 x occ)", 
+    "IVTT x AOC/(vot3 x occ)", "IVTT x AOC/(vot4 x occ)", "IVTT", 
+    "NA", "NA", "IVTT", "IVTT", "IVTT/vot1", "IVTT/vot2", "IVTT/vot3", 
+    "IVTT/vot4", "IVTT x 2.5", "IVTT  x  1.5", "IVTT  x  2", "IVTT" ),
+  'Derived Coefficient' = c("2.17" , "1.64" , "1.35" , "1.08" , "0.818" , "-0.0134" , 
+    "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "1.92" , "1.86" , 
+    "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA"),
+  't-Stat' = c("1.89" , "1.42" , "1.16" , "0.99" , "1.25" , "-2.63" , "NA" , "NA" , 
+    "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "1.99" , "1.97" , "NA" , "NA" , 
+    "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA" , "NA")
+)
+
+# Define the modes
+modes <- c("SOV", "POOL2", "POOL3", "Walk", "WalkBus", "WalkPremium")
+
+# Create empty mode columns
+for (mode in modes) {
+  model_table[[mode]] <- ""
+}
+
+# Create a mapping of variables to modes where they apply
+mode_mapping <- list(
+  "Constant (SOV)" = c("SOV"),
+  "Constant (POOL2)" = c("POOL2"),
+  "Constant (POOL3)" = c("POOL3"),
+  "Constant (WALK)" = c("Walk"),
+  "Constant (WalkBus)" = c("WalkBus"),
+  "Constant (WalkPremium)" = c("WalkPremium"),
+  "Auto Time" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 1)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 2)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 3)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 4)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income1)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income2)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income3)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income4)" = c("SOV", "POOL2", "POOL3"),
+  "Walk Time" = c("Walk"),
+  "Low Income (IncCat <= 2): Transit" = c("WalkBus", "WalkPremium"),
+  "CBD (Transit)" = c("WalkBus", "WalkPremium"),
+  "IVTT" = c("WalkBus"),
+  "IVTT - 0.3 x IVTT_PremiumLeg" = c("WalkPremium"),
+  "Fare (Income1)" = c("WalkBus", "WalkPremium"),
+  "Fare (Income2)" = c("WalkBus", "WalkPremium"),
+  "Fare (Income3)" = c("WalkBus", "WalkPremium"),
+  "Fare (Income4)" = c("WalkBus", "WalkPremium"),
+  "Access + Egress + Transfer Walk" = c("WalkBus", "WalkPremium"),
+  "Initial Wait Time" = c("WalkBus", "WalkPremium"),
+  "Transfer Wait Time" = c("WalkBus", "WalkPremium"),
+  "Transfer Penalty Time" = c("WalkBus", "WalkPremium")
+)
+
+# Populate the mode columns using the mapping
+for (i in 1:nrow(model_table)) {
+  var_name <- model_table$Variable[i]
+  if (var_name %in% names(mode_mapping)) {
+    applicable_modes <- mode_mapping[[var_name]]
+    model_table[i, applicable_modes] <- "X"
+  }
+}
+
+# Replace all "NA" with empty strings
+model_table[model_table == "NA"] <- ""
+num_cols <- ncol(model_table)
+align_v <-  c("l", rep("c", num_cols - 1))
+
+# Create the kable table with appropriate formatting
+kable_output <- kable(model_table, format = "html", align = align_v) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = TRUE, font_size = 12,
+                position = "left", fixed_thead = TRUE) %>%  # Fixed header
+  column_spec(1, bold = TRUE, width = "15em", extra_css = "position: sticky; left: 0; background-color: #fff; z-index: 1;") %>%  # Sticky first column
+  column_spec(2, width = "12em") %>%
+  column_spec(3:4, width = "8em") %>%
+  column_spec(5:9, width = "5em") %>%
+  scroll_box(width = "100%", height = "500px") %>% # Make the table scrollable with fixed height 
+  footnote(general = "Rho²: 0.449",
+          footnote_as_chunk = TRUE)
+
+# Output the table
+kable_output
+```
+
+## Model Estimation Notes
+* The drive access modes to transit and TNC were dropped, due to insufficient records.  The drive access modes to transit can be added during application if desired.
+
+* Other model effects common to the work and other purpose persist.
+
+* The model rho-sq 0.267 again indicates a decent fit given the estimation record set size especially for non-frequent modes.
+
+
+# School Purpose Tour
+**Tree Structure**
+```{r, echo=FALSE, fig.align="center"}
+knitr::include_graphics("C:/MRM/docs/other/png/school.png") 
+```
+
+**Utility Table**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Create the data frame
+model_table <- data.frame(
+  Variable = c("Constant (SOV)", "Constant (POOL2)", "Constant (POOL3)", "Constant 
+               (WALK)", "Constant (WalkBus)", "Constant (School Bus)", "School Bus 
+               Time", "Auto Time", "IntraZonal Trip (Walk)", "IntraZonal Trip 
+               (Bike)", "Walk/Bike Time", "Low Income (IncCat <= 2): Transit", 
+               "IVTT", "Fare (Income1)", "Fare (Income2)", "Fare (Income3)", "Fare 
+               (Income4)", "Initial Wait Time"),
+  Formula = c("", "", "", "", "", "", "", "IVTT", "", "", "IVTT", "", "IVTT", 
+              "IVTT/vot1" , "IVTT/vot2" , "IVTT/vot3" , "IVTT/vot4" , "IVTT"),
+  'Derived Coefficient' = c("3.58", "5.05", "5.31", "2.21", "3.28", "5.31" , "-0.0299",
+              "-0.0063", "1.96", "3.47", "", "2.12", "", "" , "" , "" , "" , "-0.115"),
+  't-Stat' = c("4.84", "6.91", "7.32", "2.86", "2.88", "7.15" , "-3.72", "-1.38" , 
+      "4.02" , "4.13" , "" , "2.98" , "" , "" , "" , "" , "" , "-1.79")
+)
+
+# Define the modes
+modes <- c("SOV", "POOL2", "POOL3", "Walk", "Bike", "WalkBus", "SchoolBus")
+
+# Create empty mode columns
+for (mode in modes) {
+  model_table[[mode]] <- ""
+}
+
+# Create a mapping of variables to modes where they apply
+mode_mapping <- list(
+  "Constant (SOV)" = c("SOV"),
+  "Constant (POOL2)" = c("POOL2"),
+  "Constant (POOL3)" = c("POOL3"),
+  "Constant (WALK)" = c("Walk"),
+  "Constant (Bike)" = c("Bike"),
+  "Constant (WalkBus)" = c("WalkBus"),
+  "Constant (SchoolBus)" = c("School Bus"),
+  "School Bus Time" = c("School Bus"),
+  "Auto Time" = c("SOV", "POOL2", "POOL3"),
+  "IntraZonal Trip (Walk)" =c("Walk"),
+  "IntraZonal Trip (Bike)" =c("Bike"),
+  "Walk/Bike Time" = c("Walk","Bike"),
+  "Low Income (IncCat <= 2): Transit" = c("WalkBus"),
+  "IVTT" = c("WalkBus"),
+  "Fare (Income1)" = c("WalkBus"),
+  "Fare (Income2)" = c("WalkBus"),
+  "Fare (Income3)" = c("WalkBus"),
+  "Fare (Income4)" = c("WalkBus"),
+  "Initial Wait Time" = c("WalkBus")
+)
+
+# Populate the mode columns using the mapping
+for (i in 1:nrow(model_table)) {
+  var_name <- model_table$Variable[i]
+  if (var_name %in% names(mode_mapping)) {
+    applicable_modes <- mode_mapping[[var_name]]
+    model_table[i, applicable_modes] <- "X"
+  }
+}
+
+# Replace all "NA" with empty strings
+model_table[model_table == "NA"] <- ""
+num_cols <- ncol(model_table)
+align_v <-  c("l", rep("c", num_cols - 1))
+
+# Create the kable table with appropriate formatting
+kable_output <- kable(model_table, format = "html", align = align_v) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = TRUE, font_size = 12,
+                position = "left", fixed_thead = TRUE) %>%  # Fixed header
+  column_spec(1, bold = TRUE, width = "15em", extra_css = "position: sticky; left: 0; background-color: #fff; z-index: 1;") %>%  # Sticky first column
+  column_spec(2, width = "12em") %>%
+  column_spec(3:4, width = "8em") %>%
+  column_spec(5:9, width = "5em") %>%
+  scroll_box(width = "100%", height = "500px") %>% # Make the table scrollable with fixed height 
+  footnote(general = "Rho²: 0.452",
+          footnote_as_chunk = TRUE)
+
+# Output the table
+kable_output
+```
+
+## Model Estimation Notes
+* The sub-tour mode choices are limited to auto modes and the walk mode.
+
+* Auto mode utility terms consist of travel time, auto operating cost and parking cost.
+
+* Intrazonal effect has a positive impact on walk mode utility.
+* The model rho-sq 0.452 indicates a good fit.
+
+
+## Model calibration: Constant (ASC) adjustments
+Typically, logit models are estimated without survey weights. Post estimation, alternate specific constants are adjusted to match weighted survey shares by mode. A similar procedure was adapted for the Charlotte model. 
+The one complication is that transit weighted shares from the survey are not reliable due to the small sample size and therefore cannot be taken at face value. Instead, transit mode choice calibration heavily depends on external data such as observed boardings by transit mode. The initial application of the mode choice model (with constants adjusted to match survey weighted shares) resulted in model boardings well above the observed boardings. The transit shares were therefore lowered significantly, and new constants were established. These constants are updated in the model specifications and used during application. 
+

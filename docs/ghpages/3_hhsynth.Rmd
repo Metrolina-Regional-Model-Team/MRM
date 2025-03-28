@@ -308,7 +308,7 @@ p %>% config(responsive = TRUE)
 
 
 ```
-*Source:  Survey: 2017-2021 5-year PUMS, Table: Number of workers in household by Household size*
+*Source:  Survey: 2017-2021 5-year PUMS, Table: Number of Workers in Household by Household size*
 
 The table below shows a segment of rows from the look-up table the model uses to dis-aggregate zonal data into households by workers. 
 
