@@ -33,6 +33,8 @@
 <link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
 <script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
 
@@ -343,14 +345,11 @@ div.tocify {
     <li>
       <a href="2_surveys.html">Surveys</a>
     </li>
-    <li>
-      <a href="2_traveldata.html">Travel Data</a>
-    </li>
   </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Models
+    Resident Models
      
     <span class="caret"></span>
   </a>
@@ -359,7 +358,7 @@ div.tocify {
       <a href="3_hhsynth.html">Household Synthesis</a>
     </li>
     <li>
-      <a href="3_purpose.html">Tour Purpose</a>
+      <a href="3_purpose.html">Tour Purpose &amp; Frequency</a>
     </li>
     <li>
       <a href="3_dc.html">Destination Choice</a>
@@ -381,6 +380,12 @@ div.tocify {
   <ul class="dropdown-menu" role="menu">
     <li>
       <a href="4_ext.html">Externals</a>
+    </li>
+    <li>
+      <a href="4_freight.html">Freight</a>
+    </li>
+    <li>
+      <a href="4_TOD.html">TOD</a>
     </li>
     <li>
       <a href="4_assignment.html">Assignment</a>
@@ -462,6 +467,657 @@ zones. In order to remove bias, the households are sorted in random
 order. In addition, there are at least 1% more total attractions than
 total tours for each purpose so that the last remaining households are
 not left with only unreasonable choices.</p>
+<p>During the model update phase, the coefficients of the existing
+destination choice model specifications were re-estimated. Rather than
+develop an entire new framework for destination choice and use
+TransCAD’s in-built procedures for both Multinomial and Nested DC, the
+current specifications were updated owing to budgetary and time
+constraints.</p>
+<p>The following tables presents the estimation results for destination
+choice across various tour purposes, including work, school, university,
+shopping, other, and at-work tours.</p>
+<div id="work-tours" class="section level4">
+<h4>Work Tours</h4>
+<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:right;">
+Coefficient
+</th>
+<th style="text-align:right;">
+t-Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Size: Ln(Total Employment)
+</td>
+<td style="text-align:right;">
+0.949
+</td>
+<td style="text-align:right;">
+-3.02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time
+</td>
+<td style="text-align:right;">
+-0.0862
+</td>
+<td style="text-align:right;">
+-45.43
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CBD Dummy (Income 1-3)
+</td>
+<td style="text-align:right;">
+0.525
+</td>
+<td style="text-align:right;">
+2.56
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CDB Dummy (Income 4)
+</td>
+<td style="text-align:right;">
+1.140
+</td>
+<td style="text-align:right;">
+17.02
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraZonal (Income 1-3)
+</td>
+<td style="text-align:right;">
+2.140
+</td>
+<td style="text-align:right;">
+8.76
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraZonal (Income 4)
+</td>
+<td style="text-align:right;">
+1.130
+</td>
+<td style="text-align:right;">
+7.82
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraCounty (Income 1-3)
+</td>
+<td style="text-align:right;">
+0.944
+</td>
+<td style="text-align:right;">
+6.28
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraCounty (Income 4)
+</td>
+<td style="text-align:right;">
+0.479
+</td>
+<td style="text-align:right;">
+7.82
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total Employment Density @ Dest
+</td>
+<td style="text-align:right;">
+0.002
+</td>
+<td style="text-align:right;">
+2.38
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Rho² = 0.148
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="school-tours" class="section level4">
+<h4>School Tours</h4>
+<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:right;">
+Coefficient
+</th>
+<th style="text-align:right;">
+t-Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Size: Ln(K12_Enrollment)
+</td>
+<td style="text-align:right;">
+0.807
+</td>
+<td style="text-align:right;">
+-4.21
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time
+</td>
+<td style="text-align:right;">
+-0.268
+</td>
+<td style="text-align:right;">
+-35.19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraZonal
+</td>
+<td style="text-align:right;">
+-0.253
+</td>
+<td style="text-align:right;">
+-1.45
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraCounty
+</td>
+<td style="text-align:right;">
+1.380
+</td>
+<td style="text-align:right;">
+9.06
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Rho² = 0.47
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="unviersity-tours" class="section level4">
+<h4>Unviersity Tours</h4>
+<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:right;">
+Coefficient
+</th>
+<th style="text-align:right;">
+t-Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Size: Ln(STUCU)
+</td>
+<td style="text-align:right;">
+1.000
+</td>
+<td style="text-align:right;">
+Fixed
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time
+</td>
+<td style="text-align:right;">
+-0.122
+</td>
+<td style="text-align:right;">
+-6.51
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraCounty
+</td>
+<td style="text-align:right;">
+1.390
+</td>
+<td style="text-align:right;">
+2.92
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Adjusted Auto Time Coefficient -0.15
+</td>
+</tr>
+</tfoot>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Rho² = 0.448
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="shop-tours" class="section level4">
+<h4>Shop Tours</h4>
+<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:right;">
+Coefficient
+</th>
+<th style="text-align:right;">
+t-Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Size: Ln(RTL + HWY)
+</td>
+<td style="text-align:right;">
+0.9300
+</td>
+<td style="text-align:right;">
+-3.47
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time (Income 1-3)
+</td>
+<td style="text-align:right;">
+-0.2940
+</td>
+<td style="text-align:right;">
+-29.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time (Income 4)
+</td>
+<td style="text-align:right;">
+-0.2820
+</td>
+<td style="text-align:right;">
+-57.63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CBD Dummy
+</td>
+<td style="text-align:right;">
+-0.7630
+</td>
+<td style="text-align:right;">
+-1.77
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Intrazonal (Income 4)
+</td>
+<td style="text-align:right;">
+-0.2680
+</td>
+<td style="text-align:right;">
+-2.06
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraCounty
+</td>
+<td style="text-align:right;">
+0.2320
+</td>
+<td style="text-align:right;">
+1.23
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Area Type @ Dest (Income 4)
+</td>
+<td style="text-align:right;">
+-0.1550
+</td>
+<td style="text-align:right;">
+-4.01
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Retail Employment Density @ Dest)
+</td>
+<td style="text-align:right;">
+0.0649
+</td>
+<td style="text-align:right;">
+-4.01
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Rho² = 0.371
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="other-tours" class="section level4">
+<h4>Other Tours</h4>
+<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:right;">
+Coefficient
+</th>
+<th style="text-align:right;">
+t-Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Size: Ln(TotalEmp + 0.1108*Pop)
+</td>
+<td style="text-align:right;">
+7.42e-01
+</td>
+<td style="text-align:right;">
+-14.83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time (Income 1-3)
+</td>
+<td style="text-align:right;">
+-3.01e-01
+</td>
+<td style="text-align:right;">
+-57.77
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time (Income 4)
+</td>
+<td style="text-align:right;">
+-2.94e-01
+</td>
+<td style="text-align:right;">
+-88.42
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time Squared
+</td>
+<td style="text-align:right;">
+2.00e-03
+</td>
+<td style="text-align:right;">
+46.65
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CBD Dummy
+</td>
+<td style="text-align:right;">
+-1.02e-01
+</td>
+<td style="text-align:right;">
+-1.40
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraZonal (Income 1-3)
+</td>
+<td style="text-align:right;">
+8.74e-01
+</td>
+<td style="text-align:right;">
+8.29
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraZonal (Income 4)
+</td>
+<td style="text-align:right;">
+6.56e-01
+</td>
+<td style="text-align:right;">
+12.31
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AreaType @ Dest (Income 1-3)
+</td>
+<td style="text-align:right;">
+-1.94e-01
+</td>
+<td style="text-align:right;">
+-4.10
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AreaType @ Dest (Income 4)
+</td>
+<td style="text-align:right;">
+-2.35e-01
+</td>
+<td style="text-align:right;">
+-10.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraCounty
+</td>
+<td style="text-align:right;">
+3.29e-01
+</td>
+<td style="text-align:right;">
+7.94
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Employment within 15 min by composite time (Income 1-3)
+</td>
+<td style="text-align:right;">
+-3.80e-06
+</td>
+<td style="text-align:right;">
+-2.72
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Employment within 15 min by composite time (Income 4)
+</td>
+<td style="text-align:right;">
+-2.30e-06
+</td>
+<td style="text-align:right;">
+-3.73
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Total Employment Density @ Dest
+</td>
+<td style="text-align:right;">
+7.80e-03
+</td>
+<td style="text-align:right;">
+8.53
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Rho² = 0.294
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
+<div id="at-work" class="section level4">
+<h4>At Work</h4>
+<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Variable
+</th>
+<th style="text-align:right;">
+Coefficient
+</th>
+<th style="text-align:right;">
+t-Statistic
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Size: Ln(TotalEmp + 0.1108*Pop)
+</td>
+<td style="text-align:right;">
+8.01e-01
+</td>
+<td style="text-align:right;">
+-4.04
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time (Income 1-3)
+</td>
+<td style="text-align:right;">
+-3.12e-01
+</td>
+<td style="text-align:right;">
+-21.11
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time (Income 4)
+</td>
+<td style="text-align:right;">
+9.02e-01
+</td>
+<td style="text-align:right;">
+3.64
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Auto Time Squared
+</td>
+<td style="text-align:right;">
+5.36e-01
+</td>
+<td style="text-align:right;">
+2.86
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+CBD Dummy
+</td>
+<td style="text-align:right;">
+2.89e-01
+</td>
+<td style="text-align:right;">
+1.20
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+IntraZonal (Income 1-3)
+</td>
+<td style="text-align:right;">
+-6.80e-06
+</td>
+<td style="text-align:right;">
+-2.67
+</td>
+</tr>
+</tbody>
+<tfoot>
+<tr>
+<td style="padding: 0; border:0;" colspan="100%">
+<sup></sup> Rho² = 0.413
+</td>
+</tr>
+</tfoot>
+</table>
+</div>
 </div>
 <div id="friction-factors" class="section level3">
 <h3>Friction Factors</h3>

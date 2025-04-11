@@ -12,8 +12,28 @@ output:
     toc_depth: 4
     css: "styles.css"
 ---
+The mode choice model within the MRM is a nested logit model, with the basic form of the logit model that has “N” modes, is represented by the following equation: 
+
+$$
+\text{Share}_{\text{mode A}} = \frac{e^{-U_{\text{mode A}}}}{e^{-U_{\text{mode A}}} + \cdots + e^{-U_{\text{mode N}}}}
+$$
+Where:
+•	SharemodeA is the share of trips that use mode A
+•	e-u is the natural logarithm of the utility of any particular mode. 
+
+Utility is a term used in econometrics to define the satisfaction received from using a product or service. In mode choice models it converts different types of measures that influence travel behavior decisions into comparable units so that the choices available can be evaluated against each other. Utilities are a function of highway travel time, transit travel time, transit fare, parking and toll costs, land use characteristics, and household characteristics. Basic modes are travel by auto, transit, walking and biking. These are further divided in lower levels of the nesting structure. Travel by auto can be drive alone, 2-person carpools, or 3 or more person carpools. For transit trips, patrons can approach by walking or driving. Further they have options of premium service (light rail, bus rapid transit, and commuter rail), express bus service, or local bus service. 
+
+Each mode choice utility has three basic components:
+
+1. **Variable:** Travel times, wait times, parking costs, etc. Transit variables are from transit skim matrices. Highway variables are built primarily from the highway skims using free-flow and congested travel times, as well as parking costs.
+
+2. **Coefficient:** A relative weight that people subconsciously apply in making their mode decision. For example, people generally place a higher value on the time waiting than time spent traveling (because it feels like a longer time). The coefficients for the Metrolina model are borrowed primarily from the Houston-Galveston travel demand model (Houston-Galveston Area Council. Regional Travel Models. 1995 Model Validation and Documentation Report, February, 2001).  These have been modified to fit the Metrolina model, but are similar to other models throughout the country.
+
+3. **Constant:** Many components of the mode choice decision are not dependent on travel characteristics. For example, some people must have their car at work for travel during the day. Others are disinclined to use transit for any reason. These types of issued are handled through a constant unrelated to the travel variables.
 
 The mode choice model for the MRM was estimated based on the household survey records for 6 tour purposes: Work, Other, Shop, University, Sub-Tour and School tours. These models are estimated as nested logit models. Note that the previous Metrolina model did not have a mode choice model for school tours since it was based on a fixed shares model. In the context of application, the tour mode choice model is applied after the tour destinations and tour time of day are determined.
+
+In the context of application, the tour mode choice model is applied after the tour destinations and tour time of day are determined. The mode choice model is applied to each of the origin-destination pairs to determine the choice.
 
 The survey records were scanned for frequency of observations, shown in the table below:
 
@@ -23,6 +43,7 @@ library(knitr)
 library(kableExtra)
 library(scales)
 library(dplyr)
+library(png)
 
 data <- data.frame(
   Mode = c("SOV", "HOV2", "HOV3", "Walk", "Bike", "Walk Bus", "Walk Rail (Premium)", "Drive Bus", "Drive Rail (Premium)", "School Bus", "Taxi", "TNC", "LD passenger", "Micromobility", "Missing", "Total Observations"),
@@ -93,12 +114,13 @@ table_data <- kable(data,
 table_data
 ```
 
-## Work Tour Purpose
+# Work Tour Purpose
 
 **Tree Structure**
-```{r, echo=FALSE, fig.align="center"}
+```{r, echo=FALSE, out.width="100%", fig.align="center"}
 knitr::include_graphics("C:/MRM/docs/other/png/work.png") 
 ```
+
 
 **Utility Table**
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
@@ -252,7 +274,7 @@ kable_output
 # Other Tour Purpose
 
 **Tree Structure**
-```{r, echo=FALSE, fig.align="center"}
+```{r, echo=FALSE, out.width="100%", fig.align="center"}
 knitr::include_graphics("C:/MRM/docs/other/png/other.png") 
 ```
 
@@ -380,8 +402,9 @@ kable_output
 # University Tour Purpose
 
 **Tree Structure**
-```{r, echo=FALSE, fig.align="center"}
-knitr::include_graphics("C:/MRM/docs/other/png/uni.png") 
+```{r, echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("../other/png/uni.png")
+
 ```
 
 **Utility Table**
@@ -496,7 +519,7 @@ kable_output
 
 # School Purpose Tour
 **Tree Structure**
-```{r, echo=FALSE, fig.align="center"}
+```{r, echo=FALSE, out.width="100%", fig.align="center"}
 knitr::include_graphics("C:/MRM/docs/other/png/school.png") 
 ```
 
@@ -574,6 +597,101 @@ kable_output <- kable(model_table, format = "html", align = align_v) %>%
   column_spec(3:4, width = "8em") %>%
   column_spec(5:9, width = "5em") %>%
   scroll_box(width = "100%", height = "500px") %>% # Make the table scrollable with fixed height 
+  footnote(general = "Rho²: 0.328",
+          footnote_as_chunk = TRUE)
+
+# Output the table
+kable_output
+```
+
+## Model Estimation Notes
+* The school tour mode choice replaces the fixed shares model.
+
+* Walk access to bus is the only transit alternative. There is no TNC alternative.
+
+* School Bus is an added alternative.
+
+* Low-income effect having a positive effect on bus utility persists.
+
+* Intrazonal effects for non-motorized modes persist.
+
+* Neither auto-operative nor parking costs are considered as utility terms.
+
+* The model rho-sq 0.328 again indicates a good fit.
+
+# Sub-Tour Purpose Tour
+**Tree Structure**
+```{r, echo=FALSE, out.width="100%", fig.align="center"}
+knitr::include_graphics("C:/MRM/docs/other/png/subtour.png") 
+```
+
+**Utility Table**
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Create the data frame
+model_table <- data.frame(
+  Variable = c("Constant (SOV)", "Constant (POOL2)", "Constant 
+               (WALK)", "Auto Time", 
+               "ParkCost (Income 1)", "ParkCost (Income 2)", "ParkCost (Income 3)", "ParkCost (Income 4)", 
+               "Auto Distance (Income 1)", "Auto Distance (Income 2)", "Auto Distance (Income 3)", "Auto Distance   
+               (Income 4)", "IZ Walk", "Walk Time"), 
+  Formula = c("", "", "", "IVTT", "IVTT/(2*vot1*occ)", "IVTT/(2*vot1*occ)","IVTT/(2*vot1*occ)", 
+              "IVTT/(2*vot1*occ)", "IVTT*AOC/(vot1*occ)", "IVTT*AOC/(vot1*occ)", "IVTT*AOC/(vot1*occ)", 
+              "IVTT*AOC/(vot1*occ)", "", "IVTT"),
+  'Derived Coefficient' = c("1.7700", "0.5310", "2.2900", "-0.1240","", "", "", "", "", "", "", "", "0.6270", ""),
+  't-Stat' = c("11.68", "3.59", "7.68", "-7.41","", "", "", "", "", "", "", "", "1.76","")
+)
+
+# Define the modes
+modes <- c("SOV", "POOL2", "POOL3", "Walk")
+
+# Create empty mode columns
+for (mode in modes) {
+  model_table[[mode]] <- ""
+}
+
+# Create a mapping of variables to modes where they apply
+mode_mapping <- list(
+  "Constant (SOV)" = c("SOV"),
+  "Constant (POOL2)" = c("POOL2"),
+  "Constant (WALK)" = c("Walk"),
+  "Auto Time" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 1)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 2)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 3)" = c("SOV", "POOL2", "POOL3"),
+  "ParkCost (Income 4)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income 1)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income 2)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income 3)" = c("SOV", "POOL2", "POOL3"),
+  "Auto Distance (Income 4)" = c("SOV", "POOL2", "POOL3"),
+  "IZ Walk" = c("Walk"),
+  "Walk Time" = c("Walk")
+  )
+
+# Populate the mode columns using the mapping
+for (i in 1:nrow(model_table)) {
+  var_name <- model_table$Variable[i]
+  if (var_name %in% names(mode_mapping)) {
+    applicable_modes <- mode_mapping[[var_name]]
+    model_table[i, applicable_modes] <- "X"
+  }
+}
+
+# Replace all "NA" with empty strings
+model_table[model_table == "NA"] <- ""
+num_cols <- ncol(model_table)
+align_v <-  c("l", rep("c", num_cols - 1))
+
+# Create the kable table with appropriate formatting
+kable_output <- kable(model_table, format = "html", align = align_v) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed"), 
+                full_width = TRUE, font_size = 12,
+                position = "left", fixed_thead = TRUE) %>%  # Fixed header
+  column_spec(1, bold = TRUE, width = "15em", extra_css = "position: sticky; left: 0; background-color: #fff; z-index: 1;") %>%  # Sticky first column
+  column_spec(2, width = "12em") %>%
+  column_spec(3:4, width = "8em") %>%
+  column_spec(5:8, width = "5em") %>%
+  scroll_box(width = "100%", height = "500px") %>% # Make the table scrollable with fixed height 
   footnote(general = "Rho²: 0.452",
           footnote_as_chunk = TRUE)
 
@@ -587,10 +705,12 @@ kable_output
 * Auto mode utility terms consist of travel time, auto operating cost and parking cost.
 
 * Intrazonal effect has a positive impact on walk mode utility.
+
 * The model rho-sq 0.452 indicates a good fit.
 
 
 ## Model calibration: Constant (ASC) adjustments
 Typically, logit models are estimated without survey weights. Post estimation, alternate specific constants are adjusted to match weighted survey shares by mode. A similar procedure was adapted for the Charlotte model. 
+
 The one complication is that transit weighted shares from the survey are not reliable due to the small sample size and therefore cannot be taken at face value. Instead, transit mode choice calibration heavily depends on external data such as observed boardings by transit mode. The initial application of the mode choice model (with constants adjusted to match survey weighted shares) resulted in model boardings well above the observed boardings. The transit shares were therefore lowered significantly, and new constants were established. These constants are updated in the model specifications and used during application. 
 

@@ -1,0 +1,141 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Feedback},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Feedback}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{4}
+\tableofcontents
+}
+Trip tables created in the Destination Choice step depend, to some
+degree, on the travel time between the zones. Feedback loops refers to
+the process of taking the congested travel time from the traffic
+assignment step and feeding it back to the trip distribution process.
+These travel times are iteratively fed back to the trip distribution
+step to recalculate the trip tables. The purpose of the feedback loop is
+to include more ``realistic'' travel times in the distribution, mode
+choice, and highway assignment steps.
+
+\subsection{Feedback in Destination
+Choice}\label{feedback-in-destination-choice}
+
+\section{Calculation of Feedback Travel
+Times}\label{calculation-of-feedback-travel-times}
+
+Feedback travel times are calculated for the highway and transit models
+to more accurately represent the effect of congestion on the
+transportation system.
+
+\subsection{Highway travel times and
+skims}\label{highway-travel-times-and-skims}
+
+Following highway assignment, new peak highway skims are built using an
+average of travel times from the assignment and from the previous run.
+Due to the nature of regional modeling, highway delay can be estimated
+accurately on an aggregate basis, but can sometimes produce unreasonable
+results on a link-by-link basis. Since link delay in the model is
+impacted by the length of the link, queuing onto upstream links (like
+traffic on a congested ramp spilling back onto a freeway) cannot be
+accounted for. Highly congested links may also produce unrealistically
+low speeds (under 1 mph) that cannot occur. To account for this, a
+minimum speed of 10\% of free-flow speed is applied to each link during
+feedback.
+
+After the minimum speed is applied, the travel times are averaged with
+travel times from the previous iteration. An average of the two
+iterations is used to prevent large oscillations in the travel time, but
+slows convergence. These travel times are used to create a new set of
+morning peak highway travel times and impedances, which is used for the
+next feedback loop. A total of three iterations are used to re-run peak
+distribution, peak mode choice, and peak assignment. On the third and
+final pass, the evening peak and off-peak assignments are completed as
+well.
+
+\subsection{Transit travel times and
+skims}\label{transit-travel-times-and-skims}
+
+Initial transit travel times are determined using a look-up table of
+average bus speeds by facility type and area type. A minimum speed of
+90\% of the background traffic speed is also calculated and used if it
+is faster than the lookup speed. Buses typically operate on the same
+facilities as all other traffic and are impacted by congestion just as
+much as all other vehicles (except for exclusive guideways, which are
+unaffected by the feedback process). Therefore, these calculations are
+repeated and subsequently updated for each feedback iteration. In cases
+where background traffic is slower in the second iteration than the
+first, buses should experience a similar effect. Conversely, if
+background traffic travels faster due to less congestion, buses should
+benefit as well. This will only occur, however, if the minimum speed
+(90\% of background traffic speed) is lower than the transit lookup
+speed, since it uses the higher of the two.
+
+\end{document}

@@ -30,8 +30,8 @@ library(dplyr)
 
 ```{r load-and-process-data, warning=FALSE, message=FALSE, results='hide'}
 invisible(capture.output({
-  mrm_boundary <- st_read("C:/MRM/docs/ghpages/other/shps/Boundaries/MRMBoundary.shp")
-  mpo_rpo_boundary <- st_read("C:/MRM/docs/ghpages/other/shps/Boundaries/MPO_RPO.shp")
+  mrm_boundary <- st_read("C:/MRM/docs/other/shps/Boundaries/MRMBoundary.shp")
+  mpo_rpo_boundary <- st_read("C:/MRM/docs/other/shps/Boundaries/MPO_RPO.shp")
 
 # Ensure both shapefiles are in the same CRS (WGS84)
   mrm_boundary <- st_transform( mrm_boundary, 4326)

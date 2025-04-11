@@ -32,8 +32,8 @@ library(dplyr)
 
 ```{r load-and-process-data, warning=FALSE, message=FALSE, results='hide'}
 invisible(capture.output({
-  TAZ3578 <- st_read("C:/MRM/docs/ghpages/other/shps/TAZ3578/TAZ3578.shp")
-  TAZ3896 <- st_read("C:/MRM/docs/ghpages/other/shps/TAZ3896/TAZ3896.shp")
+  TAZ3578 <- st_read("C:/MRM/docs/other/shps/TAZ3578/TAZ3578.shp")
+  TAZ3896 <- st_read("C:/MRM/docs/other/shps/TAZ3896/TAZ3896.shp")
 
 # Ensure both shapefiles are in the same CRS (WGS84)
   TAZ3578 <- st_transform(TAZ3578, 4326)
