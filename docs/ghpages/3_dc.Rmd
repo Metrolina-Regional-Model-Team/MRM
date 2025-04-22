@@ -41,14 +41,14 @@ library(dplyr)
 data <- data.frame(
   Variable = c("Size: Ln(Total Employment)", "Auto Time", "CBD Dummy (Income 1-3)", "CDB Dummy (Income 4)", 
                "IntraZonal (Income 1-3)", "IntraZonal (Income 4)", "IntraCounty (Income 1-3)", 
-               "IntraCounty (Income 4)", "Total Employment Density @ Dest"),
+               "IntraCounty (Income 4)", "Total Employment Density at Destination"),
   Coefficient = c(0.949, -0.0862, 0.525, 1.14, 2.14, 1.13, 0.944, 0.479, 0.0025),
   T_Stat = c(-3.02, -45.43, 2.56, 17.02, 8.76, 7.82, 6.28, 7.82, 2.38)
 )
 
 # Format the Coefficient column
 data$Coefficient <- sapply(data$Coefficient, function(x) {
-  if (x == -0.0862) {
+  if (x == -0.0862 || x == 0.0025) {
     return(sprintf("%.4f", x))  # Show 8 decimals for this specific value
   } else {
     return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
@@ -129,10 +129,20 @@ table_model
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 data <- data.frame(
-  Variable = c("Size: Ln(RTL + HWY)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "CBD Dummy", "Intrazonal (Income 4)", "IntraCounty", "Area Type @ Dest (Income 4)", "Retail Employment Density @ Dest)"),
+  Variable = c("Size: Ln(RTL + HWY)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "CBD Dummy", "Intrazonal (Income 4)", "IntraCounty", "Area Type at Destination (Income 4)", "Retail Employment Density at Destination)"),
   Coefficient = c(0.93, -0.294, -0.282, -0.763, -0.268, 0.232, -0.155, 0.0649),
   T_Stat = c(-3.47, -29.04, -57.63, -1.77, -2.06, 1.23, -4.01, -4.01)
 )
+
+
+# Format the Coefficient column
+data$Coefficient <- sapply(data$Coefficient, function(x) {
+  if (x == 0.0649) {
+    return(sprintf("%.4f", x))  # Show 8 decimals for this specific value
+  } else {
+    return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
+  }
+})
 
 # Create the table with kable
 table_model <- kable(data, 
@@ -153,10 +163,19 @@ table_model
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
 data <- data.frame(
-  Variable = c("Size: Ln(TotalEmp + 0.1108*Pop)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "Auto Time Squared", "CBD Dummy", "IntraZonal (Income 1-3)", "IntraZonal (Income 4)", "AreaType @ Dest (Income 1-3)", "AreaType @ Dest (Income 4)", "IntraCounty", "Employment within 15 min by composite time (Income 1-3)", "Employment within 15 min by composite time (Income 4)", "Total Employment Density @ Dest"),
+  Variable = c("Size: Ln(TotalEmp + 0.1108*Pop)", "Auto Time (Income 1-3)", "Auto Time (Income 4)", "Auto Time Squared", "CBD Dummy", "IntraZonal (Income 1-3)", "IntraZonal (Income 4)", "AreaType at Destination (Income 1-3)", "AreaType at Destination (Income 4)", "IntraCounty", "Employment within 15 min by composite time (Income 1-3)", "Employment within 15 min by composite time (Income 4)", "Total Employment Density at Destination"),
   Coefficient = c(0.742, -0.301, -0.294, 0.002, -0.102, 0.874, 0.656, -0.194, -0.235, 0.329, -0.00000378, -0.00000229, 0.0078),
   T_Stat = c(-14.83, -57.77, -88.42, 46.65, -1.4, 8.29, 12.31, -4.1, -10.15, 7.94, -2.72, -3.73, 8.53)
 )
+
+# Format the Coefficient column
+data$Coefficient <- sapply(data$Coefficient, function(x) {
+  if (x == -0.00000378 || x == -0.00000229) {
+    return(sprintf("%.8f", x))  # Show 8 decimals for this specific value
+  } else {
+    return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
+  }
+})
 
 # Create the table with kable
 table_model <- kable(data, 
@@ -181,6 +200,16 @@ data <- data.frame(
   Coefficient = c(0.801, -0.312, 0.902, 0.536, 0.289, -0.00000681),
   T_Stat = c(-4.04, -21.11, 3.64, 2.86, 1.2, -2.67)
 )
+
+# Format the Coefficient column
+data$Coefficient <- sapply(data$Coefficient, function(x) {
+  if (x == -0.00000681) {
+    return(sprintf("%.8f", x))  # Show 8 decimals for this specific value
+  } else {
+    return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
+  }
+})
+
 
 # Create the table with kable
 table_model <- kable(data, 

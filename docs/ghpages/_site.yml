@@ -64,6 +64,8 @@ navbar:
       menu:
        - text: "MRM25v1.0"
          href: 5_mrm25v1.html
+       - text: "MRM25v2.0"
+         href: 5_mrm25v2.html
            
   right:
     - icon: fa-github
