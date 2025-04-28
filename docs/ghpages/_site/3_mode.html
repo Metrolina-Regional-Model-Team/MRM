@@ -509,6 +509,9 @@ div.tocify {
     <li>
       <a href="5_mrm25v1.html">MRM25v1.0</a>
     </li>
+    <li>
+      <a href="5_mrm25v2.html">MRM25v2.0</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -580,16 +583,14 @@ household survey records for 6 tour purposes: Work, Other, Shop,
 University, Sub-Tour and School tours. These models are estimated as
 nested logit models. Note that the previous Metrolina model did not have
 a mode choice model for school tours since it was based on a fixed
-shares model. In the context of application, the tour mode choice model
-is applied after the tour destinations and tour time of day are
-determined.</p>
+shares model.</p>
 <p>In the context of application, the tour mode choice model is applied
 after the tour destinations and tour time of day are determined. The
 mode choice model is applied to each of the origin-destination pairs to
 determine the choice.</p>
 <p>The survey records were scanned for frequency of observations, shown
 in the table below:</p>
-<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;">
+<table class="table table-bordered table-striped" style="font-size: 14px; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1047,7 +1048,7 @@ have an X, then that term does not apply to that column
 <h2>Constants Table</h2>
 <p>The constants in the table below are common to all estimated
 models.</p>
-<table class="table table-bordered table-striped" style="font-size: 14px; color: black; margin-left: auto; margin-right: auto;border-bottom: 0;">
+<table class="table table-bordered table-striped" style="font-size: 14px; margin-left: auto; margin-right: auto;border-bottom: 0;">
 <thead>
 <tr>
 <th style="text-align:left;">
@@ -1167,14 +1168,13 @@ of Time; <sup></sup> IVTT = In Vehicle Travel Time
 </div>
 <div id="work-tour-purpose" class="section level1">
 <h1>Work Tour Purpose</h1>
-<p><strong>Tree Structure</strong>
-<img src="../other/png/work.png" width="100%" style="display: block; margin: auto;" /></p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../other/png/uni.png&quot;</span>)</span></code></pre></div>
-<p><img src="../other/png/uni.png" width="80%" style="display: block; margin: auto;" /></p>
+<p><strong>Tree Structure</strong></p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../other/png/work.png&quot;</span>)</span></code></pre></div>
+<p><img src="../other/png/work.png" width="80%" style="display: block; margin: auto;" /></p>
 <strong>Utility Table</strong>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped table-hover table-condensed" style="font-size: 12px; color: black; border-bottom: 0;">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; border-bottom: 0;">
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;position: sticky; top:0; background-color: #FFFFFF;">
@@ -2526,12 +2526,13 @@ typically indicates an excellent fit.</p></li>
 </div>
 <div id="other-tour-purpose" class="section level1">
 <h1>Other Tour Purpose</h1>
-<p><strong>Tree Structure</strong>
-<img src="../other/png/other.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><strong>Tree Structure</strong></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../other/png/other.png&quot;</span>)</span></code></pre></div>
+<p><img src="../other/png/other.png" width="80%" style="display: block; margin: auto;" /></p>
 <strong>Utility Table</strong>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped table-hover table-condensed" style="font-size: 12px; color: black; border-bottom: 0;">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; border-bottom: 0;">
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;position: sticky; top:0; background-color: #FFFFFF;">
@@ -3824,12 +3825,13 @@ those used in the ‘Work’ model.</p></li>
 </div>
 <div id="university-tour-purpose" class="section level1">
 <h1>University Tour Purpose</h1>
-<p><strong>Tree Structure</strong>
-<img src="../other/png/uni.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><strong>Tree Structure</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../other/png/uni.png&quot;</span>)</span></code></pre></div>
+<p><img src="../other/png/uni.png" width="80%" style="display: block; margin: auto;" /></p>
 <strong>Utility Table</strong>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped table-hover table-condensed" style="font-size: 12px; color: black; border-bottom: 0;">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; border-bottom: 0;">
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;position: sticky; top:0; background-color: #FFFFFF;">
@@ -4601,12 +4603,13 @@ estimation record set size especially for non-frequent modes.</p></li>
 </div>
 <div id="school-purpose-tour" class="section level1">
 <h1>School Purpose Tour</h1>
-<p><strong>Tree Structure</strong>
-<img src="../other/png/school.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><strong>Tree Structure</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../other/png/school.png&quot;</span>)</span></code></pre></div>
+<p><img src="../other/png/school.png" width="80%" style="display: block; margin: auto;" /></p>
 <strong>Utility Table</strong>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped table-hover table-condensed" style="font-size: 12px; color: black; border-bottom: 0;">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; border-bottom: 0;">
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;position: sticky; top:0; background-color: #FFFFFF;">
@@ -5172,12 +5175,13 @@ utility terms.</p></li>
 </div>
 <div id="sub-tour-purpose-tour" class="section level1">
 <h1>Sub-Tour Purpose Tour</h1>
-<p><strong>Tree Structure</strong>
-<img src="../other/png/subtour.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><strong>Tree Structure</strong></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">include_graphics</span>(<span class="st">&quot;../other/png/subtour.png&quot;</span>)</span></code></pre></div>
+<p><img src="../other/png/subtour.png" width="80%" style="display: block; margin: auto;" /></p>
 <strong>Utility Table</strong>
 <div
 style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:500px; overflow-x: scroll; width:100%; ">
-<table class="table table-striped table-hover table-condensed" style="font-size: 12px; color: black; border-bottom: 0;">
+<table class="table table-striped table-hover table-condensed" style="font-size: 12px; border-bottom: 0;">
 <thead>
 <tr>
 <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;position: sticky; top:0; background-color: #FFFFFF;">

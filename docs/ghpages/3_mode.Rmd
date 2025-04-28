@@ -31,7 +31,7 @@ Each mode choice utility has three basic components:
 
 3. **Constant:** Many components of the mode choice decision are not dependent on travel characteristics. For example, some people must have their car at work for travel during the day. Others are disinclined to use transit for any reason. These types of issued are handled through a constant unrelated to the travel variables.
 
-The mode choice model for the MRM was estimated based on the household survey records for 6 tour purposes: Work, Other, Shop, University, Sub-Tour and School tours. These models are estimated as nested logit models. Note that the previous Metrolina model did not have a mode choice model for school tours since it was based on a fixed shares model. In the context of application, the tour mode choice model is applied after the tour destinations and tour time of day are determined.
+The mode choice model for the MRM was estimated based on the household survey records for 6 tour purposes: Work, Other, Shop, University, Sub-Tour and School tours. These models are estimated as nested logit models. Note that the previous Metrolina model did not have a mode choice model for school tours since it was based on a fixed shares model.
 
 In the context of application, the tour mode choice model is applied after the tour destinations and tour time of day are determined. The mode choice model is applied to each of the origin-destination pairs to determine the choice.
 
