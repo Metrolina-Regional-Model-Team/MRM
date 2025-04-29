@@ -117,8 +117,8 @@ table_data
 # Work Tour Purpose
 
 **Tree Structure**
-```{r, echo=FALSE, out.width="80%", fig.show='hold',fig.align='center'}
-knitr::include_graphics("C:\\MRM\\docs\\ghpages\\work.png")
+```{r, echo=FALSE, out.width="90%", out.height="250px", fig.show='hold',fig.align='center'}
+knitr::include_graphics("Images/work.png")
 ```
 
 **Utility Table**
@@ -273,8 +273,8 @@ kable_output
 # Other Tour Purpose
 
 **Tree Structure**
-```{r, echo=FALSE, out.width="80%", fig.show='hold',fig.align='center'}
-knitr::include_graphics("C:\\MRM\\docs\\ghpages\\other.png")
+```{r, echo=FALSE, out.width="90%", out.height="250px", fig.show='hold',fig.align='center'}
+knitr::include_graphics("Images/other.png")
 ```
 
 **Utility Table**
@@ -401,8 +401,8 @@ kable_output
 # University Tour Purpose
 
 **Tree Structure**
-```{r, echo=FALSE, out.width="80%", fig.show='hold',fig.align='center'}
-knitr::include_graphics("C:\\MRM\\docs\\ghpages\\uni.png")
+```{r, echo=FALSE, out.width="90%", out.height="250px", fig.show='hold',fig.align='center'}
+knitr::include_graphics("Images/uni.png")
 ```
 
 **Utility Table**
@@ -517,8 +517,8 @@ kable_output
 
 # School Purpose Tour
 **Tree Structure**
-```{r, echo=FALSE, out.width="80%", fig.show='hold',fig.align='center'}
-knitr::include_graphics("C:\\MRM\\docs\\ghpages\\school.png")
+```{r, echo=FALSE, out.width="90%", out.height="250px", fig.show='hold',fig.align='center'}
+knitr::include_graphics("Images/school.png")
 ```
 
 **Utility Table**
@@ -619,8 +619,8 @@ kable_output
 
 # Sub-Tour Purpose Tour
 **Tree Structure**
-```{r, echo=FALSE, out.width="80%", fig.show='hold',fig.align='center'}
-knitr::include_graphics("C:\\MRM\\docs\\ghpages\\subtour.png")
+```{r, echo=FALSE, out.width="90%", out.height="250px", fig.show='hold',fig.align='center'}
+knitr::include_graphics("Images/subtour.png")
 ```
 
 **Utility Table**
