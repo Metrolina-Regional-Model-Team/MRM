@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Validation</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MRM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Databases
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="1_taz_se.html">TAZs &amp; SE</a>
+    </li>
+    <li>
+      <a href="1_networks.html">Networks</a>
+    </li>
+    <li>
+      <a href="1_routes.html">Transit</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Surveys &amp; Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="2_surveys.html">Surveys</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resident Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="3_hhsynth.html">Household Synthesis</a>
+    </li>
+    <li>
+      <a href="3_purpose.html">Tour Purpose &amp; Frequency</a>
+    </li>
+    <li>
+      <a href="3_dc.html">Destination Choice</a>
+    </li>
+    <li>
+      <a href="3_stops.html">Intermediate Stops</a>
+    </li>
+    <li>
+      <a href="3_mode.html">Mode Choice</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Other Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="4_ext.html">Externals</a>
+    </li>
+    <li>
+      <a href="4_freight.html">Freight</a>
+    </li>
+    <li>
+      <a href="4_TOD.html">TOD</a>
+    </li>
+    <li>
+      <a href="4_assignment.html">Assignment</a>
+    </li>
+    <li>
+      <a href="4_feedback.html">Feedback</a>
+    </li>
+    <li>
+      <a href="4_validation.html">Validation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    MRM Versions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="5_mrm25v1.html">MRM25v1.0</a>
+    </li>
+    <li>
+      <a href="5_mrm25v2.html">MRM25v2.0</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Metrolina-Regional-Model-Team/MRM">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Validation</h1>
+
+</div>
+
+
+<p>In addition to the calibration checks performed for each submodel,
+where model performance is compared back to the survey used to estimate
+it, the final results are also compared to independent data sources not
+used in estimation. This is the validation set. Caliper used traffic
+counts and observed transit ridership to validate that the estimated
+models did a good job predicting conditions in 2022 (the base year).</p>
+<p>The table below shows the model link volumes compared to traffic
+counts by volume group. Percent difference and percent root mean square
+error (%RMSE) all look great. While the percent difference for the
+100000+ category looks low, there are only 2 counts and low volume. This
+means that even small differences look larger in percentage terms.</p>
+<div id="model-comparison" class="section level3">
+<h3>Model Comparison</h3>
+<table class="table table-bordered table-striped" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Volume Group
+</th>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:right;">
+Total Count
+</th>
+<th style="text-align:right;">
+Total Volume
+</th>
+<th style="text-align:right;">
+Percent Difference
+</th>
+<th style="text-align:right;">
+PRMSE
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+1,0000
+</td>
+<td style="text-align:right;">
+2,063
+</td>
+<td style="text-align:right;">
+9,051,500
+</td>
+<td style="text-align:right;">
+9,284,533
+</td>
+<td style="text-align:right;">
+2.57
+</td>
+<td style="text-align:right;">
+56.19
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+25,000
+</td>
+<td style="text-align:right;">
+1,161
+</td>
+<td style="text-align:right;">
+18,626,300
+</td>
+<td style="text-align:right;">
+17,149,797
+</td>
+<td style="text-align:right;">
+-7.93
+</td>
+<td style="text-align:right;">
+29.98
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+50,000
+</td>
+<td style="text-align:right;">
+469
+</td>
+<td style="text-align:right;">
+16,041,100
+</td>
+<td style="text-align:right;">
+15,547,126
+</td>
+<td style="text-align:right;">
+-3.08
+</td>
+<td style="text-align:right;">
+22.54
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+100,000
+</td>
+<td style="text-align:right;">
+146
+</td>
+<td style="text-align:right;">
+9,764,300
+</td>
+<td style="text-align:right;">
+9,637,426
+</td>
+<td style="text-align:right;">
+-1.30
+</td>
+<td style="text-align:right;">
+14.66
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+100,000+
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+205,200
+</td>
+<td style="text-align:right;">
+176,706
+</td>
+<td style="text-align:right;">
+-13.89
+</td>
+<td style="text-align:right;">
+13.89
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+3,841
+</td>
+<td style="text-align:right;">
+53,688,400
+</td>
+<td style="text-align:right;">
+51,795,589
+</td>
+<td style="text-align:right;">
+-3.53
+</td>
+<td style="text-align:right;">
+33.00
+</td>
+</tr>
+</tbody>
+</table>
+<p>In the next table, link volumes are compared to counts by facility
+type. The model is predicting lower volumes on facility type C than
+observed. Given the strong performance by volume group, Caliper did not
+deem this a problem, but future enhancements could look into this
+facility type.</p>
+<table class="table table-bordered table-striped" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Facility Type
+</th>
+<th style="text-align:right;">
+N
+</th>
+<th style="text-align:right;">
+Total Count
+</th>
+<th style="text-align:right;">
+Total Volume
+</th>
+<th style="text-align:right;">
+Percent Difference
+</th>
+<th style="text-align:right;">
+PRMSE
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Divided - left turn bays
+</td>
+<td style="text-align:right;">
+304
+</td>
+<td style="text-align:right;">
+8,081,500
+</td>
+<td style="text-align:right;">
+8,160,430
+</td>
+<td style="text-align:right;">
+0.98
+</td>
+<td style="text-align:right;">
+26.83
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Undivided - continuous left
+</td>
+<td style="text-align:right;">
+304
+</td>
+<td style="text-align:right;">
+5,428,200
+</td>
+<td style="text-align:right;">
+4,477,111
+</td>
+<td style="text-align:right;">
+-17.52
+</td>
+<td style="text-align:right;">
+34.93
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Divided - no median breaks
+</td>
+<td style="text-align:right;">
+48
+</td>
+<td style="text-align:right;">
+1,215,100
+</td>
+<td style="text-align:right;">
+1,144,579
+</td>
+<td style="text-align:right;">
+-5.80
+</td>
+<td style="text-align:right;">
+28.38
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Expressway
+</td>
+<td style="text-align:right;">
+19
+</td>
+<td style="text-align:right;">
+486,800
+</td>
+<td style="text-align:right;">
+426,668
+</td>
+<td style="text-align:right;">
+-12.35
+</td>
+<td style="text-align:right;">
+20.15
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Freeway
+</td>
+<td style="text-align:right;">
+306
+</td>
+<td style="text-align:right;">
+14,786,100
+</td>
+<td style="text-align:right;">
+14,728,504
+</td>
+<td style="text-align:right;">
+-0.39
+</td>
+<td style="text-align:right;">
+15.81
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Divided - median breaks only
+</td>
+<td style="text-align:right;">
+49
+</td>
+<td style="text-align:right;">
+997,800
+</td>
+<td style="text-align:right;">
+996,695
+</td>
+<td style="text-align:right;">
+-0.11
+</td>
+<td style="text-align:right;">
+25.55
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Ramp
+</td>
+<td style="text-align:right;">
+2
+</td>
+<td style="text-align:right;">
+36,800
+</td>
+<td style="text-align:right;">
+32,254
+</td>
+<td style="text-align:right;">
+-12.35
+</td>
+<td style="text-align:right;">
+12.38
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Undivided - left turn bays
+</td>
+<td style="text-align:right;">
+271
+</td>
+<td style="text-align:right;">
+5,251,800
+</td>
+<td style="text-align:right;">
+5,289,483
+</td>
+<td style="text-align:right;">
+0.72
+</td>
+<td style="text-align:right;">
+28.63
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Undivided - no left provision
+</td>
+<td style="text-align:right;">
+2,538
+</td>
+<td style="text-align:right;">
+17,404,300
+</td>
+<td style="text-align:right;">
+16,539,864
+</td>
+<td style="text-align:right;">
+-4.97
+</td>
+<td style="text-align:right;">
+44.74
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+All
+</td>
+<td style="text-align:right;">
+3,841
+</td>
+<td style="text-align:right;">
+53,688,400
+</td>
+<td style="text-align:right;">
+51,795,589
+</td>
+<td style="text-align:right;">
+-3.53
+</td>
+<td style="text-align:right;">
+33.00
+</td>
+</tr>
+</tbody>
+</table>
+<p>In addition to these summary-level validation checks, Caliper also
+checked for link level differences using the maps shown below.</p>
+<ul>
+<li>Blue links: the model is lower than counts</li>
+<li>Red links: the model is higher than counts</li>
+<li>Green links: the model is close to counts</li>
+</ul>
+<p><img src="Images/RegNetAM.png" width="65%" style="display: block; margin: auto;" /></p>
+<p>The table below shows observed unlinked transit boardings compared to
+the model. The model is matching the observed data well.</p>
+<table class="table table-bordered table-striped" style="font-size: 14px; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+Mode
+</th>
+<th style="text-align:right;">
+Observed
+</th>
+<th style="text-align:right;">
+Model
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Bus
+</td>
+<td style="text-align:right;">
+28,000
+</td>
+<td style="text-align:right;">
+30,000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Rail
+</td>
+<td style="text-align:right;">
+16,000
+</td>
+<td style="text-align:right;">
+16,000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
