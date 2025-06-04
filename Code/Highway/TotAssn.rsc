@@ -55,6 +55,8 @@ macro "TotAssn" (Args, AssnSubDir, assntype)
 	setview(netview)
 
 	cntflag		= CreateExpression(netview, "CNTFLAG", "if CALIB > 0 then 1 else 0",)
+	MTKflag		= CreateExpression(netview, "MTKFLAG", "if MTK > 0 then 1 else 0",)
+	HTKflag		= CreateExpression(netview, "HTKFLAG", "if HTK > 0 then 1 else 0",)
 	fun2		= CreateExpression(netview, "Fun2", "if FUNCL = 1 or FUNCL = 2 or FUNCL = 9 then 1 else if funcl < 6 then 3 else if funcl < 10 then 4 else if (funcl > 20 and funcl < 30 or funcl = 82 or funcl = 83) then 2 else 0",)  
 	cntyaf	= CreateExpression(netview, "CntyAF", "COUNTY * 10000 + AREATP * 100 + Fun2",)
 	vmtlen	= CreateExpression(netview, "VMTLen", "if FUNCL = 90 then nz(LENGTH) * 2 else nz(LENGTH)",)
