@@ -1,6 +1,6 @@
 Network
 1083,codepage=65001
-"ID",I,1,4,0,4,0,,"","",,"Sum",
+"ID",I,1,4,0,10,0,,"","",,"Sum",
 "Anode",I,5,4,0,6,0,,"","A node number",,"Blank",
 "Bnode",I,9,4,0,6,0,,"","B node number",,"Copy",
 "Strname",C,13,75,0,75,0,,"","Street name",,"Copy",
