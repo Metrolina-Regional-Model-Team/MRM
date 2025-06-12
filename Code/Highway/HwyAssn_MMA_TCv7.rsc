@@ -34,14 +34,16 @@ Macro "HwyAssn_MMA" (Args, od_matrix, cap_field, output_bin, timeperiod)
 	{, , netview, } = SplitPath(hwy_file)
 
 	user_threads = GetNumThreads()
-	initial_threads = user_threads
 	
 	if user_threads <> 16
 		then SetNumThreads(16)
 		else do SetNumThreads(user_threads)
 		end
-	// SetNumThreads(16) // 5/12/25	 	
+	
+	run_threads = GetNumThreads()
 
+	AppendToLogFile(2, "Set Threads = " + i2s(run_threads))
+	
 
 	/*if timeperiod = "AMpeak" then do	
 		hwy_file = Args.[AM Peak Hwy Name]

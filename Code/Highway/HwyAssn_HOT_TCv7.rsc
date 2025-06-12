@@ -38,14 +38,6 @@ macro "HwyAssn_HOT" (Args, hwyassnarguments, timeperiod)
 	hwy_file = Args.[Hwy Name]
 	{, , netview, } = SplitPath(hwy_file)
 
-	user_threads = GetNumThreads()
-	initial_threads = user_threads
-	
-	if user_threads <> 16
-		then SetNumThreads(16)
-		else do SetNumThreads(user_threads)
-		end
-
 	// can change to "BPR" to run straight BPR function
 	hwyassntype = "BPR"
 	/*
@@ -1154,7 +1146,7 @@ new_mat = CopyMatrix(mc, {{"File Name", od_hot_matrix},
 	RunMacro("G30 File Close All")
 	datentime = GetDateandTime()
 	AppendToLogFile(1, "Exit HwyAssn_HOT: " + datentime)
-	SetNumThreads(initial_threads)
+	//SetNumThreads(initial_threads)
 
 	return(HOTHwyAssnOK)
 
