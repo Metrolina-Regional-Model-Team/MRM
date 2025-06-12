@@ -40,10 +40,10 @@ Scenario "2045"
 EndScenario
     
     
-Scenario "2055"
+Scenario "2050"
     
-    [Run Year] = "2055"
-    Scenario = "Official_2055"
-    [Output Folder] = "%Model Folder%\\Output\\2055"
+    [Run Year] = "2050"
+    Scenario = "Official_2050"
+    [Output Folder] = "%Model Folder%\\Output\\2050"
 EndScenario
     
