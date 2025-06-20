@@ -280,8 +280,8 @@ WriteArray(reportfile, pctwkr)
 
 //Alternative percentages: 0 tours = 51.9%, 1 tour = 29.2%, 2 tours = 15.0%, 3 tours = 3.1%, 4 tours = 0.7%, 5 tours = 0.1%
 
-	U1 = -1.29 + .387*wrkr + 0.652*school_v - 0.385*lc2dum - 1.1*cbddum + 1.0*urbdum - 0.209*at5dum + 0.158*siz1dum - .17 - .06 + .65
-	U2 = -2.57 + .819*wrkr + 0.652*school_v - 0.385*lc2dum - 0.385*inc1dum - 0.768*wkr1dum - 0.398*at5dum + 0.565*siz1dum + .45 + .09 + .65
+	U1 = -1.29 + .387*wrkr + 0.652*school_v - 0.385*lc2dum - 1.1*cbddum + 1.0*urbdum + 0.209*at5dum + 0.158*siz1dum - .17 - .06 + .65
+	U2 = -2.57 + .819*wrkr + 0.652*school_v - 0.385*lc2dum - 1.008*inc1dum - 0.768*wkr1dum + 0.398*at5dum + 0.565*siz1dum + .45 + .09 + .65
 
 	E2U0 = Vector(hhid.length, "float", {{"Constant", 1}})
 	E2U1 = if (wrkr = 0) then 0 else exp(U1)			//if wrkr = 0, then can be no work tours
