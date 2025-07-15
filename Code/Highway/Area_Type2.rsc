@@ -28,7 +28,8 @@ Macro "Area_Type" (Args)
 	// TAZ Neighbors file - percentage of neighboring TAZ within 1.5 mile buffer
 	//  of TAZ centroid - SUM of pop and emp in this buffer used to assign area type (1-5) 
 	TAZFilesplit = SplitPath(TAZFile)
-	ZonePctFile = TAZFilesplit[1] + TAZFilesplit[2] + "TAZNeighbors_pct.asc"
+	//ZonePctFile = TAZFilesplit[1] + TAZFilesplit[2] + "TAZNeighbors_pct.asc"
+	ZonePctFile = TAZFilesplit[1] + TAZFilesplit[2] + "TAZNeighbors_pct.bin"
 	info = GetFileInfo(ZonePctFile)
 	if info = null 
 		then do
@@ -41,19 +42,37 @@ Macro "Area_Type" (Args)
 	msg = null
 	AreaTypeOK = 1
 
-	SEDataView = Opentable("SEDataView","FFB",{SEDataFile,})
-	ZonePctView = OpenTable("ZonePctView", "FFA", {ZonePctFile,})
+	//SEDataView = Opentable("SEDataView","FFB",{SEDataFile,})
+	//ZonePctView = OpenTable("ZonePctView", "FFA", {ZonePctFile,})
 	
+	tbl_se = CreateObject("Table", SEDataFile)
+	tbl_se.TOTEMP = tbl_se.LOIND + tbl_se.hIIND + tbl_se.RTL + tbl_se.HWY + tbl_se.LOSVC + tbl_se.HISVC + tbl_se.OFFGOV + tbl_se.EDUC
+	
+	tbl_zone = CreateObject("Table", ZonePctFile)
+
 
 	// check SE against TAZNeighbors to make sure they match (both are internal taz only
 	// first join TAZNeighbors to SE to see if Neighbors has missing TAZ
-	join1 = JoinViews("join1", SEDataView + ".TAZ", ZonePctView + ".TAZ",
-	    {{"A"}, {"Fields", {"PERCENT_1", {{"Sum"}}}}})
+	//join1 = JoinViews("join1", SEDataView + ".TAZ", ZonePctView + ".TAZ",
+	 //   {{"A"}, {"Fields", {"PERCENT_1", {{"Sum"}}}}})
 
-	SetView(join1)
-	selnopct = "Select * where TAZNeighbor = null"
-	Selectbyquery("check_pct", "Several", selnopct,)
-	selnopctcount = getsetcount("check_pct")
+	join = tbl_se.Join({
+		Table: tbl_zone, 
+		LeftFields: "TAZ", 
+		RightFields: "TAZ",
+		Options: {{"A"}, {"Fields", {"PERCENT_1", {{"Sum"}}
+		}}}})
+
+	//SetView(join1)
+	//selnopct = "Select * where TAZNeighbor = null"
+	//Selectbyquery("check_pct", "Several", selnopct,)
+	//selnopctcount = getsetcount("check_pct")
+
+	selnopctcount= join1.SelectByQuery({
+     	SetName: "selnopct",
+    	Filter: "Select * where TAZNeighbor = null",
+     	Opeartion: "several"
+		})
 	
 	if selnopctcount > 0
 		then do
@@ -62,15 +81,27 @@ Macro "Area_Type" (Args)
 			// Throw("not present in TAZNeighbors_pct file")
 			// goto badend
 		end
-	CloseView(join1)
+	
+	join= null
+	//CloseView(join1)
 
 	// next join SE to TAZNeighbors to SE to see if SE has missing TAZ
-	join2 = JoinViews("join2", ZonePctView + ".TAZ", SEDataView + ".TAZ",)
+	//join2 = JoinViews("join2", ZonePctView + ".TAZ", SEDataView + ".TAZ",)
+	join = tbl_zone.Join({
+		Table: tbl_se, 
+		LeftFields: "TAZ", 
+		RightFields: "TAZ"})
 
-	SetView(join2)
-	selnose = "Select * where SEDataView.TAZ = null"
-	SelectbyQuery("check_SE", "Several", selnose,)
-	selnosecount = getsetcount("check_SE")
+	//SetView(join2)
+	//selnose = "Select * where SEDataView.TAZ = null"
+	//SelectbyQuery("check_SE", "Several", selnose,)
+	//selnosecount = getsetcount("check_SE")
+	selnosecount= join.SelectByQuery({
+     	SetName: "selnose",
+    	Filter: "Select * where Table_1.TAZ = null",
+     	Opeartion: "several"
+		})
+	
 	
 	if selnosecount > 0
 		then do
@@ -79,13 +110,14 @@ Macro "Area_Type" (Args)
 			// Throw("has TAZ not present in SE file")
 			// goto badend
 		end
-	CloseView(join2)
+	join= null
+	//CloseView(join2)
 
 	// Replace CalcZone Fortran beginning here
 
-	SetView(SEDataView)
+	//SetView(SEDataView)
 	
-	on NotFound do
+	/*on NotFound do
 		// Add TOTEMP to end of Land Use File
 		strct = GetTableStructure(SEDataView)
 		for i = 1 to strct.length do
@@ -99,8 +131,9 @@ Macro "Area_Type" (Args)
 
 	skipcreate:
 	on notfound default
+	*/
 
-	vLOIND  = GetDataVector(SEDataView + "|", "LOIND",)
+	/*vLOIND  = GetDataVector(SEDataView + "|", "LOIND",)
 	vHIIND  = GetDataVector(SEDataView + "|", "HIIND",)
 	vRTL    = GetDataVector(SEDataView + "|", "RTL",)
 	vHWY    = GetDataVector(SEDataView + "|", "HWY",)
@@ -110,43 +143,95 @@ Macro "Area_Type" (Args)
 	vEDUC   = GetDataVector(SEDataView + "|", "EDUC",)
 	vTOTEMP = vLOIND + vHIIND + vRTL + vHWY + vLOSVC + vHISVC + vOFFGOV + vEDUC
 	SetDataVector(SEDataView + "|", "TOTEMP", vTOTEMP, )
-	
+	*/
 
 	//Add TAZ info to TAZNeighbors_pct by Neighbor TAZ (can have many copies of same taz data data based on # taz it it within buffer
-	ZonePctDataView = JoinViews("ZonePctDataView", ZonePctView + ".TAZNeighbor", SEDataView + ".TAZ",)
+	//ZonePctDataView = JoinViews("ZonePctDataView", ZonePctView + ".TAZNeighbor", SEDataView + ".TAZ",)
+
+	a_fields = {
+        {FieldName: "HHPOP", Type: "Real"},
+        {FieldName: "EMPTOT", Type: "Real"},
+        {FieldName: "zArea", Type: "Real"},
+		{FieldName: "EMPDEN", Type: "Real"},
+		{FieldName: "POPDEN", Type: "Real"}
+    }
+    
+tbl_zone.AddFields({Fields: a_fields})
+
+a_fields = {
+        {FieldName: "HHPOP", Type: "Real"},
+        {FieldName: "EMPTOT", Type: "Real"},
+        {FieldName: "zArea", Type: "Real"},
+		{FieldName: "EMPDEN", Type: "Real"},
+		{FieldName: "POPDEN", Type: "Real"},
+		{FieldName: "AREATYPE", Type: "Integer"}
+    }
+    
+tbl_zone.AddFields({Fields: a_fields})
+
+zone_specs = tbl_zone.GetFieldSpecs({NamedArray: "true"})
+se_specs = tbl_se.GetFieldSpecs({NamedArray: "true"})
+
+join = tbl_zone.Join({
+Table: tbl_se, 
+LeftFields: "TAZNeighbor", 
+RightFields: "TAZ"
+})
+
+join.(zone_specs.HHPOP) = ROUND(join.(zone_specs.PercentIN) * join.(se_specs.POP_HHS),6)
+join.(zone_specs.EMPTOT) = ROUND(join.(zone_specs.PercentIN) * join.(se_specs.TOTEMP),6)
+join.(zone_specs.zArea) = ROUND(join.(zone_specs.PercentIN) * join.(se_specs.AREA_LU),6)
+join.(zone_specs.EMPDEN) = if join.(zone_specs.zAREA) >0 then join.(zone_specs.EMPTOT)/join.(zone_specs.zAREA) else 0
+join.(zone_specs.POPDEN) = if join.(zone_specs.zAREA) >0 then join.(zone_specs.HHPOP)/join.(zone_specs.zAREA) else 0
 
 	// ExportView(ZonePctDataView + "|", "FFB", METDir + "\\TAZ\\Wurk.bin", {"ZONE_ID", "ZONEIN_ID", "PercentIN", "TAZ", "SEQ", "POP_HHS", "TOTEMP", "AREA_LU"},)
 
 	// Calc zdat - category * percentin 
-	hhpop = CreateExpression(ZonePctDataView, "HHPOP", "ROUND(PercentIN * POP_HHS,6)",)
-	emptot = CreateExpression(ZonePctDataView, "EMPTOT", "ROUND(PercentIN * TOTEMP,6)",)
-	zarea = CreateExpression(ZonePctDataView, "zAREA", "ROUND(PercentIN * AREA_LU,6)",)
-	ExportView(ZonePctDataView + "|", "FFB", Dir + "\\LandUse\\TAZtemp.bin", 
-	 	{ZonePctView+ ".TAZ", "TAZNeighbor", "PercentIN", "HHPOP", "EMPTOT", "zAREA"},)
-//	CloseView(SEDataView)
-	CloseView(ZonePctView)
-	CloseView(ZonePctDataView)
+	//hhpop = CreateExpression(ZonePctDataView, "HHPOP", "ROUND(PercentIN * POP_HHS,6)",)
+	//emptot = CreateExpression(ZonePctDataView, "EMPTOT", "ROUND(PercentIN * TOTEMP,6)",)
+	//zarea = CreateExpression(ZonePctDataView, "zAREA", "ROUND(PercentIN * AREA_LU,6)",)
 
-	ZpctView = OpenTable("ZpctView", "FFB", {Dir + "\\LandUse\\TAZtemp.bin",})	
-	ZdatView = JoinViews("ZdatView", SEDataView + ".TAZ", ZpctView + ".TAZ",
+
+	//ExportView(ZonePctDataView + "|", "FFB", Dir + "\\LandUse\\TAZtemp.bin", 
+	// 	{ZonePctView+ ".TAZ", "TAZNeighbor", "PercentIN", "HHPOP", "EMPTOT", "zAREA"},)
+
+
+//	CloseView(SEDataView)
+//	CloseView(ZonePctView)
+//	CloseView(ZonePctDataView)
+
+
+	//ZpctView = OpenTable("ZpctView", "FFB", {Dir + "\\LandUse\\TAZtemp.bin",})	
+	/*ZdatView = JoinViews("ZdatView", SEDataView + ".TAZ", ZpctView + ".TAZ",
 	    {{"A"}, {"Fields", 
 		  {"HHPOP", {{"Sum"}}},{"EMPTOT", {{"Sum"}}},{"zAREA", {{"Sum"}}} 
 		}})
-	empden = CreateExpression(ZdatView, "EMPDEN", "if zAREA > 0 then EMPTOT / zAREA else 0",)
-	popden = CreateExpression(ZdatView, "POPDEN", "if zAREA > 0 then HHPOP / zAREA else 0",)
+	*/
+
+	//empden = CreateExpression(ZdatView, "EMPDEN", "if zAREA > 0 then EMPTOT / zAREA else 0",)
+	//popden = CreateExpression(ZdatView, "POPDEN", "if zAREA > 0 then HHPOP / zAREA else 0",)
 	
-	ExportView(ZdatView + "|", "DBASE", Dir + "\\LandUse\\SE"+theyear+"_DENSITY.dbf", 
+	// we may not even need to export this.... see if year_density used other places
+	join = null
+	DensityFile = Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"
+	tbl_zone.Export({
+		FileName: DensityFile,
+		FieldNames: {"TAZ", "zAREA", "EMPTOT", "HHPOP", "EMPDEN", "POPDEN", "AREATYPE"}	
+		})
+
+	/*ExportView(ZdatView + "|", "DBASE", Dir + "\\LandUse\\SE"+theyear+"_DENSITY.dbf", 
 			{SEDataView + ".TAZ", "zAREA", "EMPTOT", "HHPOP", "EMPDEN", "POPDEN"},
 			{{"Additional Fields",{{"AREATYPE", "INTEGER", 1, 0, "False"}}}})
 	
 	CloseView(SEDataView)
 	CloseView(ZpctView)
 	CloseView(ZdatView)
+	*/
 	// End of calczone replacement
 
 	//Reopen new density file with ATYPE added 
-	DensityView = Opentable("DensityView","DBASE",{Dir + "\\LandUse\\SE"+theyear+"_DENSITY.dbf",})
-	SetView("DensityView")
+	//DensityView = Opentable("DensityView","DBASE",{Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin",})
+	//SetView("DensityView")
   
 	vw1 = "DensityView"
 	//Calculate Zonal Employment and Household Population Density
