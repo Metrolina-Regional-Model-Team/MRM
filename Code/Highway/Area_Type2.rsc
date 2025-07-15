@@ -69,7 +69,7 @@ Macro "Area_Type" (Args)
 			// goto badend
 		end
 	CloseView(join1)*/
-
+	//SEData_tbl.RenameField({FieldName: "TAZSEData", NewName: "TAZ"})
 	join1 = SEData_tbl.Join({
   		Table: TAZ_tbl, 
   		LeftFields: "TAZ", 
@@ -142,7 +142,8 @@ Macro "Area_Type" (Args)
 	vEDUC   = GetDataVector(SEDataView + "|", "EDUC",)
 	vTOTEMP = vLOIND + vHIIND + vRTL + vHWY + vLOSVC + vHISVC + vOFFGOV + vEDUC
 	SetDataVector(SEDataView + "|", "TOTEMP", vTOTEMP, )*/
-	
+	//join1 = null
+	//join2 = null
 	field_names = SEData_tbl.GetFieldNames()
         
 	for field_name in field_names do
@@ -156,14 +157,17 @@ Macro "Area_Type" (Args)
 	//Add TAZ info to TAZNeighbors_pct by Neighbor TAZ (can have many copies of same taz data data based on # taz it it within buffer
 	/*ZonePctDataView = JoinViews("ZonePctDataView", ZonePctView + ".TAZNeighbor", SEDataView + ".TAZ",)*/
 	//Both TAZ and SEData file have same field named as TAZ. So we renamed one. We could not do it in original SEData, hence created a copy of it and renamed it
-	temp_SEData_tbl = SEData_tbl.Export()
-	temp_SEData_tbl.RenameField({FieldName: "TAZ", NewName: "TAZSEData"})
-	temp_ZonePctData_tbl = TAZ_tbl.Join({
-  		Table: temp_SEData_tbl, 
+	//temp_SEData_tbl = SEData_tbl.Export()
+	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: "true"})
+	se_specs = SEData_tbl.GetFieldSpecs({NamedArray: "true"})
+	//SEData_tbl.RenameField({FieldName: "TAZ", NewName: "TAZSEData"})
+	ZonePctData_tbl = TAZ_tbl.Join({
+  		Table: SEData_tbl, 
   		LeftFields: "TAZNeighbor", 
-  		RightFields: "TAZSEData"
+  		RightFields: "TAZ"
  	})
-	ZonePctData_tbl = temp_ZonePctData_tbl.Export()
+	//ZonePctData_specs = ZonePctData_tbl.GetFieldSpecs({NamedArray: "true"})
+	//ZonePctData_tbl = temp_ZonePctData_tbl.Export()
 	a_fields = {
      	{FieldName: "HHPOP", Type: "integer"},
      	{FieldName: "EMPTOT", Type: "integer"},
@@ -184,9 +188,12 @@ Macro "Area_Type" (Args)
 	CloseView(ZonePctDataView)*/
 
 	ZonePctData_tbl.AddFields({Fields: a_fields})
+
 	ZonePctData_tbl.HHPOP  = ROUND(ZonePctData_tbl.PercentIN * ZonePctData_tbl.POP_HHS,6)
 	ZonePctData_tbl.EMPTOT = ROUND(ZonePctData_tbl.PercentIN * ZonePctData_tbl.TOTEMP,6)
 	ZonePctData_tbl.zAREA  = ROUND(ZonePctData_tbl.PercentIN * ZonePctData_tbl.AREA_LU,6)
+	
+	//WORK IN PROGRESS.how to export TAZtemp with TAZ field? TAZ presents in two tables
 	ZonePctData_tbl.Export({FileName: Dir + "\\LandUse\\TAZtemp.bin", FieldNames: {
 		"TAZ",
 		"TAZNeighbor",
