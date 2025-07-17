@@ -70,19 +70,20 @@ Macro "Area_Type" (Args)
 		end
 	CloseView(join1)*/
 	//SEData_tbl.RenameField({FieldName: "TAZSEData", NewName: "TAZ"})
-	join1 = SEData_tbl.Join({
+	join = SEData_tbl.Join({
   		Table: TAZ_tbl, 
   		LeftFields: "TAZ", 
-  		RightFields: "TAZ",Options: {{"A"}, {"Fields",{"Percent_1", {{"Sum"}}}}}
+  		RightFields: "TAZ",Options: {{"A"}, {"Fields",{"PercentIN", {{"Sum"}}}}}
  	})
 
-//join1.View()
-
-	n1 = join1.SelectByQuery({
+	n1 = join.SelectByQuery({
   		SetName: "count_set",
   		Query: "Select * where TAZNeighbor = null"
  	})
+
 	if n1 <> 0 then Throw("AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file")
+
+	join = null
 	
 	// next join SE to TAZNeighbors to SE to see if SE has missing TAZ
 	/*join2 = JoinViews("join2", ZonePctView + ".TAZ", SEDataView + ".TAZ",)
@@ -100,19 +101,20 @@ Macro "Area_Type" (Args)
 			// goto badend
 		end
 	CloseView(join2)*/
-	join2 = TAZ_tbl.Join({
+	join = TAZ_tbl.Join({
   		Table: SEData_tbl, 
   		LeftFields: "TAZ", 
   		RightFields: "TAZ"
  	})
 
-//join2.View()
-
-	n2 = join2.SelectByQuery({
+	n2 = join.SelectByQuery({
   		SetName: "count_set",
   		Query: "Select * where TAZNeighbor = null"
  	})
+
 	if n2 <> 0 then Throw("AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file")
+
+	join = null
 	// Replace CalcZone Fortran beginning here
 
 	/*SetView(SEDataView)
@@ -146,34 +148,23 @@ Macro "Area_Type" (Args)
 	//join2 = null
 	field_names = SEData_tbl.GetFieldNames()
         
-	for field_name in field_names do
+	/*for field_name in field_names do
    		if field_name <> "TOTEMP" then do
      		SEData_tbl.AddField({FieldName: "TOTEMP", Type: "integer", Width: 10, Decimals: 0})
      		SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC 
    		end
-	end
+	end*/
 
+	for field_name in field_names do
+   		if field_name <> "TOTEMP" then do
+     		SEData_tbl.AddField({FieldName: "TOTEMP", Type: "integer", Width: 10, Decimals: 0})
+			SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC 
+		end
+		else SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC
+	end
 
 	//Add TAZ info to TAZNeighbors_pct by Neighbor TAZ (can have many copies of same taz data data based on # taz it it within buffer
 	/*ZonePctDataView = JoinViews("ZonePctDataView", ZonePctView + ".TAZNeighbor", SEDataView + ".TAZ",)*/
-	//Both TAZ and SEData file have same field named as TAZ. So we renamed one. We could not do it in original SEData, hence created a copy of it and renamed it
-	//temp_SEData_tbl = SEData_tbl.Export()
-	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: "true"})
-	se_specs = SEData_tbl.GetFieldSpecs({NamedArray: "true"})
-	//SEData_tbl.RenameField({FieldName: "TAZ", NewName: "TAZSEData"})
-	ZonePctData_tbl = TAZ_tbl.Join({
-  		Table: SEData_tbl, 
-  		LeftFields: "TAZNeighbor", 
-  		RightFields: "TAZ"
- 	})
-	//ZonePctData_specs = ZonePctData_tbl.GetFieldSpecs({NamedArray: "true"})
-	//ZonePctData_tbl = temp_ZonePctData_tbl.Export()
-	a_fields = {
-     	{FieldName: "HHPOP", Type: "integer"},
-     	{FieldName: "EMPTOT", Type: "integer"},
-     	{FieldName: "zAREA", Type: "real"}
-  	}
-
 	// ExportView(ZonePctDataView + "|", "FFB", METDir + "\\TAZ\\Wurk.bin", {"ZONE_ID", "ZONEIN_ID", "PercentIN", "TAZ", "SEQ", "POP_HHS", "TOTEMP", "AREA_LU"},)
 
 	// Calc zdat - category * percentin 
@@ -187,21 +178,6 @@ Macro "Area_Type" (Args)
 	CloseView(ZonePctView)
 	CloseView(ZonePctDataView)*/
 
-	ZonePctData_tbl.AddFields({Fields: a_fields})
-
-	ZonePctData_tbl.HHPOP  = ROUND(ZonePctData_tbl.PercentIN * ZonePctData_tbl.POP_HHS,6)
-	ZonePctData_tbl.EMPTOT = ROUND(ZonePctData_tbl.PercentIN * ZonePctData_tbl.TOTEMP,6)
-	ZonePctData_tbl.zAREA  = ROUND(ZonePctData_tbl.PercentIN * ZonePctData_tbl.AREA_LU,6)
-	
-	//WORK IN PROGRESS.how to export TAZtemp with TAZ field? TAZ presents in two tables
-	ZonePctData_tbl.Export({FileName: Dir + "\\LandUse\\TAZtemp.bin", FieldNames: {
-		"TAZ",
-		"TAZNeighbor",
-		"PercentIN",
-		"HHPOP",
-		"EMPTOT",
-		"zAREA"
-	}})
 	/*ZpctView = OpenTable("ZpctView", "FFB", {Dir + "\\LandUse\\TAZtemp.bin",})	
 	ZdatView = JoinViews("ZdatView", SEDataView + ".TAZ", ZpctView + ".TAZ",
 	    {{"A"}, {"Fields", 
@@ -219,25 +195,51 @@ Macro "Area_Type" (Args)
 	CloseView(ZdatView)*/
 	// End of calczone replacement
 
-	Zpct_file = Dir + "\\LandUse\\TAZtemp.bin"
+	a_fields = {
+        {FieldName: "HHPOP", Type: "Real"},
+        {FieldName: "EMPTOT", Type: "Real"},
+        {FieldName: "zAREA", Type: "Real"}
+    }
+    
+	TAZ_tbl.AddFields({Fields: a_fields})
 
-	Zpct_tbl = CreateObject("Table", Zpct_file)
-	temp_Zpct_tbl = Zpct_tbl.Export()	
-	temp_Zdat_tbl = temp_SEData_tbl.Join({
-  		Table: temp_Zpct_tbl, 
-  		LeftFields: "TAZSEData", 
-  		RightFields: "TAZ",Options: {{"A"}, {"Fields", 
-  			{"HHPOP", {{"Sum"}}},{"EMPTOT", {{"Sum"}}},{"zAREA", {{"Sum"}}} 
-		}}})
+	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: "true"})
+	se_specs = SEData_tbl.GetFieldSpecs({NamedArray: "true"})
 
-	//since we cannot modify a joined table object. we created a copy of the original joined file to modify it next
-	Zdat_tbl = temp_Zdat_tbl.Export()
+	join = TAZ_tbl.Join({
+		Table: SEData_tbl, 
+		LeftFields: "TAZNeighbor",
+		RightFields: "TAZ"
+	})
 
+	join.(zone_specs.HHPOP) = ROUND(join.(zone_specs.PercentIN) * join.(se_specs.POP_HHS),6)
+	join.(zone_specs.EMPTOT) = ROUND(join.(zone_specs.PercentIN) * join.(se_specs.TOTEMP),6)
+	join.(zone_specs.zAREA) = ROUND(join.(zone_specs.PercentIN) * join.(se_specs.AREA_LU),6)
+	  
+	TAZ_agg_tbl = TAZ_tbl.Aggregate({
+    	GroupBy: {"TAZ"},
+    	FieldStats: {
+      		HHPOP: "sum",
+      		EMPTOT: "sum",
+      		zAREA: "sum"
+    	}
+  	})
+	TAZ_agg_tbl.RenameField({FieldName: "sum_HHPOP", NewName: "HHPOP"})
+	TAZ_agg_tbl.RenameField({FieldName: "sum_EMPTOT", NewName: "EMPTOT"})
+	TAZ_agg_tbl.RenameField({FieldName: "sum_zAREA", NewName: "zAREA"})
+	
+	a_fields = {
+        {FieldName: "EMPDEN", Type: "Real"},
+        {FieldName: "POPDEN", Type: "Real"},
+        {FieldName: "AREATYPE", Type: "Integer"}
+    }
 
-	Zdat_tbl.AddFields({Fields: {{FieldName: "EMPDEN", Type: "real"},
-    	{FieldName: "POPDEN", Type: "real"}}})
-	if Zdat_tbl.zAREA > 0 then Zdat_tbl.EMPDEN = Zdat_tbl.EMPTOT / Zdat_tbl.zAREA else Zdat_tbl.EMPDEN = 0
-	if Zdat_tbl.zAREA > 0 then Zdat_tbl.POPDEN = Zdat_tbl.HHPOP / Zdat_tbl.zAREA else Zdat_tbl.POPDEN = 0
+	TAZ_agg_tbl.AddFields({Fields: a_fields})
+
+	TAZ_agg_tbl.EMPDEN = if TAZ_agg_tbl.zAREA >0 then TAZ_agg_tbl.EMPTOT/TAZ_agg_tbl.zAREA else 0
+	TAZ_agg_tbl.POPDEN = if TAZ_agg_tbl.zAREA >0 then TAZ_agg_tbl.HHPOP/TAZ_agg_tbl.zAREA else 0
+
+	TAZ_agg_tbl.Export({FileName: Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"})
 	
 
 
