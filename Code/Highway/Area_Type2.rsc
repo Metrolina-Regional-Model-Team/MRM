@@ -147,13 +147,6 @@ Macro "Area_Type" (Args)
 	//join1 = null
 	//join2 = null
 	field_names = SEData_tbl.GetFieldNames()
-        
-	/*for field_name in field_names do
-   		if field_name <> "TOTEMP" then do
-     		SEData_tbl.AddField({FieldName: "TOTEMP", Type: "integer", Width: 10, Decimals: 0})
-     		SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC 
-   		end
-	end*/
 
 	for field_name in field_names do
    		if field_name <> "TOTEMP" then do
@@ -242,8 +235,7 @@ Macro "Area_Type" (Args)
 	TAZ_agg_tbl.Export({FileName: Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"})
 	
 
-
-	//Reopen new density file with ATYPE added 
+	/*//Reopen new density file with ATYPE added 
 	DensityView = Opentable("DensityView","DBASE",{Dir + "\\LandUse\\SE"+theyear+"_DENSITY.dbf",})
 	SetView("DensityView")
   
@@ -276,14 +268,35 @@ Macro "Area_Type" (Args)
 	ModifyTable(DensityView, strct)
 
 	atype = CreateExpression("DensityView", "ATYPE", "AREATYPE",
-	 		{{"Type","Integer"},{"Width",1}})
+	 		{{"Type","Integer"},{"Width",1}})*/
 
+	//In order to set the width of a field of this table below, this table must be set to null first.
+	TAZ_agg_tbl = null
 
-	// So far we only have internal TAZ - good for TAZ_AREATYPE used by TripGen
+	density_file = Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"
+
+	tbl_density = CreateObject("Table", density_file)
+
+	tbl_density.ChangeField({FieldName: "TAZ", Width: 10})	
+
+	tbl_density.AREATYPE = 	if (tbl_density.EMPDEN > 10500) then 1 
+               				else if (tbl_density.EMPDEN > 2600 and tbl_density.AREATYPE = null) then 2 
+               				else if (tbl_density.POPDEN >= 375 and (tbl_density.POPDEN + (tbl_density.EMPDEN / 1.6) > 2100) and tbl_density.AREATYPE = null)then 3 
+            				else if (tbl_density.POPDEN >= 375 and(tbl_density.POPDEN + (tbl_density.EMPDEN / 1.6) <= 2100) and tbl_density.AREATYPE = null) then 4 
+               				else 5
+
+	/*// So far we only have internal TAZ - good for TAZ_AREATYPE used by TripGen
 	Exportview(DensityView + "|", "FFA", Dir + "\\LandUse\\TAZ_AREATYPE.asc", {"TAZ","ATYPE"},)
 	DestroyExpression("DensityView.ATYPE")	
-	// For Transit, (root.TAZ_ATYPE.asc - need external stations (ATYPE = 5) 
+	// For Transit, (root.TAZ_ATYPE.asc - need external stations (ATYPE = 5) */
 
+	tbl_density.AddField({FieldName: "ATYPE", Type: "integer", Width: 1, Decimals: 0})
+	tbl_density.ATYPE = tbl_density.AREATYPE
+	flds = {"TAZ", "ATYPE"}
+	tbl_density.Export({FileName: Dir + "\\LandUse\\TAZ_AREATYPE.bin", FieldNames: flds})
+	tbl_density.DropFields({FieldNames: "ATYPE"})
+
+//////////WORK IN PROGRESS////////
 	//Open TAZID file (created by Matrix_template)
 	tazpath = SplitPath(TAZFile)
 
