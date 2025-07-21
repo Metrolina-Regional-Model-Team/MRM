@@ -66,14 +66,14 @@ Macro "Matrix_template" (TAZFile)
 
 	// <TAZName>_TAZID includes base TAZ info to use in checking taz against other files
 	checktazid:
-	TAZIDName = tazpath[1] + tazpath[2] + TAZName + "_TAZID.asc"
+	TAZIDName = tazpath[1] + tazpath[2] + TAZName + "_TAZID.bin"
 
 	exist = GetFileInfo(TAZIDName)
 	if exist = null 
 		then goto createtazid
 
 	// Check if tazid matches TAZ, if not - replace it
-	TAZID = OpenTable("TAZID", "FFA", {TAZIDName,})
+	TAZID = OpenTable("TAZID", "FFB", {TAZIDName,})
 
 	Join1 = JoinViews("Join1", TAZName + ".TAZ", "TAZID.TAZ",)
 	SetView(Join1)

@@ -70,7 +70,7 @@ addBias = 0.8
 	medinc = se_vectors[5]
 	avgsize = if (hh > 0) then (pop / hh) else 0
 
-	areatype = OpenTable("areatype", "DBASE", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.dbf",})  
+	areatype = OpenTable("areatype", "FFB", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.bin",})  
 	atype = GetDataVector(areatype+"|", "AREATYPE", {{"Sort Order", {{"TAZ","Ascending"}}}}) 
 
 //copy the HHdetail file (ouput from HHMET).  This will be the output file of Tour Frequency

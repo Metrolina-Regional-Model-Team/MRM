@@ -330,7 +330,7 @@ Macro "GetTAZ" (Args)
     if TAZrtn[1] = 1 then goto notaz 
     
     tazpath = SplitPath(TAZUser)
-    TAZID = OpenTable("TAZID", "FFA", {MRMUser + "\\TAZ\\" + tazpath[3] + "_TAZID.asc",})
+    TAZID = OpenTable("TAZID", "FFB", {MRMUser + "\\TAZ\\" + tazpath[3] + "_TAZID.bin",})
     SetView(TAZID)
     selinttaz = "Select * where TAZ < 12000"
     selexttaz = "Select * where TAZ >= 12000"
