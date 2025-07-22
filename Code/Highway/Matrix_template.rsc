@@ -99,7 +99,8 @@ Macro "Matrix_template" (TAZFile)
 	SetView(TAZName)
 	int_ext = CreateExpression(TAZName, "INT_EXT", "if TAZ < 12000 then 1 else 2",
 		{{"Type","Integer"},{"Width",8}})
-	ExportView(TAZName+"|", "FFA", TAZIDName,{"TAZ", "SEQ", "INT_EXT"},)
+	//ExportView(TAZName+"|", "FFA", TAZIDName,{"TAZ", "SEQ", "INT_EXT"},)
+	ExportView(TAZName+"|", "FFB", TAZIDName,{"TAZ", "SEQ", "INT_EXT"},)
 	goto quit
 
 	badtemplate:

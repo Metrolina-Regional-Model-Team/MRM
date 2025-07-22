@@ -179,7 +179,7 @@ Macro "Area_Type" (Args)
 		{FieldName: "AREATYPE", Type: "Integer"}
     }
     
-	tbl_density_zone.AddFields({Fields: a_fields})
+	tbl_density.AddFields({Fields: a_fields})
 
 	/*ZdatView = JoinViews("ZdatView", SEDataView + ".TAZ", ZpctView + ".TAZ",
 	    {{"A"}, {"Fields", 
@@ -244,7 +244,7 @@ Macro "Area_Type" (Args)
 	TAZ_AreaType_File = Dir + "\\LandUse\\TAZ_AREATYPE.bin"
 	tbl_density.Export({
 		FileName: TAZ_AreaType_File,
-		Fields: {"TAZ", "AREATYPE"}
+		FieldNames: {"TAZ", "AREATYPE"}
 		})
 
 	// reset width of TAZ field to 10 (for \landuse\taz_areatype.asc)
@@ -277,24 +277,27 @@ Macro "Area_Type" (Args)
 
 	tbl_TAZID = CreateObject("Table", TAZIDFile)
 	a_fields = {
-	{FieldName: "ZONE", Type: "Integer"},
-	{FieldName: "ATYPE", Type: "Integer"}}
+		{FieldName: "ZONE", Type: "Integer"},
+		{FieldName: "ATYPE", Type: "Integer"},
+		{FieldName: "CBD_FLAG", Type: "Integer"},
+		{FieldName: "PARK_INF", Type: "Integer"},
+		{FieldName: "EXP_FLAG", Type: "Integer"}	
+    }
 
 	tbl_TAZID.AddFields({Fields: a_fields})
+	TAZID_specs = tbl_TAZID.GetFieldSpecs({NamedArray: "true"})
 
 	// The TAZID table has information about externals, i.e. if INT_EX = 2. We join that with atype so we have the area type for all internals
 	
-	TAZID_specs = tbl_TAZID.GetFieldSpecs({NamedArray: "true"})
-	denstiy_specs = tbl_density.GetFieldSpecs({NamedArray: "true"})
 	tbl_transit_AT = tbl_TAZID.Join({
 		Table: tbl_density, 
 		LeftFields: "TAZ", 
 		RightFields: "TAZ"})
 
-	tbl_transit_AT.(TAZID_specs.ZONE) = tbl_transit_AT.(density_specs.TAZ)
-	tbl_transit_AT.(TAZID_specs.ATYPE) = if tbl_transit_AT.(TAZID_specs.INT_EXT) = 2 then 5 else tbl_transit_AT.(density_specs.AREATYPE)
-
-
+	tbl_transit_AT.ATYPE = if tbl_transit_AT.INT_EXT = 2 then 5 else tbl_transit_AT.AREATYPE
+	tbl_transit_AT = Null
+	tbl_TAZID.ZONE = tbl_TAZID.TAZ
+	
 		
 	//TransitATJoin1 = JoinViews("TransitATJoin1", "TAZID.TAZ", "DensityView.TAZ",)
 	//CloseView("DensityView")
@@ -302,28 +305,19 @@ Macro "Area_Type" (Args)
 	
 	//  Also Get Transit Flags and join to file created in step above
 
-	TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf"
+	//TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf"
+	TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin"
 	exist = GetFileInfo(TFFile)
 	if exist = null
 		then do
-			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf not found")
+			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found")
 		end
 
 	//TFIn = OpenTable("TFIn", "DBASE", {TFFile,})
 	tbl_TFIn = CreateObject("Table", TFFile)
-
-	a_fields = {
-	{FieldName: "CBD_FLAG", Type: "Integer"},
-	{FieldName: "PARK_INF", Type: "Integer"},
-	{FieldName: "EXP_FLAG", Type: "Integer"}	
-    }
-
-	tbl_TFIn.AddFields({Fields: a_fields})
-
 	TFIn_specs = tbl_TFIn.GetFieldSpecs({NamedArray: "true"})
-	transit_specs = tbl_transit_AT.GetFieldSpecs({NamedArray: "true"})
 
-	transit_AT2 = tbl_transit_AT.Join({
+	transit_AT2 = tbl_TAZID.Join({
 		Table: tbl_TFIn, 
 		LeftFields: "TAZ", 
 		RightFields: "TAZ"})
@@ -335,31 +329,43 @@ Macro "Area_Type" (Args)
 	// Transit taz_atype uses "ZONE"
 	//SetView("TransitATJoin2")
 
-	//zone = CreateExpression("TransitATJoin2", "ZONE", "TransitATJoin1.TAZID.TAZ",{{"Type","Integer"},{"Width",5}})   - I don't think we need this?
+	//zone = CreateExpression("TransitATJoin2", "ZONE", "TransitATJoin1.TAZID.TAZ",{{"Type","Integer"},{"Width",5}})   
 	//atype = CreateExpression("TransitATJoin2", "ATYPE", "if INT_EXT = 2 then 5 else AREATYPE",
-
-	transit_AT2.(TFIn_specs.ZONE) = transit_AT2.(transit_specs.TAZ)
-	transit_AT2.(TFIn_specs.ATYPE) = if transit_AT2.(transit_specs.INT_EXT) = 2 then 5 else transit_AT2.(transit_specs.AREATYPE)
 
 	//use 2005 inflation through 2008, 2010 infl. for 2009-15, 2020 infl. for 2016-25, 
 	// 2030 inf. for 2026+
-	cbd_flag = CreateExpression("TransitATJoin2", "CBD_FLAG", "if TFIn.TAZ = null then 1 else if "+theyear+" <= 2000 then CBDFLAG00 else if "+theyear+" <= 2002 then CBDFLAG02 else if "+theyear+" <= 2003 then CBDFLAG03 else if "+theyear+" <= 2008 then CBDFLAG05 else if "+theyear+" <= 2015 then CBDFLAG10 else if "+theyear+" <= 2025 then CBDFLAG20 else CBDFLAG30",
-		{{"Type","Integer"},{"Width",5}})
-
-	park_inf = CreateExpression("TransitATJoin2", "PARK_INF", "if TFIn.TAZ = null then 100 else if "+theyear+" <= 2000 then PKINFLAT00 else if "+theyear+" <= 2002 then PKINFLAT02 else if "+theyear+" <= 2003 then PKINFLAT03 else if "+theyear+" <= 2008 then PKINFLAT05 else if "+theyear+" <= 2015 then PKINFLAT10 else if "+theyear+" <= 2025 then PKINFLAT20 else PKINFLAT30",
-		{{"Type","Integer"},{"Width",5}})
-
-	exp_flag = CreateExpression("TransitATJoin2", "EXP_FLAG", "if TFIn.TAZ = null then 0 else EXP_FLAG_T",
-		{{"Type","Integer"},{"Width",5}})
+	//cbd_flag = CreateExpression("TransitATJoin2", "CBD_FLAG", "if TFIn.TAZ = null then 1 else if "+theyear+" <= 2000 then CBDFLAG00 else if "+theyear+" <= 2002 then CBDFLAG02 else if "+theyear+" <= 2003 then CBDFLAG03 else if "+theyear+" <= 2008 then CBDFLAG05 else if "+theyear+" <= 2015 then CBDFLAG10 else if "+theyear+" <= 2025 then CBDFLAG20 else CBDFLAG30",
+	//	{{"Type","Integer"},{"Width",5}})
 	
+	tbl_TAZID.CBD_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 1 else if "+theyear+" <= 2000 then tbl_TFIn.CBDFLAG00 else if "+theyear+" <= 2002 then tbl_TFIn.CBDFLAG02 else if "+theyear+" <= 2003 then tbl_TFIn.CBDFLAG03 else if "+theyear+" <= 2008 then tbl_TFIn.CBDFLAG05 else if "+theyear+" <= 2015 then tbl_TFIn.CBDFLAG10 else if "+theyear+" <= 2025 then tbl_TFIn.CBDFLAG20 else tbl_TFIn.CBDFLAG30
+
+	//park_inf = CreateExpression("TransitATJoin2", "PARK_INF", "if TFIn.TAZ = null then 100 else if "+theyear+" <= 2000 then PKINFLAT00 else if "+theyear+" <= 2002 then PKINFLAT02 else if "+theyear+" <= 2003 then PKINFLAT03 else if "+theyear+" <= 2008 then PKINFLAT05 else if "+theyear+" <= 2015 then PKINFLAT10 else if "+theyear+" <= 2025 then PKINFLAT20 else PKINFLAT30",
+	//	{{"Type","Integer"},{"Width",5}})
+
+	tbl_TAZID.PARK_INF = if transit_AT2.(TFIn_specs.TAZ) = null then 100 else if "+theyear+" <= 2000 then transit_AT2.(TFIn_specs.PKINFLAT00) else if "+theyear+" <= 2002 then transit_AT2.(TFIn_specs.PKINFLAT02) else if "+theyear+" <= 2003 then transit_AT2.(TFIn_specs.PKINFLAT030) else if "+theyear+" <= 2008 then transit_AT2.(TFIn_specs.PKINFLAT05) else if "+theyear+" <= 2015 then transit_AT2.(TFIn_specs.PKINFLAT10) else if "+theyear+" <= 2025 then transit_AT2.(TFIn_specs.PKINFLAT20) else transit_AT2.(TFIn_specs.PKINFLAT30) 
+
+	//exp_flag = CreateExpression("TransitATJoin2", "EXP_FLAG", "if TFIn.TAZ = null then 0 else EXP_FLAG_T",
+	//	{{"Type","Integer"},{"Width",5}})
+	
+	tbl_TAZID.EXP_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 0 else transit_AT2.(TFIn_specs.EXP_FLAG_T)
+
+	transit_AT2 = null
+	tbl_TAZID.Sort({FieldArray: {{"TAZ", "Ascending"}}})
+
 	// export transit TAZ_ATYPE.asc	
-	ExportView("TransitATJoin2|", "FFA", Dir + "\\TAZ_ATYPE.asc",{"ZONE","TransitATJoin2.ATYPE","CBD_FLAG","PARK_INF", "EXP_FLAG"},
-		{{"Row Order", {{"TransitATJoin1.TAZID.TAZ", "Ascending"}}}}) 
-	ExportView("TransitATJoin2|", "FFA", Dir + "\\holdher2.asc",,
-		{{"Row Order", {{"TransitATJoin1.TAZID.TAZ", "Ascending"}}}}) 
+	//ExportView("TransitATJoin2|", "FFA", Dir + "\\TAZ_ATYPE.asc",{"ZONE","TransitATJoin2.ATYPE","CBD_FLAG","PARK_INF", "EXP_FLAG"},
+	//	{{"Row Order", {{"TransitATJoin1.TAZID.TAZ", "Ascending"}}}}) 
 	
+	TAZ_AType_File = Dir + "\\TAZ_ATYPE.bin"
+	tbl_TAZID.Export({
+		FileName: TAZ_AreaType_File,
+		FieldNames: {"TAZ", "ZONE", "ATYPE", "CBD_FLAG", "PARK_INF", "EXP_FLAG"}
+		})
+
+	//ExportView("TransitATJoin2|", "FFA", Dir + "\\holdher2.asc",,
+	//	{{"Row Order", {{"TransitATJoin1.TAZID.TAZ", "Ascending"}}}}) 
 	
-	CloseView("TransitATJoin2")	
+	//CloseView("TransitATJoin2")	
 	goto quit
 	
 	badend:
