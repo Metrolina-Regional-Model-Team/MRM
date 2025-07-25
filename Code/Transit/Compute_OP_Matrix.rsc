@@ -328,9 +328,9 @@ pnrcost:
     prods_set = "Production_Zones_Set"
     n_selected=SelectByQuery(prods_set, "Several", "Select * where Centroid = 1 or [External Station] = 1", )
 
-    zone_file=Dir+"\\TAZ_ATYPE.ASC"
+    zone_file=Dir+"\\TAZ_ATYPE.bin"
     
-    zone_vw = OpenTable("TAZ_ATYPE", "FFA", {zone_file, })
+    zone_vw = OpenTable("TAZ_ATYPE", "FFB", {zone_file, })
     zone_count = GetRecordCount(zone_vw,)
     
     for i=1 to rowID.length do

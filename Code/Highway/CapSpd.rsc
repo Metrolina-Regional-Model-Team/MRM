@@ -207,7 +207,7 @@ Macro "CapSpd" (Args)
 	end
 		
 	// Area type by TAZ - to be joined to HwyView by TAZ no.  
-	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.asc"
+	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.bin"
 	exist = GetFileInfo(AreaTypeFile)
 	if exist = null
 		then do
@@ -281,7 +281,7 @@ Macro "CapSpd" (Args)
 		
 		stat = UpdateProgressBar("Add area type - based on link TAZ",10)
 	
-		AT_TAZ = OpenTable("AT_TAZ",	"FFA", {AreaTypeFile},)
+		AT_TAZ = OpenTable("AT_TAZ", "FFB", {AreaTypeFile},)
 		Join_AT = JoinViews("Join_AT", HwyView+".TAZ", "AT_TAZ.TAZ",)
 	
 		SetView(Join_AT)

@@ -131,8 +131,8 @@ Macro "XPR_StopFlags"  (Args)
 	taz_lyr = AddLayer(net, tazlayers[1], taz_file, tazlayers[1])
 
 	// Get EXP_FLAG from TAZ file and create TAZ selection set - TAZ XPR Flag
-	zone_file = Dir+"\\TAZ_ATYPE.ASC"
-	zone_vw = OpenTable("TAZ_ATYPE", "FFA", {zone_file, })
+	zone_file = Dir+"\\TAZ_ATYPE.bin"
+	zone_vw = OpenTable("TAZ_ATYPE", "FFB", {zone_file, })
 
 	SetView(taz_lyr)
 	tazviewAT = joinviews("tazviewAT", taz_lyr + ".TAZ", zone_vw + ".ZONE",)

@@ -35,7 +35,7 @@ Macro "Tour_IS_Location" (Args)
 	se_vw = OpenTable("SEFile", "FFB", {sedata_file,})
 	access_peak = OpenTable("access_peak", "FFB", {DirArray + "\\ACCESS_PEAK.bin",})
 	access_free = OpenTable("access_free", "FFB", {DirArray + "\\ACCESS_FREE.bin",})
-	areatype = OpenTable("areatype", "DBASE", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.dbf",})  
+	areatype = OpenTable("areatype", "FFB", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.bin",})  
 	distExtsta_vw = OpenTable("distextsta", "FFA", {Dir + "\\Ext\\Dist_to_Closest_ExtSta.asc",})
 	distCBD_vw = OpenTable("distcbd", "FFA", {Dir + "\\LandUse\\Dist_to_CBD.asc",})
 
