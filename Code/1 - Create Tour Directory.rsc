@@ -76,7 +76,7 @@ Macro "CreateDir" (Args)
             "ALTNAME_NHB_PEAK.bat", "ALTNAME_NHB_OFFPEAK.bat", "ALTNAME_NHB_PEAK.ctl", "ALTNAME_NHB_OFFPEAK.ctl",
             "ALTNAME_HBU_PEAK.bat", "ALTNAME_HBU_OFFPEAK.bat", "ALTNAME_HBU_PEAK.ctl", "ALTNAME_HBU_OFFPEAK.ctl",
             "Mode_Choice_Script.txt", "Segment_Map.txt", "Segment_Map.txt.def",
-            "TAZ_ATYPE_TRANSIT_FLAGS.dbf", "TAZ_ATYPE.asc.def"}},
+            "TAZ_ATYPE_TRANSIT_FLAGS.bin", "TAZ_ATYPE_TRANSIT_FLAGS.dcb", "TAZ_ATYPE.asc.def"}},
  
             {"\\MS_Control_Template", 
             {"HBW_PEAK_Bias.txt", "HBW_PEAK_Bias.txt.def", "HBW_PEAK_Constant.txt", "HBW_PEAK_Constant.txt.def",
@@ -91,7 +91,7 @@ Macro "CreateDir" (Args)
 
 
         {"\\TAZ", 
-            {"TAZNeighbors_pct.asc", "TAZNeighbors_pct.dct", "Parking_Cost_Base06.dbf", "PUMAequiv.prn"}},
+            {"TAZNeighbors_pct.bin", "TAZNeighbors_pct.dcb", "Parking_Cost_Base06.dbf", "PUMAequiv.prn"}},
 
         {"\\Pgm",
             {"CaliperMTXF.dll","CaliperMTXF.lib","capspd.exe","SHW32.DLL",
@@ -330,7 +330,7 @@ Macro "GetTAZ" (Args)
     if TAZrtn[1] = 1 then goto notaz 
     
     tazpath = SplitPath(TAZUser)
-    TAZID = OpenTable("TAZID", "FFA", {MRMUser + "\\TAZ\\" + tazpath[3] + "_TAZID.asc",})
+    TAZID = OpenTable("TAZID", "FFB", {MRMUser + "\\TAZ\\" + tazpath[3] + "_TAZID.bin",})
     SetView(TAZID)
     selinttaz = "Select * where TAZ < 12000"
     selexttaz = "Select * where TAZ >= 12000"

@@ -245,17 +245,17 @@ writecost:
 	opcost=0.0
 
 	tazpath = SplitPath(TAZFile)
-	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.asc"
+	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.bin"
 	exist = GetFileInfo(TAZIDFile)
 	if exist = null
 		then do
-            Throw("FillParkCost: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
+            Throw("FillParkCost: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.bin not found")
 			// Throw("FillParkCost: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AppendToLogFile(2, "FillParkCost: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// FillParkCostOK = 0
 			// goto badend
 		end
-	TAZID = OpenTable("TAZID", "FFA", {TAZIDFile,})
+	TAZID = OpenTable("TAZID", "FFB", {TAZIDFile,})
 	selext = "Select * where INT_EXT = 2"
 
 	SetView(TAZID)

@@ -7,7 +7,7 @@ Macro "Area_Type" (Args)
 	SEDataFile = Args.[LandUse file]
 	TAZFile = Args.[TAZ File]
 	theyear = Args.[Run Year]
-	ZonePctFile = METDir + "\\TAZ\\TAZNeighbors_pct.bin" // default file name for TAZNeighbors_pct file 
+	ZonePctFile = METDir + "\\TAZ\\TAZNeighbors_pct.bin" 
 
 	datentime = GetDateandTime()
 	AppendToLogFile(1, "Enter Area_Type2 " + datentime)
@@ -19,7 +19,7 @@ Macro "Area_Type" (Args)
 	info = GetFileInfo(ZonePctFile)
 	if info = null 
 		then do
-			Throw("Area Type - ERROR - cannot find TAZNeighbors_pct file. Please run MRM Utilities - AreaType_TAZNeighbors or copy valid TAZNeighbor_pct.asc into TAZ directory")
+			Throw("Area Type - ERROR - cannot find TAZNeighbors_pct file. Please run MRM Utilities - AreaType_TAZNeighbors or copy valid TAZNeighbor_pct.bin into TAZ directory")
 		end
 	msg = null
 	AreaTypeOK = 1

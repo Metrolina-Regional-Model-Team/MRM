@@ -50,7 +50,7 @@ Macro "Tour_IS" (Args)
 	se_vw = OpenTable("SEFile", "FFB", {sedata_file,})
 //	access_peak = OpenTable("access_peak", "FFB", {DirArray + "\\ACCESS_PEAK.bin",})
 //	access_free = OpenTable("access_free", "FFB", {DirArray + "\\ACCESS_FREE.bin",})
-	areatype = OpenTable("areatype", "DBASE", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.dbf",})  
+	areatype = OpenTable("areatype", "FFB", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.bin",})  
 
 	se_vectors = GetDataVectors(se_vw+"|", {"TAZ", "HH", "POP_HHS", "LOIND", "HIIND", "RTL", "HWY", "LOSVC", "HISVC", "OFFGOV", 
 						"EDUC", "STU_K8", "STU_HS", "STU_CU", "MED_INC", "AREA", "TOTEMP", "STCNTY", "SEQ", "POP"},{{"Sort Order", {{"TAZ","Ascending"}}}})

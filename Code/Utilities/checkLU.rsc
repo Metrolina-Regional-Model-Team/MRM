@@ -8,10 +8,10 @@ Macro "checkLU" (LUFile, TAZFile)
 	badIDLU = null
 	
 	tazpath = SplitPath(TAZFile)
-	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.asc"
+	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.bin"
 	
 	LU_in = OpenTable("LU_in", "FFB", {LUFile,})
-	TAZID = OpenTable("TAZID", "FFA", {TAZIDFile,})
+	TAZID = OpenTable("TAZID", "FFB", {TAZIDFile,})
 
 	//TAZ in LU not in TAZID
 	JoinLUID = JoinViews("JoinLUID", "LU_in.TAZ", "TAZID.TAZ",)

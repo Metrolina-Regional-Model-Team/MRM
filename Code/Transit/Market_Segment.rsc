@@ -31,13 +31,13 @@ Macro "Market_Segment" (Args)
 // Copy TAZ_AtYPE to new file so columns can be added without screwing up mode split .def file call to TAZ_ATYPE
 
 	// on error goto notaz_atype
-		CopyFile(Dir+"\\TAZ_ATYPE.ASC", Dir + "\\TranAssn\\TAZ_ATYPE_TranAssn_Market_Segment.ASC")
-		CopyFile(Dir+"\\TAZ_ATYPE.DCT", Dir + "\\TranAssn\\TAZ_ATYPE_TranAssn_Market_Segment.DCT")
+		CopyFile(Dir+"\\TAZ_ATYPE.bin", Dir + "\\TranAssn\\TAZ_ATYPE_TranAssn_Market_Segment.ASC")
+		CopyFile(Dir+"\\TAZ_ATYPE.dcb", Dir + "\\TranAssn\\TAZ_ATYPE_TranAssn_Market_Segment.DCT")
 	on error default
 
 	zone_file = Dir + "\\TranAssn\\TAZ_ATYPE_TranAssn_Market_Segment.ASC"
     
-     zone_view = OpenTable("TAZ_ATYPE", "FFA", {zone_file, })
+     zone_view = OpenTable("TAZ_ATYPE", "FFB", {zone_file, })
      setview(zone_view)
 
     MS_CBD_Currency    = CreateMatrixCurrency(OM, "CBD Attractions Flag",midx[1], midx[2],)

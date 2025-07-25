@@ -66,14 +66,14 @@ Macro "Matrix_template" (TAZFile)
 
 	// <TAZName>_TAZID includes base TAZ info to use in checking taz against other files
 	checktazid:
-	TAZIDName = tazpath[1] + tazpath[2] + TAZName + "_TAZID.asc"
+	TAZIDName = tazpath[1] + tazpath[2] + TAZName + "_TAZID.bin"
 
 	exist = GetFileInfo(TAZIDName)
 	if exist = null 
 		then goto createtazid
 
 	// Check if tazid matches TAZ, if not - replace it
-	TAZID = OpenTable("TAZID", "FFA", {TAZIDName,})
+	TAZID = OpenTable("TAZID", "FFB", {TAZIDName,})
 
 	Join1 = JoinViews("Join1", TAZName + ".TAZ", "TAZID.TAZ",)
 	SetView(Join1)
@@ -99,7 +99,7 @@ Macro "Matrix_template" (TAZFile)
 	SetView(TAZName)
 	int_ext = CreateExpression(TAZName, "INT_EXT", "if TAZ < 12000 then 1 else 2",
 		{{"Type","Integer"},{"Width",8}})
-	ExportView(TAZName+"|", "FFA", TAZIDName,{"TAZ", "SEQ", "INT_EXT"},)
+	ExportView(TAZName+"|", "FFB", TAZIDName,{"TAZ", "SEQ", "INT_EXT"},)
 	goto quit
 
 	badtemplate:

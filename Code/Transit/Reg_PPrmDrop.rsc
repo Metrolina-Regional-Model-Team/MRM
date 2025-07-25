@@ -171,9 +171,9 @@ setview("Vehicle Routes")
      ret_value = RunMacro("TCB Run Procedure", 5, "Transit Skim PF", Opts)
      if !ret_value then goto badtranskim
 
-     zone_file=Dir+"\\TAZ_ATYPE.ASC"
+     zone_file=Dir+"\\TAZ_ATYPE.bin"
     
-     zone_vw = OpenTable("TAZ_ATYPE", "FFA", {zone_file, })
+     zone_vw = OpenTable("TAZ_ATYPE", "FFB", {zone_file, })
      setview(zone_vw)
 //     CBD_set = "CBD_Set"
 //     n_selected=SelectByQuery(CBD_set, "Several", "select * where CBD_FLAG = 2", )
