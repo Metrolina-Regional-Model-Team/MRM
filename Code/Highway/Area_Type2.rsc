@@ -121,9 +121,9 @@ Macro "Area_Type" (Args)
 	//Add TAZ info to TAZNeighbors_pct by Neighbor TAZ (can have many copies of same taz data data based on # taz it it within buffer
 
 	a_fields = {
-        {FieldName: "HHPOP", Type: "Real"},
-        {FieldName: "EMPTOT", Type: "Real"},
-        {FieldName: "zArea", Type: "Real"}
+        {FieldName: "HHPOP", Type: "Real", Decimals: 6},
+        {FieldName: "EMPTOT", Type: "Real",Decimals: 6},
+        {FieldName: "zArea", Type: "Real", Decimals: 6}
     }
     
 	tbl_zone.AddFields({Fields: a_fields})
@@ -142,9 +142,9 @@ Macro "Area_Type" (Args)
 	//emptot = CreateExpression(ZonePctDataView, "EMPTOT", "ROUND(PercentIN * TOTEMP,6)",)
 	//zarea = CreateExpression(ZonePctDataView, "zAREA", "ROUND(PercentIN * AREA_LU,6)",)
 
-	HHPOP = ROUND(PercentIN * POP_HHS,6)
-	EMPTOT = ROUND(PercentIN * TOTEMP,6)
-	zArea = ROUND(PercentIN * AREA_LU,6)
+	join.HHPOP = ROUND(join.PercentIN * join.POP_HHS,6)
+	join.EMPTOT = ROUND(join.PercentIN * join.TOTEMP,6)
+	join.zArea = ROUND(join.PercentIN * join.AREA_LU,6)
 
 	join = Null
 	
@@ -169,8 +169,8 @@ Macro "Area_Type" (Args)
 	tbl_density.ChangeField({FieldName:"sum_zArea", NewName: "zArea"})
 
 	a_fields = {
-		{FieldName: "EMPDEN", Type: "Real"},
-		{FieldName: "POPDEN", Type: "Real"},
+		{FieldName: "EMPDEN", Type: "Real", Decimals: 6},
+		{FieldName: "POPDEN", Type: "Real",	Decimals: 6},
 		{FieldName: "AREATYPE", Type: "Integer"}
     }
     
@@ -197,10 +197,6 @@ Macro "Area_Type" (Args)
 	CloseView(ZdatView)
 	
 	*/
-	DensityFile = Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"
-	tbl_density.Export({
-		FileName: DensityFile}	
-		)
 	
 	// End of calczone replacement
 
@@ -236,10 +232,19 @@ Macro "Area_Type" (Args)
 	v_output = if v_empdens > 10500 then 1 else if v_empdens > 2600 then 2 else if v_popdens >= 375 and (v_popdens + (v_empdens / 1.6)) > 2100 then 3 else if v_popdens >= 375 then 4 else 5
 	tbl_density.AREATYPE = v_output
 
-	TAZ_AreaType_File = Dir + "\\LandUse\\TAZ_AREATYPE.bin"
+	DensityFile = Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"
 	tbl_density.Export({
-		FileName: TAZ_AreaType_File,
-		FieldNames: {"TAZ", "AREATYPE"}
+		FileName: DensityFile}	
+		)
+
+	TAZ_AreaType_File = Dir + "\\LandUse\\TAZ_AREATYPE.bin"
+
+	//tbl_density.AddField({FieldName: "ATYPE", Type: "Integer", Width: 1})
+	//tbl_density.ATYPE = tbl_density.AREATYPE
+
+	tbl_density.Export({
+		FileName: TAZ_AreaType_File
+		//FieldNames: {"TAZ", "ATYPE"}
 		})
 
 	// reset width of TAZ field to 10 (for \landuse\taz_areatype.asc)
@@ -292,8 +297,7 @@ Macro "Area_Type" (Args)
 	tbl_transit_AT.ATYPE = if tbl_transit_AT.INT_EXT = 2 then 5 else tbl_transit_AT.AREATYPE
 	tbl_transit_AT = Null
 	tbl_TAZID.ZONE = tbl_TAZID.TAZ
-	
-		
+
 	//TransitATJoin1 = JoinViews("TransitATJoin1", "TAZID.TAZ", "DensityView.TAZ",)
 	//CloseView("DensityView")
 	//CloseView("TAZID")
@@ -332,12 +336,12 @@ Macro "Area_Type" (Args)
 	//cbd_flag = CreateExpression("TransitATJoin2", "CBD_FLAG", "if TFIn.TAZ = null then 1 else if "+theyear+" <= 2000 then CBDFLAG00 else if "+theyear+" <= 2002 then CBDFLAG02 else if "+theyear+" <= 2003 then CBDFLAG03 else if "+theyear+" <= 2008 then CBDFLAG05 else if "+theyear+" <= 2015 then CBDFLAG10 else if "+theyear+" <= 2025 then CBDFLAG20 else CBDFLAG30",
 	//	{{"Type","Integer"},{"Width",5}})
 	
-	tbl_TAZID.CBD_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 1 else if S2I(theyear) <= 2000 then transit_AT2.CBDFLAG00 else if S2I(theyear) <= 2015 then transit_AT2.CBDFLAG10 else if S2I(theyear) <= 2025 then transit_AT2.CBDFLAG20 else transit_AT2.CBDFLAG30
+	tbl_TAZID.CBD_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 1 else if S2I(theyear) <= 2025 then transit_AT2.CBDFLAG20 else transit_AT2.CBDFLAG30
 
 	//park_inf = CreateExpression("TransitATJoin2", "PARK_INF", "if TFIn.TAZ = null then 100 else if "+theyear+" <= 2000 then PKINFLAT00 else if "+theyear+" <= 2002 then PKINFLAT02 else if "+theyear+" <= 2003 then PKINFLAT03 else if "+theyear+" <= 2008 then PKINFLAT05 else if "+theyear+" <= 2015 then PKINFLAT10 else if "+theyear+" <= 2025 then PKINFLAT20 else PKINFLAT30",
 	//	{{"Type","Integer"},{"Width",5}})
 
-	tbl_TAZID.PARK_INF = if transit_AT2.(TFIn_specs.TAZ) = null then 100 else if S2I(theyear) <= 2000 then transit_AT2.PKINFLAT00 else if S2I(theyear) <= 2002 then transit_AT2.PKINFLAT02 else if S2I(theyear) <= 2003 then transit_AT2.PKINFLAT030 else if S2I(theyear) <= 2008 then transit_AT2.PKINFLAT05 else if S2I(theyear) <= 2015 then transit_AT2.PKINFLAT10 else if S2I(theyear) <= 2025 then transit_AT2.PKINFLAT20 else transit_AT2.PKINFLAT30 
+	tbl_TAZID.PARK_INF = if transit_AT2.(TFIn_specs.TAZ) = null then 100 else if S2I(theyear) <= 2025 then transit_AT2.PKINFLAT20 else transit_AT2.PKINFLAT30 
 
 	//exp_flag = CreateExpression("TransitATJoin2", "EXP_FLAG", "if TFIn.TAZ = null then 0 else EXP_FLAG_T",
 	//	{{"Type","Integer"},{"Width",5}})
