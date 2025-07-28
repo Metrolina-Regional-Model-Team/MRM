@@ -410,6 +410,7 @@ Macro "Area_Type" (Args)
 		LeftFields: "TAZ", 
 		RightFields: "TAZ"})
 
+
 	// Transit taz_atype uses "ZONE"
 	/*SetView("TransitATJoin2")
 
@@ -456,25 +457,25 @@ Macro "Area_Type" (Args)
 
 	temp.ATYPE = if (INT_EXT = 2) then 5 else AREATYPE*/
 
-	tbl_TAZID.CBD_FLAG = if (transit_AT2.(TFIn_specs.TAZ) = null) then 1
-                else if "+theyear+" <= 2000 then (transit_AT2.(tbl_TFIn.CBDFLAG00))
-                else if "+theyear+" <= 2002 then (transit_AT2.(tbl_TFIn.CBDFLAG02))
-                else if "+theyear+" <= 2003 then (transit_AT2.(tbl_TFIn.CBDFLAG03))
-                else if "+theyear+" <= 2008 then (transit_AT2.(tbl_TFIn.CBDFLAG05))
-                else if "+theyear+" <= 2015 then (transit_AT2.(tbl_TFIn.CBDFLAG10))
-                else if "+theyear+" <= 2025 then (transit_AT2.(tbl_TFIn.CBDFLAG20))
-                else (transit_AT2.(tbl_TFIn.CBDFLAG30))
+	tbl_TAZID.CBD_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 1
+                else if S2I(theyear) <= 2000 then (transit_AT2.CBDFLAG00)
+                else if S2I(theyear) <= 2002 then (transit_AT2.CBDFLAG02)
+                else if S2I(theyear) <= 2003 then (transit_AT2.CBDFLAG03)
+                else if S2I(theyear) <= 2008 then (transit_AT2.CBDFLAG05)
+                else if S2I(theyear) <= 2015 then (transit_AT2.CBDFLAG10)
+                else if S2I(theyear) <= 2025 then (transit_AT2.CBDFLAG20)
+                else (transit_AT2.CBDFLAG30)
 
-	tbl_TAZID.PARK_INF = if (transit_AT2.(TFIn_specs.TAZ) = null) then 100
-                else if "+theyear+" <= 2000 then (transit_AT2.(tbl_TFIn.PKINFLAT00))
-                else if "+theyear+" <= 2002 then (transit_AT2.(tbl_TFIn.PKINFLAT02))
-                else if "+theyear+" <= 2003 then (transit_AT2.(tbl_TFIn.PKINFLAT03))
-                else if "+theyear+" <= 2008 then (transit_AT2.(tbl_TFIn.PKINFLAT05))
-                else if "+theyear+" <= 2015 then (transit_AT2.(tbl_TFIn.PKINFLAT10))
-                else if "+theyear+" <= 2025 then (transit_AT2.(tbl_TFIn.PKINFLAT20))
-                else (transit_AT2.(tbl_TFIn.PKINFLAT30))
+	tbl_TAZID.PARK_INF = if transit_AT2.(TFIn_specs.TAZ) = null then 100
+                else if S2I(theyear) <= 2000 then (transit_AT2.PKINFLAT00)
+                else if S2I(theyear) <= 2002 then (transit_AT2.PKINFLAT02)
+                else if S2I(theyear) <= 2003 then (transit_AT2.PKINFLAT03)
+                else if S2I(theyear) <= 2008 then (transit_AT2.PKINFLAT05)
+                else if S2I(theyear) <= 2015 then (transit_AT2.PKINFLAT10)
+                else if S2I(theyear) <= 2025 then (transit_AT2.PKINFLAT20)
+                else (transit_AT2.PKINFLAT30)
 
-	tbl_TAZID.EXP_FLAG = if (transit_AT2.(TFIn_specs.TAZ) = null) then 0 else EXP_FLAG_T
+	tbl_TAZID.EXP_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 0 else EXP_FLAG_T
 
 	transit_AT2 = null
 	tbl_TAZID.Sort({FieldArray: {{"TAZ", "Ascending"}}})
