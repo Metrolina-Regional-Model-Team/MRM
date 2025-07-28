@@ -48,8 +48,11 @@ Macro "Area_Type" (Args)
 	/*SEDataView = Opentable("SEDataView","FFB",{SEDataFile,})
 	ZonePctView = OpenTable("ZonePctView", "FFA", {ZonePctFile,})*/
 	SEData_tbl = CreateObject("Table", SEDataFile)
-	TAZ_tbl = CreateObject("Table", TAZ_file)
+	
+	SEData_tbl.AddField({FieldName: "TOTEMP", Type: "integer", Width: 10, Decimals: 0})
+	SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC
 
+	TAZ_tbl = CreateObject("Table", TAZ_file)
 
 	// check SE against TAZNeighbors to make sure they match (both are internal taz only
 	// first join TAZNeighbors to SE to see if Neighbors has missing TAZ
@@ -146,7 +149,7 @@ Macro "Area_Type" (Args)
 	SetDataVector(SEDataView + "|", "TOTEMP", vTOTEMP, )*/
 	//join1 = null
 	//join2 = null
-	field_names = SEData_tbl.GetFieldNames()
+	/*field_names = SEData_tbl.GetFieldNames()
 
 	for field_name in field_names do
    		if field_name <> "TOTEMP" then do
@@ -154,7 +157,7 @@ Macro "Area_Type" (Args)
 			SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC 
 		end
 		else SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC
-	end
+	end*/
 
 	//Add TAZ info to TAZNeighbors_pct by Neighbor TAZ (can have many copies of same taz data data based on # taz it it within buffer
 	/*ZonePctDataView = JoinViews("ZonePctDataView", ZonePctView + ".TAZNeighbor", SEDataView + ".TAZ",)*/
@@ -292,37 +295,76 @@ Macro "Area_Type" (Args)
 
 	tbl_density.AddField({FieldName: "ATYPE", Type: "integer", Width: 1, Decimals: 0})
 	tbl_density.ATYPE = tbl_density.AREATYPE
-	flds = {"TAZ", "ATYPE"}
-	tbl_density.Export({FileName: Dir + "\\LandUse\\TAZ_AREATYPE.bin", FieldNames: flds})
+	a_fields = {"TAZ", "ATYPE"}
+	tbl_density.Export({FileName: Dir + "\\LandUse\\TAZ_AREATYPE.bin", FieldNames: a_fields})
 	tbl_density.DropFields({FieldNames: "ATYPE"})
-
-//////////WORK IN PROGRESS////////
+	density_specs = tbl_density.GetFieldSpecs({NamedArray: "true"})
 	//Open TAZID file (created by Matrix_template)
-	tazpath = SplitPath(TAZFile)
+	/*tazpath = SplitPath(TAZFile)
 
-	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.asc"
+	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.asc"*/
+	TAZIDFile = METDir + "\\TAZ\\TAZ3896_TAZID.bin"
 	exist = GetFileInfo(TAZIDFile)
 	if exist = null
 		then do
-			Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
+			Throw("AreaType: ERROR! Metrolina\\TAZ\\TAZ3896_TAZID.bin not found")
 			// Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AppendToLogFile(2, "AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AreaTypeOK = 0
 			// goto badend
 		end
+	
 
-	TAZID = OpenTable("TAZID", "FFA", {TAZIDFile,})
+	/*TAZID = OpenTable("TAZID", "FFA", {TAZIDFile,})
 	TransitATJoin1 = JoinViews("TransitATJoin1", "TAZID.TAZ", "DensityView.TAZ",)
 	CloseView("DensityView")
-	CloseView("TAZID")
+	CloseView("TAZID")*/
 	
+	/*tbl_TAZID = CreateObject("Table", TAZIDFile)
+
+	tbl_TAZID.ChangeField({FieldName: "TAZ", Type: "Integer", Width: 5})	
+
+	tazid_specs = tbl_TAZID.GetFieldSpecs({NamedArray: "true"})
+
+	join1 = tbl_TAZID.Join({
+	Table: tbl_density, 
+	LeftFields: tazid_specs.TAZ,
+	RightFields: density_specs.TAZ
+	})
+
+	join1_specs = join1.GetFieldSpecs({NamedArray: "true"})*/
+	
+	tbl_TAZID = CreateObject("Table", TAZIDFile)
+	a_fields = {
+		{FieldName: "ZONE", Type: "Integer"},
+		{FieldName: "ATYPE", Type: "Integer"},
+		{FieldName: "CBD_FLAG", Type: "Integer"},
+		{FieldName: "PARK_INF", Type: "Integer"},
+		{FieldName: "EXP_FLAG", Type: "Integer"}	
+    }
+
+	tbl_TAZID.AddFields({Fields: a_fields})
+	TAZID_specs = tbl_TAZID.GetFieldSpecs({NamedArray: "true"})
+
+	// The TAZID table has information about externals, i.e. if INT_EX = 2. We join that with atype so we have the area type for all internals
+	
+	tbl_transit_AT = tbl_TAZID.Join({
+		Table: tbl_density, 
+		LeftFields: "TAZ", 
+		RightFields: "TAZ"})
+
+	tbl_transit_AT.ATYPE = if tbl_transit_AT.INT_EXT = 2 then 5 else tbl_transit_AT.AREATYPE
+	tbl_transit_AT = Null
+	tbl_TAZID.ZONE = tbl_TAZID.TAZ
+
+
 	//  Also Get Transit Flags and join to file created in step above
 
-	TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf"
+	/*TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf"
 	exist = GetFileInfo(TFFile)
 	if exist = null
 		then do
-			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf not found")
+			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found")
 			// Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf not found")
 			// AppendToLogFile(2, "AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.dbf not found")
 			// AreaTypeOK = 0
@@ -332,10 +374,44 @@ Macro "Area_Type" (Args)
 	TFIn = OpenTable("TFIn", "DBASE", {TFFile,})
 	TransitATJoin2 = JoinViews("TransitATJoin2", "TransitATJoin1.TAZID.TAZ", "TFIn.TAZ",)
 	CloseView("TFIn")
-	CloseView("TransitATJoin1")
-		 
+	CloseView("TransitATJoin1")*/
+	
+	/*TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin"
+	
+	tbl_TF = CreateObject("Table", TFFile)
+	
+	if exist = null
+		then do
+			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found")
+		end
+	
+	tf_specs = tbl_TF.GetFieldSpecs({NamedArray: "true"})
+
+	join2 = join1.Join({
+	Table: tbl_TF, 
+	LeftFields: tazid_specs.TAZ,
+	RightFields: tf_specs.TAZ
+	})*/
+
+
+	TFFile = METDir + "\\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin"
+	exist = GetFileInfo(TFFile)
+	if exist = null
+		then do
+			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found")
+		end
+
+	//TFIn = OpenTable("TFIn", "DBASE", {TFFile,})
+	tbl_TFIn = CreateObject("Table", TFFile)
+	TFIn_specs = tbl_TFIn.GetFieldSpecs({NamedArray: "true"})
+
+	transit_AT2 = tbl_TAZID.Join({
+		Table: tbl_TFIn, 
+		LeftFields: "TAZ", 
+		RightFields: "TAZ"})
+
 	// Transit taz_atype uses "ZONE"
-	SetView("TransitATJoin2")
+	/*SetView("TransitATJoin2")
 
 	zone = CreateExpression("TransitATJoin2", "ZONE", "TransitATJoin1.TAZID.TAZ",{{"Type","Integer"},{"Width",5}})
 
@@ -360,7 +436,54 @@ Macro "Area_Type" (Args)
 		{{"Row Order", {{"TransitATJoin1.TAZID.TAZ", "Ascending"}}}}) 
 	
 	
-	CloseView("TransitATJoin2")	
+	CloseView("TransitATJoin2")*/
+
+	/*temp = join2.Export()
+
+	a_fields = {
+		{FieldName: "ZONE", Type: "Integer", Width: 5},
+        {FieldName: "ATYPE", Type: "Integer", Width: 5},
+        {FieldName: "CBD_FLAG", Type: "Integer", Width: 5},
+        {FieldName: "PARK_INF", Type: "Integer", Width: 5},
+        {FieldName: "EXP_FLAG", Type: "Integer", Width: 5}
+    }
+
+	temp.AddFields({Fields: a_fields})
+	
+	temp_specs = temp.GetFieldSpecs({NamedArray: "true"})
+
+	temp.ZONE = tbl_TAZID.TAZ
+
+	temp.ATYPE = if (INT_EXT = 2) then 5 else AREATYPE*/
+
+	tbl_TAZID.CBD_FLAG = if (transit_AT2.(TFIn_specs.TAZ) = null) then 1
+                else if "+theyear+" <= 2000 then (transit_AT2.(tbl_TFIn.CBDFLAG00))
+                else if "+theyear+" <= 2002 then (transit_AT2.(tbl_TFIn.CBDFLAG02))
+                else if "+theyear+" <= 2003 then (transit_AT2.(tbl_TFIn.CBDFLAG03))
+                else if "+theyear+" <= 2008 then (transit_AT2.(tbl_TFIn.CBDFLAG05))
+                else if "+theyear+" <= 2015 then (transit_AT2.(tbl_TFIn.CBDFLAG10))
+                else if "+theyear+" <= 2025 then (transit_AT2.(tbl_TFIn.CBDFLAG20))
+                else (transit_AT2.(tbl_TFIn.CBDFLAG30))
+
+	tbl_TAZID.PARK_INF = if (transit_AT2.(TFIn_specs.TAZ) = null) then 100
+                else if "+theyear+" <= 2000 then (transit_AT2.(tbl_TFIn.PKINFLAT00))
+                else if "+theyear+" <= 2002 then (transit_AT2.(tbl_TFIn.PKINFLAT02))
+                else if "+theyear+" <= 2003 then (transit_AT2.(tbl_TFIn.PKINFLAT03))
+                else if "+theyear+" <= 2008 then (transit_AT2.(tbl_TFIn.PKINFLAT05))
+                else if "+theyear+" <= 2015 then (transit_AT2.(tbl_TFIn.PKINFLAT10))
+                else if "+theyear+" <= 2025 then (transit_AT2.(tbl_TFIn.PKINFLAT20))
+                else (transit_AT2.(tbl_TFIn.PKINFLAT30))
+
+	tbl_TAZID.EXP_FLAG = if (transit_AT2.(TFIn_specs.TAZ) = null) then 0 else EXP_FLAG_T
+
+	transit_AT2 = null
+	tbl_TAZID.Sort({FieldArray: {{"TAZ", "Ascending"}}})
+
+	a_fields = {"TAZ", "ZONE", "ATYPE", "CBD_FLAG", "PARK_INF", "EXP_FLAG"}
+	tbl_TAZID.Export({FileName: Dir + "\\TAZ_ATYPE.bin", FieldNames: a_fields})
+
+	//temp.Export({FileName: Dir + "\\holdher2.bin"})
+
 	goto quit
 	
 	badend:
