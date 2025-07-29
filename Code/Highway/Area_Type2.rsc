@@ -357,7 +357,7 @@ Macro "Area_Type" (Args)
 	
 	TAZ_AType_File = Dir + "\\TAZ_ATYPE.bin"
 	tbl_TAZID.Export({
-		FileName: TAZ_AreaType_File,
+		FileName: TAZ_AType_File,
 		FieldNames: {"TAZ", "ZONE", "ATYPE", "CBD_FLAG", "PARK_INF", "EXP_FLAG"}
 		})
 
