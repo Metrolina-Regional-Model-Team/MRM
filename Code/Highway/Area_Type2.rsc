@@ -238,9 +238,8 @@ Macro "Area_Type" (Args)
 		)
 
 	TAZ_AreaType_File = Dir + "\\LandUse\\TAZ_AREATYPE.bin"
-
-	//tbl_density.AddField({FieldName: "ATYPE", Type: "Integer", Width: 1})
-	//tbl_density.ATYPE = tbl_density.AREATYPE
+	tbl_density.AddField({FieldName: "ATYPE", Type: "Integer", Width: 1})
+	tbl_density.ATYPE = tbl_density.AREATYPE
 
 	tbl_density.Export({
 		FileName: TAZ_AreaType_File
@@ -294,7 +293,7 @@ Macro "Area_Type" (Args)
 		LeftFields: "TAZ", 
 		RightFields: "TAZ"})
 
-	tbl_transit_AT.ATYPE = if tbl_transit_AT.INT_EXT = 2 then 5 else tbl_transit_AT.AREATYPE
+	tbl_transit_AT.(TAZID_specs.ATYPE) = if tbl_transit_AT.INT_EXT = 2 then 5 else tbl_transit_AT.AREATYPE
 	tbl_transit_AT = Null
 	tbl_TAZID.ZONE = tbl_TAZID.TAZ
 
