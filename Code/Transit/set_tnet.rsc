@@ -21,69 +21,126 @@ Macro "set_tnet" (time_period, transit_mode, access_mode, Dir)
 // ----- Transit Network Settings for Path Finder -----------------------------------
 
 
-     Opts = null
+    Opts = null
     Opts.Input.[Transit RS] = route_file
+
+
 
     if ( transit_mode = "premium") then do
 
-		if ( time_period = "peak") then do 
+		if ( time_period = "AM") then do 
 			if (access_mode = "walk") then 
-				Opts.Input.[Transit Network] = Dir + "\\PprmW.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\PrmW_AM.tnw"
 			else if (access_mode = "drive") then 
-				Opts.Input.[Transit Network] = Dir + "\\PprmD.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\PrmD_AM.tnw"
 			else if (access_mode = "dropoff") then 
-				Opts.Input.[Transit Network] = Dir + "\\PprmDrop.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\PrmDrop_AM.tnw"
 		end
 
-		if ( time_period = "offpeak") then do 
+        if ( time_period = "PM") then do 
 			if (access_mode = "walk") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPprmW.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\PrmW_PM.tnw"
 			else if (access_mode = "drive") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPprmD.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\PrmD_PM.tnw"
 			else if (access_mode = "dropoff") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPprmDrop.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\PrmDrop_PM.tnw"
+		end
+
+
+		if ( time_period = "MD") then do 
+			if (access_mode = "walk") then 
+				Opts.Input.[Transit Network] = Dir + "\\PrmW_MD.tnw"
+			else if (access_mode = "drive") then 
+				Opts.Input.[Transit Network] = Dir + "\\PrmD_MD.tnw"
+			else if (access_mode = "dropoff") then 
+				Opts.Input.[Transit Network] = Dir + "\\PrmDrop_MD.tnw"
+		end
+
+        if ( time_period = "NT") then do 
+			if (access_mode = "walk") then 
+				Opts.Input.[Transit Network] = Dir + "\\PrmW_NT.tnw"
+			else if (access_mode = "drive") then 
+				Opts.Input.[Transit Network] = Dir + "\\PrmD_NT.tnw"
+			else if (access_mode = "dropoff") then 
+				Opts.Input.[Transit Network] = Dir + "\\PrmDrop_NT.tnw"
 		end
     end
 
     if ( transit_mode = "premium2") then do
 
-		if ( time_period = "peak") then do 
+		if ( time_period = "AM") then do 
 			if (access_mode = "walk") then 
-				Opts.Input.[Transit Network] = Dir + "\\Pprm2W.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\Prm2W_AM.tnw"
 			else if (access_mode = "drive") then 
-				Opts.Input.[Transit Network] = Dir + "\\Pprm2D.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\Prm2D_AM.tnw"
 			else if (access_mode = "dropoff") then 
-				Opts.Input.[Transit Network] = Dir + "\\Pprm2Drop.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\Prm2Drop_AM.tnw"
 		end
 
-		if ( time_period = "offpeak") then do 
+        if ( time_period = "PM") then do 
 			if (access_mode = "walk") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPprm2W.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\Prm2W_PM.tnw"
 			else if (access_mode = "drive") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPprm2D.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\Prm2D_PM.tnw"
 			else if (access_mode = "dropoff") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPprm2Drop.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\Prm2Drop_PM.tnw"
+		end
+
+		if ( time_period = "MD") then do 
+			if (access_mode = "walk") then 
+				Opts.Input.[Transit Network] = Dir + "\\Prm2W_MD.tnw"
+			else if (access_mode = "drive") then 
+				Opts.Input.[Transit Network] = Dir + "\\Prm2D_MD.tnw"
+			else if (access_mode = "dropoff") then 
+				Opts.Input.[Transit Network] = Dir + "\\Prm2Drop_MD.tnw"
+		end
+
+        if ( time_period = "NT") then do 
+			if (access_mode = "walk") then 
+				Opts.Input.[Transit Network] = Dir + "\\Prm2W_NT.tnw"
+			else if (access_mode = "drive") then 
+				Opts.Input.[Transit Network] = Dir + "\\Prm2D_NT.tnw"
+			else if (access_mode = "dropoff") then 
+				Opts.Input.[Transit Network] = Dir + "\\Prm2Drop_NT.tnw"
 		end
     end
 
     if ( transit_mode = "bus") then do
 
-		if ( time_period = "peak") then do 
+		if ( time_period = "AM") then do 
 			if (access_mode = "walk") then 
-				Opts.Input.[Transit Network] = Dir + "\\PbusW.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\BusW_AM.tnw"
 			else if (access_mode = "drive") then 
-				Opts.Input.[Transit Network] = Dir + "\\PbusD.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\BusD_AM.tnw"
 			else if (access_mode = "dropoff") then 
-				Opts.Input.[Transit Network] = Dir + "\\PbusDrop.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\BusDrop_AM.tnw"
 		end
 
-		if ( time_period = "offpeak") then do 
+        if ( time_period = "PM") then do 
 			if (access_mode = "walk") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPbusW.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\BusW_PM.tnw"
 			else if (access_mode = "drive") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPbusD.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\BusD_PM.tnw"
 			else if (access_mode = "dropoff") then 
-				Opts.Input.[Transit Network] = Dir + "\\OPbusDrop.tnw"
+				Opts.Input.[Transit Network] = Dir + "\\BusDrop_PM.tnw"
+		end
+
+		if ( time_period = "MD") then do 
+			if (access_mode = "walk") then 
+				Opts.Input.[Transit Network] = Dir + "\\BusW_MD.tnw"
+			else if (access_mode = "drive") then 
+				Opts.Input.[Transit Network] = Dir + "\\BusD_MD.tnw"
+			else if (access_mode = "dropoff") then 
+				Opts.Input.[Transit Network] = Dir + "\\BusDrop_MD.tnw"
+		end
+
+        if ( time_period = "NT") then do 
+			if (access_mode = "walk") then 
+				Opts.Input.[Transit Network] = Dir + "\\BusW_NT.tnw"
+			else if (access_mode = "drive") then 
+				Opts.Input.[Transit Network] = Dir + "\\BusD_NT.tnw"
+			else if (access_mode = "dropoff") then 
+				Opts.Input.[Transit Network] = Dir + "\\BusDrop_NT.tnw"
 		end
     end
 
@@ -95,13 +152,14 @@ Macro "set_tnet" (time_period, transit_mode, access_mode, Dir)
  // -- set the P&R and drop-off stops
 
 	if (access_mode = "drive") then do
-
-	    if (time_period = "peak") then do
+        //if (time_period = "peak") then do
+	    if (time_period = "AM" or time_period = "PM") then do
                  if ( transit_mode = "premium") then Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_pnr_peak_prm.mtx", "TTPkAssn*", "Origin", "Destination"}
                  if ( transit_mode = "premium2") then Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_pnr_peak_prm2.mtx", "TTPkAssn*", "Origin", "Destination"}
                  if ( transit_mode = "bus") then Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_pnr_peak_bus.mtx", "TTPkAssn*", "Origin", "Destination"}
             end     
-	    if (time_period = "offpeak") then do
+	    //if (time_period = "offpeak") then do
+        if (time_period = "MD" or time_period = "NT") then do
                  if ( transit_mode = "premium") then Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_pnr_offpeak_prm.mtx", "TTFree*", "Origin", "Destination"}
                  if ( transit_mode = "premium2") then Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_pnr_offpeak_prm2.mtx", "TTFree*", "Origin", "Destination"}
                  if ( transit_mode = "bus") then Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_pnr_offpeak_bus.mtx", "TTFree*", "Origin", "Destination"}
@@ -111,9 +169,11 @@ Macro "set_tnet" (time_period, transit_mode, access_mode, Dir)
 
 	if (access_mode = "dropoff") then do
 
-	    if (time_period = "peak") then
+	    //if (time_period = "peak") then
+        if (time_period = "AM" or time_period = "PM") then
                  Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_knr_peak.mtx", "TTPkAssn*", "Origin", "Destination"}
-	    else if (time_period = "offpeak") then
+	    //else if (time_period = "offpeak") then
+        else if (time_period = "MD" or time_period = "NT") then
                  Opts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_knr_offpeak.mtx", "TTfree*", "Origin", "Destination"}
 
 	end
@@ -124,13 +184,16 @@ Macro "set_tnet" (time_period, transit_mode, access_mode, Dir)
 // -- set the field to read transit and drive travel times
 
 	if ( access_mode = "drive" or access_mode = "dropoff") then do     
-		if (time_period = "peak") then
+		//if (time_period = "peak") then
+        if (time_period = "AM" or time_period = "PM") then
 			Opts.Field.[Link Drive Time] = "TTPkAssn*" 	    
-		else if (time_period = "offpeak") then
+		//else if (time_period = "offpeak") then
+        else if (time_period = "MD" or time_period = "NT") then
 			Opts.Field.[Link Drive Time] = "TTfree*" 	    
 	end 
 
-      if (time_period = "peak") then do
+      //if (time_period = "peak") then do
+      if (time_period = "AM" or time_period = "PM") then do
 		if (transit_mode = "premium") then 
 			Opts.Field.[Link Impedance] = "TTPkLoc*"
 		else if (transit_mode = "premium2") then 
@@ -139,7 +202,8 @@ Macro "set_tnet" (time_period, transit_mode, access_mode, Dir)
 			Opts.Field.[Link Impedance] = "TTPkXpr*"
       end
     
-    if (time_period = "offpeak") then do
+    //if (time_period = "offpeak") then do
+    if (time_period = "MD" or time_period = "NT") then do
 		if (transit_mode = "premium") then 
 			Opts.Field.[Link Impedance] = "TTFrLoc*"
 		else if (transit_mode = "premium2") then 
@@ -148,10 +212,20 @@ Macro "set_tnet" (time_period, transit_mode, access_mode, Dir)
 			Opts.Field.[Link Impedance] = "TTFrXpr*"
     end
 
-    if (time_period = "peak") then
+    /*if (time_period = "peak") then
         Opts.Field.[Route Headway] = "AM_HEAD"
     else if (time_period = "offpeak") then
         Opts.Field.[Route Headway] = "MID_HEAD"
+    */
+
+     if (time_period = "AM") then
+        Opts.Field.[Route Headway] = "AM_HEAD"
+    else if (time_period = "MD") then
+        Opts.Field.[Route Headway] = "MID_HEAD"  
+    else if (time_period = "PM") then
+        Opts.Field.[Route Headway] = "PM_HEAD"
+    else if (time_period = "NT") then
+        Opts.Field.[Route Headway] = "NIGHT_HEAD"
 
 //	TC ver 7 repair - 2/2017
 //    Opts.Field.[Route Dwell Time] = "DWELL"
@@ -178,9 +252,11 @@ if (time_period = "offpeak") then do
     Opts.Field.[Mode Xfer Time] = "MODES.XFER_PEN"    // Change xfer penalty time from 6 to 0
 end
 */
-    if (time_period = "peak") then 
+    //if (time_period = "peak") then 
+    if (time_period = "AM" or time_period = "PM") then
         Opts.Field.[Mode Impedance] = "MODES.P_SPD_FIEL"
-    else if (time_period = "offpeak") then 
+    //else if (time_period = "offpeak") then
+    else if (time_period = "MD" or time_period = "NT") then 
         Opts.Field.[Mode Impedance] = "MODES.OP_SPD_FIE"
 
     Opts.Field.[Mode Speed] = "MODES.SPEED"
@@ -189,16 +265,18 @@ end
     Opts.Field.[Inter-Mode Xfer To] = "MODEXFER.TO"
     Opts.Field.[Inter-Mode Xfer Stop] = "MODEXFER.STOP"
 
-if (time_period = "peak") then do
-    if (access_mode = "drive") then do
-       Opts.Field.[Inter-Mode Xfer Time] = "MODEXFER.XFERPEN2"  // Keep peak drive access xfer penalty as 6
-    end else do
-       Opts.Field.[Inter-Mode Xfer Time] = "MODEXFER.XFERPEN1"  // Change xfer penalty time from 6 to 2
+    //if (time_period = "peak") then do
+    if (time_period = "AM" or time_period = "PM") then do
+        if (access_mode = "drive") then do
+        Opts.Field.[Inter-Mode Xfer Time] = "MODEXFER.XFERPEN2"  // Keep peak drive access xfer penalty as 6
+        end else do
+        Opts.Field.[Inter-Mode Xfer Time] = "MODEXFER.XFERPEN1"  // Change xfer penalty time from 6 to 2
+        end
     end
-end
-if (time_period = "offpeak") then do
-    Opts.Field.[Inter-Mode Xfer Time] = "MODEXFER.XFERPEN3"    // Change xfer penalty time from 6 to 0
-end
+    //if (time_period = "offpeak") then do
+    if (time_period = "MD" or time_period = "NT") then do
+        Opts.Field.[Inter-Mode Xfer Time] = "MODEXFER.XFERPEN3"    // Change xfer penalty time from 6 to 0
+    end
 
 
 //--- this field disabled 
@@ -256,22 +334,28 @@ end
 // -- setup for park & ride
 
     if ( access_mode = "drive" or access_mode = "dropoff") then do     
-
-	    if (access_mode = "drive" and time_period="peak") then Opts.Global.[Drive Time Weight] = 1.0  // JainM, March07, change drive access weight to 1.5 from 2.58 to make it consistent with Mode Choice
+        if (access_mode = "drive" and time_period="AM" or time_period="PM") then Opts.Global.[Drive Time Weight] = 1.0
+	    //if (access_mode = "drive" and time_period="peak") then Opts.Global.[Drive Time Weight] = 1.0  // JainM, March07, change drive access weight to 1.5 from 2.58 to make it consistent with Mode Choice
             // Set off-peak drive access / drop-off time weight to 2.58 (from 1.5) for better survey trip table assignment, JainM, 06.17.08
-	    if (access_mode = "drive" and time_period="offpeak") then Opts.Global.[Drive Time Weight] = 2.58  // JainM, March07, change drive access weight to 1.5 from 2.58 to make it consistent with Mode Choice
-	    if (access_mode = "dropoff") then Opts.Global.[Drive Time Weight] = 2.58 // JainM, March07, change drop-off access weight to 1.5 from 2.58 to make it consistent with Mode Choice
+	    //if (access_mode = "drive" and time_period="offpeak") then Opts.Global.[Drive Time Weight] = 2.58  // JainM, March07, change drive access weight to 1.5 from 2.58 to make it consistent with Mode Choice
+	    if (access_mode = "drive" and time_period="MD" or time_period="NT") then Opts.Global.[Drive Time Weight] = 2.58  
+        if (access_mode = "dropoff") then Opts.Global.[Drive Time Weight] = 2.58 // JainM, March07, change drop-off access weight to 1.5 from 2.58 to make it consistent with Mode Choice
 
 // JainM, March07 change maximum drive time from 45 to 60 for drive access paths
 // JainM, 08.11.08, for premium paths, increase maximum to 150 minutes.
-	    if (access_mode = "drive" and time_period="peak" and transit_mode = "bus") then Opts.Global.[Max Drive Time] = 75.0
+	    /*if (access_mode = "drive" and time_period="peak" and transit_mode = "bus") then Opts.Global.[Max Drive Time] = 75.0
 	    if (access_mode = "drive" and time_period="peak" and transit_mode = "premium") then Opts.Global.[Max Drive Time] = 150.0
 	    if (access_mode = "drive" and time_period="peak" and transit_mode = "premium2") then Opts.Global.[Max Drive Time] = 150.0
 	    if (access_mode = "drive" and time_period="offpeak") then Opts.Global.[Max Drive Time] = 45.0
+        */
+        if (access_mode = "drive" and time_period= "AM" or time_period= "PM" and transit_mode = "bus") then Opts.Global.[Max Drive Time] = 75.0
+	    if (access_mode = "drive" and time_period= "AM" or time_period= "PM" and transit_mode = "premium") then Opts.Global.[Max Drive Time] = 150.0
+	    if (access_mode = "drive" and time_period= "AM" or time_period= "PM" and transit_mode = "premium2") then Opts.Global.[Max Drive Time] = 150.0
+	    if (access_mode = "drive" and time_period= "MD" or time_period= "NT") then Opts.Global.[Max Drive Time] = 45.0
 	    if (access_mode = "dropoff") then Opts.Global.[Max Drive Time] = 45.0
 	    Opts.Flag.[Use Park and Ride] = "Yes"
-          Opts.Flag.[Use P&R Walk Access] = "No"
-          Opts.Flag.[Use Transit Access] = "No"
+        Opts.Flag.[Use P&R Walk Access] = "No"
+        Opts.Flag.[Use Transit Access] = "No"
     end
 
 	Return(Opts)
