@@ -93,7 +93,7 @@ end
      if !ret_value then goto badhwysettings
 
 // STEP 3a: TCSPMAT Free SPEED
-if (time_period = "offpeak") then do
+if (time_period = "MD" or time_period = "NT") then do
      Opts = null
      Opts.Input.Network = Dir + "\\pnr_net.net"
      Opts.Input.[Origin Set] = {net_file + "|" + node_lyr, node_lyr, "centroid", "Select * where Centroid = 1 or [External Station] = 1"}
@@ -188,7 +188,7 @@ if (time_period = "offpeak") then do
      if !ret_value then goto badtcspmat
 ////////////////////////////////////
 end
-else if (time_period = "peak") then do
+else if (time_period = "AM" or time_period = "PM") then do
 // STEP 3b: TCSPMAT PEAK SPEED
      Opts = null
      Opts.Input.Network = Dir + "\\pnr_net.net"
@@ -272,7 +272,7 @@ if (access_mode="drive") then do
        max_dr_dist[i]=max(NullToZero(hwy_dist2CBD[i]),3.0)
     end
 */    
-    if (time_period = "peak") then do 
+    if (time_period = "AM" or time_period = "PM") then do 
        if(transit_mode="premium") then dacc_time_mtx  = OpenMatrix(Dir + "\\skims\\skim_pnr_peak_prm.mtx", "FALSE")
        if(transit_mode="premium2") then dacc_time_mtx  = OpenMatrix(Dir + "\\skims\\skim_pnr_peak_prm2.mtx", "FALSE")
        if(transit_mode="bus") then dacc_time_mtx  = OpenMatrix(Dir + "\\skims\\skim_pnr_peak_bus.mtx", "FALSE")
@@ -288,7 +288,7 @@ if (access_mode="drive") then do
 //       dacc_dist_cur = CreateMatrixCurrency(dacc_dist_mtx, "Length (Skim)", mdidx[1], mdidx[2], )
     end 
 
-    if (time_period = "offpeak") then do 
+    if (time_period = "MD" or time_period = "NT") then do 
         if(transit_mode="premium") then dacc_time_mtx = OpenMatrix(Dir + "\\skims\\skim_pnr_offpeak_prm.mtx", "FALSE")
         if(transit_mode="premium2") then dacc_time_mtx = OpenMatrix(Dir + "\\skims\\skim_pnr_offpeak_prm2.mtx", "FALSE")
         if(transit_mode="bus") then dacc_time_mtx = OpenMatrix(Dir + "\\skims\\skim_pnr_offpeak_bus.mtx", "FALSE")
@@ -338,7 +338,7 @@ pnrcost:
        drive_time   = GetMatrixVector(dacc_time_cur,  {{"Row", StringToInt(rowID[i])}})
        drive_dist   = GetMatrixVector(dacc_dist_cur,  {{"Row", StringToInt(rowID[i])}})
 
-       if (time_period = "peak") then drive_time1   = GetMatrixVector(dacc_time_cur1,  {{"Row", StringToInt(rowID[i])}})
+       if (time_period = "AM" or time_period = "PM") then drive_time1   = GetMatrixVector(dacc_time_cur1,  {{"Row", StringToInt(rowID[i])}})
 
 
 // identify production area type to apply drive access time weights
@@ -410,7 +410,7 @@ pnrcost:
                
        DriveTime    = Vector(drive_time.length, "Float",)
        PNRCost      = Vector(drive_time.length, "Float",)
-       if (time_period = "peak") then do       
+       if (time_period = "AM" or time_period = "PM") then do       
            for j=1 to drive_time.length do
               fftime=0
               kk=0.65 // changed from 1 to 0.50 JainM 06.17.08; changed from 0.5 to 0.65, JainM, 08.13.08
@@ -496,7 +496,7 @@ pnrcost:
               
            end    
        end       
-       if (time_period = "offpeak") then do       
+       if (time_period = "MD" or time_period = "NT") then do       
            for j=1 to drive_time.length do
               
               if (drive_time[j] > 0.0 ) then do
@@ -569,7 +569,7 @@ end
 // For drop-off access mode, create a second set of access time skim which excludes CBD drop-off location
 if (access_mode="dropoff") then do
 
-    if (time_period = "peak") then do 
+    if (time_period = "AM" or time_period = "PM") then do 
        dacc_time_file       = Dir + "\\skims\\skim_knr_peak.mtx"
        dacc_time_file_noCBD = Dir + "\\skims\\skim_knr_peak_noCBD.mtx"
        dacc_time_mtx        = OpenMatrix(dacc_time_file, "FALSE")
@@ -583,7 +583,7 @@ if (access_mode="dropoff") then do
 
     end 
 
-    if (time_period = "offpeak") then do 
+    if (time_period = "MD" or time_period = "NT") then do 
        dacc_time_file       = Dir + "\\skims\\skim_knr_offpeak.mtx"
        dacc_time_file_noCBD = Dir + "\\skims\\skim_knr_offpeak_noCBD.mtx"
        dacc_time_mtx        = OpenMatrix(dacc_time_file, "FALSE")
