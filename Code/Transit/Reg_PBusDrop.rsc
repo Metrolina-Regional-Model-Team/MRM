@@ -664,7 +664,7 @@ goto quit
     // goto badquit
 
     badxpr_stopflags:
-    Throw("Reg_PPrmW - Error return from XPR_StopFlags")
+    Throw("Reg_PrmW - Error return from XPR_StopFlags")
     // Throw(rtnmsg)
     // AppendToLogFile(2, rtnmsg)
     // Throw("Reg_PPrmW - Error return from XPR_StopFlags")

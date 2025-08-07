@@ -1,8 +1,9 @@
-Macro "Reg_PPrmD" (Args) 
+Macro "Reg_PrmD" (Args) 
 
 // Modified for new UI - Nov, 2015 - McLelland
 // Commented out pkzip for skim file and delete - (lines 542+)
-// 5/30/19, mk: There are now three distinct networks, use offpeak since was used to setup route system
+// 5/30/19, mk: There are now three distinct networks, use offpeak since was used to setup route system - dropped in 2024 to one network
+// 7/30/25, ar: Loop through four time periods to build and set transit network and skims for each 
 	shared route_file, routename, net_file, link_lyr, node_lyr
 
 	// LogFile = Args.[Log File].value
@@ -97,7 +98,6 @@ setview("Vehicle Routes")
 
 // ----------------------------------- Loop by 4 time periods  -----------------------------------
 
-//  time_periods = {"AM"}
   time_periods = {"AM", "PM", "MD","NT"}
    
     for time_period in time_periods do
@@ -143,7 +143,11 @@ setview("Vehicle Routes")
 
      // ----------------------------------- STEP 3: Transit Skim Path Finder  -----------------------------------
 
-     
+          // skip PM and NT as same skimming used
+
+          if time_period = "PM" then goto skiptransskim
+          if time_period = "NT" then goto skiptransskim
+
           Opts = null
           Opts.Input.Database = net_file 
           Opts.Input.[Transit RS] = route_file
@@ -616,6 +620,8 @@ setview("Vehicle Routes")
                if rtn_upskim[1] = 0 then goto badupskim
 
           //CloseMap()
+     skiptransskim:
+
      M=null
      M1=null
      M2= null

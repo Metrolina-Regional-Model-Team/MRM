@@ -192,7 +192,7 @@ Macro "create_tnet" (time_period, transit_mode, access_mode, Dir)
 			end
 
 			if ( access_mode = "dropoff") then do
-			     Opts.Output.[Network File] = Dir + "\\PrmDrop_AM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\PrmDrop_PM.tnw"
 	     		 Opts.Global.[Network Label] = "PM Peak Premium DropOff Network"
 			end
 		end

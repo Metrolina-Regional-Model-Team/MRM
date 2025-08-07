@@ -21,7 +21,11 @@ OM = OpenMatrix(METDir + "\\TAZ\\matrix_template.mtx", "True")
 mc1 = CreateMatrixCurrency(OM, "Table", "Rows", "Columns", )
 on error default
 
-updmtx = Dir+"\\Skims\\"+time_period+transit_mode+"_DODist.MTX"
+if time_period = "AM" or time_period ="PM" then period = "peak"
+else
+period = "offpeak"
+
+updmtx = Dir+"\\Skims\\"+period+transit_mode+"_DODist.MTX"
 
 CopyMatrixStructure({mc1}, {{"File Name", updmtx},
     {"Label", "UpdateDropOffAccess"},
@@ -31,7 +35,7 @@ CopyMatrixStructure({mc1}, {{"File Name", updmtx},
 
 output_matrix = updmtx
 
-    if (time_period="peak") then do
+    if (period="peak") then do
         modesplit_matrix = Dir + "\\skims\\PK_DROPTRAN_SKIMS.mtx"
         if (transit_mode="premium") then do
             input_matrix = Dir + "\\skims\\TR_SKIM_PPRMDROP.mtx"
@@ -52,9 +56,9 @@ output_matrix = updmtx
             park_matrix=Dir + "\\skims\\TR_PARK_pprm3drop.mtx"
             modesplit_matrix = Dir + "\\skims\\PK_DROPTRAN_SKIMS3.mtx"
         end
-    end //time_period = peak
+    end //period = peak
     
-    if (time_period="offpeak") then do
+    if (period="offpeak") then do
         modesplit_matrix = Dir + "\\skims\\OFFPK_DROPTRAN_SKIMS.mtx"
         if (transit_mode="premium") then do
             input_matrix = Dir + "\\skims\\TR_SKIM_OPPRMDROP.mtx"
@@ -115,20 +119,21 @@ Opts = null
     // for i = 2 to dirparse.length do
     //     DirSlash = DirSlash + "//" + dirparse[i]
     // end
-    DirSlash = Dir
+    
+    DirSlash = Dir  
  
 //      ctl = OpenFile(ctlname, "w")
-     odmtx = DirSlash + "//Skims//"+time_period+transit_mode+"_DODist.MTX"
+     odmtx = DirSlash + "//Skims//"+period+transit_mode+"_DODist.MTX"
 
 //  WriteLine(ctl, DirSlash + "//Skims//"+time_period+transit_mode+"_DODist.MTX")
-    if (time_period="peak") then do
+    if (period="peak") then do
           opmtx = DirSlash + "//Skims//skim_pnr_peak_prm.mtx"
           pdmtx = DirSlash + "//Skims//skim_knr2dest_peak.mtx"
 
 //      WriteLine(ctl, DirSlash + "//Skims//skim_knr_peak.mtx")
 //      WriteLine(ctl, DirSlash + "//Skims//skim_knr2dest_peak.mtx")
     end
-    else if (time_period="offpeak") then do
+    else if (period="offpeak") then do
           opmtx = DirSlash + "//Skims//skim_knr_offpeak.mtx"
           pdmtx = DirSlash + "//Skims//skim_knr2dest_offpeak.mtx"
 

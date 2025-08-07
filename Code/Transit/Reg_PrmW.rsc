@@ -122,7 +122,11 @@ Macro "Reg_PrmW" (Args)
         Opts.Global.[OD Layer Type] = 2
         Opts.Global.[Skim Modes] = {1, 2, 3, 4, 5, 6, 10, 11}
         Opts.Output.[Skim Matrix].Label = "Skim Matrix (Pathfinder)"
-      
+
+        // skip PM and NT as same skimming used
+
+        if time_period = "PM" then goto skiptransskim
+        if time_period = "NT" then goto skiptransskim
        
         RunMacro("TCB Run Procedure", 3, "Transit Skim PF", Opts)
         if !ret_value then goto badtranskim
@@ -500,7 +504,7 @@ Macro "Reg_PrmW" (Args)
 
         if !RunMacro("TCB Run Operation", 21, "Fill Matrices", Opts) then goto badmatrixop
     
-
+        skiptransskim:
      
 end // for time_period
 

@@ -20,7 +20,11 @@ Macro "Update_Drive_Skims_Mtx" (time_period,transit_mode, access_mode, Args)
     mc1 = CreateMatrixCurrency(OM, "Table", "Rows", "Columns", )
     on error default
 
-    updmtx=Dir+"\\Skims\\"+time_period+transit_mode+"_DADist.MTX"
+    if time_period = "AM" or time_period ="PM" then period = "peak"
+    else
+    period = "offpeak"
+    
+    updmtx=Dir+"\\Skims\\"+period+transit_mode+"_DADist.MTX"
 
     CopyMatrixStructure({mc1}, {{"File Name", updmtx},
         {"Label", "UpdateDriveAccess"},
@@ -30,7 +34,7 @@ Macro "Update_Drive_Skims_Mtx" (time_period,transit_mode, access_mode, Args)
 
     output_matrix = updmtx
 
-    if (time_period="AM" or time_period = "PM") then do
+    if (period="peak") then do
         modesplit_matrix = Dir + "\\skims\\PK_DRVTRAN_SKIMS.mtx"
         
         if (transit_mode="premium") then do
@@ -44,7 +48,7 @@ Macro "Update_Drive_Skims_Mtx" (time_period,transit_mode, access_mode, Args)
         end
     end
     
-    if (time_period="MD" or time_period = "NT") then do
+    if (period= "offpeak") then do
         modesplit_matrix = Dir + "\\skims\\OFFPK_DRVTRAN_SKIMS.mtx"
         if (transit_mode="premium") then do
             input_matrix = Dir + "\\skims\\TR_SKIM_OPPRMD.mtx"
@@ -117,9 +121,9 @@ Opts = null
   
  
 //  ctl = OpenFile(ctlname, "w")
-     odmtx = DirSlash + "//Skims//"+time_period+transit_mode+"_DADist.MTX"
+     odmtx = DirSlash + "//Skims//"+period+transit_mode+"_DADist.MTX"
 //  WriteLine(ctl, DirSlash + "//Skims//"+time_period+transit_mode+"_DADist.MTX")
-    if (time_period="AM" or time_period = "PM") then do
+    if (period = "peak") then do
         if (transit_mode="premium") then do
                opmtx = DirSlash + "//Skims//skim_pnr_peak_prm.mtx"
                pdmtx = DirSlash + "//Skims//skim_pnr2dest_peak_prm.mtx"
@@ -147,7 +151,7 @@ Opts = null
 
     end  // time_period = peak
     
-    else if (time_period="MD" or time_period = "NT") then do
+    else if (period="offpeak") then do
         if (transit_mode="premium") then do
                opmtx = DirSlash + "//Skims//skim_pnr_offpeak_prm.mtx"
                pdmtx = DirSlash + "//Skims//skim_pnr2dest_offpeak_prm.mtx"
@@ -245,8 +249,8 @@ Opts = null
     if !ret_value then goto badmerge
 
      Opts=null
-     if(time_period="AM" or time_period = "PM") then exp_txt="[OP Time]-([OP Cost]*0.05)"
-     if(time_period="MD" or time_period = "NT") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
+     if(period="peak") then exp_txt="[OP Time]-([OP Cost]*0.05)"
+     if(period="offpeak") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
 
      Opts = {{"Input",    {{"Matrix Currency",   {updmtx,
                                                   "OP Time",
@@ -349,8 +353,8 @@ Opts = null
     if !ret_value then goto badmerge
 
      Opts=null
-     if(time_period="AM" or time_period = "PM") then exp_txt="[OP Time]-([OP Cost]*0.05)"
-     if(time_period="MD" or time_period = "NT") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
+     if(period="peak") then exp_txt="[OP Time]-([OP Cost]*0.05)"
+     if(period="offpeak") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
 
      Opts = {{"Input",    {{"Matrix Currency",   {updmtx,
                                                   "OP Time",
@@ -451,8 +455,8 @@ Opts = null
     if !ret_value then goto badmerge
 
      Opts=null
-     if(time_period="AM" or time_period = "PM") then exp_txt="[OP Time]-([OP Cost]*0.05)"
-     if(time_period="MD" or time_period = "NT")then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
+     if(period="peak") then exp_txt="[OP Time]-([OP Cost]*0.05)"
+     if(period="offpeak") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
 
      Opts = {{"Input",    {{"Matrix Currency",   {updmtx,
                                                   "OP Time",
@@ -553,8 +557,8 @@ Opts = null
     if !ret_value then goto badmerge
 
      Opts=null
-     if(time_period="AM" or time_period = "PM") then exp_txt="[OP Time]-([OP Cost]*0.05)"
-     if(time_period="MD" or time_period = "NT") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
+     if(period="peak") then exp_txt="[OP Time]-([OP Cost]*0.05)"
+     if(period="offpeak") then exp_txt="[OP Time]-([OP Cost]*0.05/2.58)"
 
      Opts = {{"Input",    {{"Matrix Currency",   {updmtx,
                                                   "OP Time",
