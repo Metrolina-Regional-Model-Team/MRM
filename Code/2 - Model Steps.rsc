@@ -25,20 +25,20 @@ Macro "Skimming" (Args)
     RunMacro("AutoSkims_Free", Args)
     RunMacro("AutoSkims_Peak", Args)
     if first_iter then RunMacro("Reg_NonMotorized", Args)
-   // RunMacro("Reg_PrmW", Args)
-   // RunMacro("Reg_PrmD", Args)
-    RunMacro("Reg_PrmDrop", Args)
-    //RunMacro("Reg_PBusW", Args)
-    //RunMacro("Reg_PBusD", Args)
+    //RunMacro("Reg_PrmW", Args)
+    //RunMacro("Reg_PrmD", Args)
+    //RunMacro("Reg_PrmDrop", Args)
+    //RunMacro("Reg_BusW", Args)
+    RunMacro("Reg_BusD", Args)
     //RunMacro("Reg_PBusDrop", Args)
-    if first_iter then do
+    //if first_iter then do
         //RunMacro("Reg_OPPrmW", Args)
         //RunMacro("Reg_OPPrmD", Args)
         //RunMacro("Reg_OPPrmDrop", Args)
         //RunMacro("Reg_OPBusW", Args)
         //RunMacro("Reg_OPBusD", Args)
         //RunMacro("Reg_OPBusDrop", Args)
-    end
+    //end
     return(1)
 endmacro
 

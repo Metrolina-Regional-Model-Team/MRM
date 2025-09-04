@@ -103,8 +103,8 @@ Transit\\Reg_NonMotorized
 Transit\\Reg_PrmW
 Transit\\Reg_PrmD
 Transit\\Reg_PrmDrop
-Transit\\Reg_PBusW
-Transit\\Reg_PBusD
+Transit\\Reg_BusW
+Transit\\Reg_BusD
 Transit\\Reg_PBusDrop
 //Transit\\Reg_OPPrmDrop
 Transit\\Reg_OPBusW

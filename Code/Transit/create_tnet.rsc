@@ -318,17 +318,17 @@ Macro "create_tnet" (time_period, transit_mode, access_mode, Dir)
 		if ( time_period = "AM") then do
 
 			if ( access_mode = "walk") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusW_AM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusW_AM.tnw"
 	     		 Opts.Global.[Network Label] = "AM Peak Bus Walk Network"
 			end
 
 			if ( access_mode = "drive") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusD_AM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusD_AM.tnw"
 	     		 Opts.Global.[Network Label] = "AM Peak Bus Drive Network"
 			end
 
 			if ( access_mode = "dropoff") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusDrop_AM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusDrop_AM.tnw"
 	     		 Opts.Global.[Network Label] = "AM Peak Bus DropOff Network"
 			end
 		end
@@ -336,17 +336,17 @@ Macro "create_tnet" (time_period, transit_mode, access_mode, Dir)
 		if ( time_period = "PM") then do
 
 			if ( access_mode = "walk") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusW_PM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusW_PM.tnw"
 	     		 Opts.Global.[Network Label] = "PM Peak Bus Walk Network"
 			end
 
 			if ( access_mode = "drive") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusD_PM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusD_PM.tnw"
 	     		 Opts.Global.[Network Label] = "PM Peak Bus Drive Network"
 			end
 
 			if ( access_mode = "dropoff") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusDrop_PM.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusDrop_PM.tnw"
 	     		 Opts.Global.[Network Label] = "PM Peak Bus DropOff Network"
 			end
 		end
@@ -354,17 +354,17 @@ Macro "create_tnet" (time_period, transit_mode, access_mode, Dir)
 		if ( time_period = "MD") then do
 
 			if ( access_mode = "walk") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusW_MD.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusW_MD.tnw"
 	     		 Opts.Global.[Network Label] = "MD OffPeak Bus Walk Network"
 			end
 
 			if ( access_mode = "drive") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusD_MD.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusD_MD.tnw"
 	     		 Opts.Global.[Network Label] = "MD OffPeak Bus Drive Network"
 			end
 
 			if ( access_mode = "dropoff") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusDrop_MD.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusDrop_MD.tnw"
 	     		 Opts.Global.[Network Label] = "MD OffPeak Bus DropOff Network"
 			end
 		end
@@ -372,17 +372,17 @@ Macro "create_tnet" (time_period, transit_mode, access_mode, Dir)
 		if ( time_period = "NT") then do
 
 			if ( access_mode = "walk") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusW_NT.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusW_NT.tnw"
 	     		 Opts.Global.[Network Label] = "NT OffPeak Bus Walk Network"
 			end
 
 			if ( access_mode = "drive") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusD_NT.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusD_NT.tnw"
 	     		 Opts.Global.[Network Label] = "NT OffPeak Bus Drive Network"
 			end
 
 			if ( access_mode = "dropoff") then do
-			     Opts.Output.[Network File] = Dir + "\\PbusDrop_NT.tnw"
+			     Opts.Output.[Network File] = Dir + "\\BusDrop_NT.tnw"
 	     		 Opts.Global.[Network Label] = "NT OffPeak Bus DropOff Network"
 			end
 		end

@@ -99,7 +99,7 @@ setview("Vehicle Routes")
 
     RunMacro("TCB Init")
 
-    Opts = RunMacro("create_tnet", "peak", "bus", "dropoff", Dir)
+    Opts = RunMacro("create_tnet", time_period, "bus", "dropoff", Dir)
     ret_value = RunMacro("TCB Run Operation", 1, "Build Transit Network", Opts) 
 
     if !ret_value then goto badbuildtrannet
@@ -107,7 +107,7 @@ setview("Vehicle Routes")
 // Call macro Compute_OP_Matrix to create Origin-to-DropOff Node Time matrix
 // added by JainM March 07
 
-    rtn_OP = RunMacro("Compute_OP_Matrix", "peak", "bus", "dropoff", Args)
+    rtn_OP = RunMacro("Compute_OP_Matrix", time_period, "bus", "dropoff", Args)
     if rtn_OP[1] = 0
         then do
             Throw(rtn_OP[2])
@@ -119,7 +119,7 @@ setview("Vehicle Routes")
 // ----------------------------------- STEP 2: Transit Network Setting  -----------------------------------
 
 
-    Opts = RunMacro("set_tnet", "peak", "bus", "dropoff", Dir)
+    Opts = RunMacro("set_tnet", time_period, "bus", "dropoff", Dir)
     tnwOpts=Opts
 
         ret_value = RunMacro("TCB Run Operation", 2, "Transit Network Setting PF", Opts)
