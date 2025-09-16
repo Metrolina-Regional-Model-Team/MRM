@@ -48,7 +48,7 @@ data <- data.frame(
 
 # Format the Coefficient column
 data$Coefficient <- sapply(data$Coefficient, function(x) {
-  if (x == -0.0862 || x == 0.0025) {
+  if (x == -0.0862 | x == 0.0025) {
     return(sprintf("%.4f", x))  # Show 8 decimals for this specific value
   } else {
     return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
@@ -170,7 +170,7 @@ data <- data.frame(
 
 # Format the Coefficient column
 data$Coefficient <- sapply(data$Coefficient, function(x) {
-  if (x == -0.00000378 || x == -0.00000229) {
+  if (x == -0.00000378 | x == -0.00000229) {
     return(sprintf("%.8f", x))  # Show 8 decimals for this specific value
   } else {
     return(sprintf("%.3f", x))  # Round all other coefficients to 3 decimals
