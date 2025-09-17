@@ -1,8 +1,7 @@
 
-679,codepage=65001
+675,codepage=65001
 "INDEX",I,1,4,0,6,0,,"","Project ID",,"Sum",
 "YEAR",I,5,4,0,6,0,,"","Project build year",,"Sum",
-"HY_Hold",I,668,4,0,8,0,,"","Hold reccomended build year based on STIP and MTP Development",,"Sum",
 "MTP55_HY",I,9,4,0,8,0,,"","MTP 2055 Horizon Year",,"Sum",
 "MTP55_ID",C,13,20,0,20,0,,"","2055 MTP Project ID",,"Copy",
 "MTP55_Note",C,33,50,0,50,0,,"","Modeler comments for MTP work",,"Sum",
@@ -27,5 +26,5 @@
 "T2_ID",C,638,16,0,16,0,,"","Tier 2 Submittal ID for 2026-35 STIP project ranking",,"Copy",
 "PROJSET55",C,654,10,0,10,0,,"","CRTPO 2055 MTP/ 2026-35 STIP project groupings for MRM analysis",,"Copy",
 "P7_Remove",I,664,4,0,8,0,,"","Projects listed as removed during the P7 process",,"Sum",
-"HY_25v1",I,672,4,0,8,0,,"","Horizon Year for RFATS Official Runs (mrm25v1.0)",,"Sum",
-"HY_25v2",I,676,4,0,8,0,,"","Horizon Year for STIP Official Runs (mrm25v2.0)",,"Sum",
+"HY_25v1",I,668,4,0,8,0,,"","Horizon Year for RFATS Official Runs (mrm25v1.0)",,"Sum",
+"HY_25v2",I,672,4,0,8,0,,"","Horizon Year for STIP Official Runs (mrm25v2.0)",,"Sum",
