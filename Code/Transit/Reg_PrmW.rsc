@@ -103,6 +103,11 @@ Macro "Reg_PrmW" (Args)
 
     // ----------------------------------- STEP 3: Transit Skim Path Finder  -----------------------------------
 
+        // skip PM and NT as same skimming used
+
+        if time_period = "PM" then goto skiptransskim
+        if time_period = "NT" then goto skiptransskim 
+
         Opts = null
         Opts.Input.Database = net_file 
         Opts.Input.[Transit RS] = route_file
@@ -110,23 +115,18 @@ Macro "Reg_PrmW" (Args)
         Opts.Input.Network = Dir + "\\PrmW_" + time_period + ".tnw"
         Opts.Input.[Origin Set] = {net_file + "|" + node_lyr, node_lyr,"Centroids","Select * where centroid = 1 or [External Station] = 1"}
         Opts.Input.[Destination Set] = {net_file + "|" + node_lyr, node_lyr,"Centroids"}
-        if time_period = "AM" or time_period = "PM" then do
+        if time_period = "AM" then do
             Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_PPrmW.mtx" 
             Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Length", "BRT_Flag", "TTPkLoc*", "TTWalk*"}
         end
-        if time_period = "MD" or time_period = "NT" then do
+        if time_period = "MD" then do
             Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_OPPrmW.mtx"
-             Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Length", "BRT_Flag", "TTFrLoc*", "TTWalk*"} 
+            Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Length", "BRT_Flag", "TTFrLoc*", "TTWalk*"} 
         end
            
         Opts.Global.[OD Layer Type] = 2
         Opts.Global.[Skim Modes] = {1, 2, 3, 4, 5, 6, 10, 11}
         Opts.Output.[Skim Matrix].Label = "Skim Matrix (Pathfinder)"
-
-        // skip PM and NT as same skimming used
-
-        if time_period = "PM" then goto skiptransskim
-        if time_period = "NT" then goto skiptransskim
        
         RunMacro("TCB Run Procedure", 3, "Transit Skim PF", Opts)
         if !ret_value then goto badtranskim

@@ -16,7 +16,7 @@ Macro "Skimming" (Args)
         then "true"
         else "false"
 
-    if first_iter then do
+    /*if first_iter then do
         RunMacro("HwySkim_Free", Args)
         RunMacro("Prepare_Transit_Files", Args)
     end
@@ -25,11 +25,11 @@ Macro "Skimming" (Args)
     RunMacro("AutoSkims_Free", Args)
     RunMacro("AutoSkims_Peak", Args)
     if first_iter then RunMacro("Reg_NonMotorized", Args)
-    //RunMacro("Reg_PrmW", Args)
-    //RunMacro("Reg_PrmD", Args)
-    //RunMacro("Reg_PrmDrop", Args)
+    RunMacro("Reg_PrmW", Args)
+    RunMacro("Reg_PrmD", Args)
+    */RunMacro("Reg_PrmDrop", Args)
     //RunMacro("Reg_BusW", Args)
-    RunMacro("Reg_BusD", Args)
+    //RunMacro("Reg_BusD", Args)
     //RunMacro("Reg_PBusDrop", Args)
     //if first_iter then do
         //RunMacro("Reg_OPPrmW", Args)
