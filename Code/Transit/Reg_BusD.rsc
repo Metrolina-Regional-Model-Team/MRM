@@ -147,7 +147,10 @@ setview("Vehicle Routes")
 
 
 	// ----------------------------------- STEP 3: Transit Skim Path Finder  -----------------------------------
+		// skip PM and NT as same skimming used
 
+		if time_period = "PM" then goto skiptransskim
+		if time_period = "NT" then goto skiptransskim
 	
 		Opts = null
 		Opts.Input.Database = net_file 
@@ -159,9 +162,16 @@ setview("Vehicle Routes")
 		Opts.Global.[OD Layer Type] = 2
 		Opts.Global.[Skim Modes] = { 5, 6, 7, 8, 9, 10, 11}
 		Opts.Output.[Skim Matrix].Label = "Skim Matrix (Pathfinder)"
-		Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_PBusD.mtx"
-		Opts.Output.[Parking Matrix].Label = "TR_PARK_PBusD"
-		Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_PBusD.mtx"
+		if time_period = "AM" then do
+			Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_PBusD.mtx"
+			Opts.Output.[Parking Matrix].Label = "TR_PARK_PBusD"
+			Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_PBusD.mtx"
+		end
+		if time_period = "MD" then do	
+			Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_OPBusD.mtx"
+			Opts.Output.[Parking Matrix].Label = "TR_PARK_OPBusD"
+			Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_OPBusD.mtx"
+		end
 	// -------- Output Origin-to-Parking Time Matrix ---------------
 	//     Opts.Output.[OP Matrix].Label = "OP Time Matrix (Peak)"
 	//     Opts.Output.[OP Matrix].[File Name] = Dir + "\\skims\\TR_OP_SKIM_pbusd.mtx"
@@ -171,7 +181,10 @@ setview("Vehicle Routes")
 
 		// --- Fill the Null Values in PARK matrix with Zeroes
 
-		park_matrix = Dir + "\\skims\\TR_PARK_PBusD.mtx"
+		if time_period = "AM" or time_period = "PM" then
+			park_matrix = Dir + "\\skims\\TR_PARK_PBusD.mtx"
+		else
+			park_matrix = Dir + "\\skims\\TR_PARK_OPBusD.mtx"
 
 		OM = OpenMatrix(park_matrix, "True")
 
@@ -196,8 +209,11 @@ setview("Vehicle Routes")
 		// Check for local matrix cores (JWM 16.09.16) - add if necessary and initialize to null (clear)
 		// 	matrix assignment ":=" please see help documentation for "Matrix Assignment Statement"
 
-		OM = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
-
+		if time_period = "AM" or time_period = "PM" then
+			OM = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
+		else
+			OM = OpenMatrix(Dir + "\\skims\\TR_SKIM_OPBusD.mtx", "True")
+		
 		matcores = GetMatrixCoreNames(OM)
 		corepos = ArrayPosition(matcores, {"Total Distance"},)
 		if corepos = 0 then addmatrixcore(OM,"Total Distance")
@@ -248,7 +264,11 @@ setview("Vehicle Routes")
 
 		hwyskim_matrix = Dir + "\\AutoSkims\\SPMAT_free.mtx"
 
-		M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_PBusD.mtx", "True")
+		if time_period = "AM" or time_period = "PM" then
+			M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_PBusD.mtx", "True")
+		else
+			M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_OPBusD.mtx", "True")
+
 		M2 = OpenMatrix(hwyskim_matrix, "True")
 
 		c1 = CreateMatrixCurrency(M2, "Non HOV Length", "Rows", "Columns",)
@@ -260,7 +280,11 @@ setview("Vehicle Routes")
 		M1 = null
 		M2 = null
 
-		M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
+		if time_period = "AM" or time_period = "PM" then
+			M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
+		else
+			M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_OPBusD.mtx", "True")
+
 			c1 = CreateMatrixCurrency(M1, "Length (XCM)", "RCIndex", "RCIndex",)
 			c2 = CreateMatrixCurrency(M1, "Length (XPR)", "RCIndex", "RCIndex",)
 			c3 = CreateMatrixCurrency(M1, "Length (FDR)", "RCIndex", "RCIndex",)
@@ -298,11 +322,18 @@ setview("Vehicle Routes")
 	//goto quit
 
 	//--- include the DropFlag from PbusW as a part of Transit Skim Matrices 
-
-		pbusw_matrix = Dir + "\\skims\\TR_SKIM_pbusw.mtx"
+		
+		if time_period = "AM" or time_period = "PM" then
+			pbusw_matrix = Dir + "\\skims\\TR_SKIM_pbusw.mtx"
+		else
+			opbusw_matrix = Dir + "\\skims\\TR_SKIM_opbusw.mtx"
 
 		M1 = OpenMatrix(pbusw_matrix, "True")
-		M2 = OpenMatrix(Dir+"\\skims\\TR_SKIM_PBusD.mtx", "True")
+		
+		if time_period = "AM" or time_period = "PM" then
+			M2 = OpenMatrix(Dir+"\\skims\\TR_SKIM_PBusD.mtx", "True")
+		else
+			M2 = OpenMatrix(Dir+"\\skims\\TR_SKIM_OPBusD.mtx", "True")
 
 		c1 = CreateMatrixCurrency(M1, "Drop Flag", "RCIndex", "RCIndex",)
 		c2 = CreateMatrixCurrency(M2, "Walk Drop Flag", "RCIndex", "RCIndex",)
@@ -316,22 +347,32 @@ setview("Vehicle Routes")
 
 	// -- If a Walk Access Path was droppped since the path used only the Gold Rush
 	// -- then delete the drive access path for these interchanges as well
-
-	Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_PBusD.mtx",
+	if time_period = "AM" or time_period = "PM" then
+		Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_PBusD.mtx",
+														"IVTT",
+														"RCIndex",
+														"RCIndex"}}}},
+					{"Global",   {{"Method",            11},
+								{"Cell Range",        2},
+					{"Matrix K",          {1,
+								1}},
+					{"Expression Text", "if ([Walk Drop Flag] = null) then [InVehGT5]"},                     
+						{"Force Missing",     "Yes"}}}}
+	else
+		Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_OPBusD.mtx",
 													"IVTT",
 													"RCIndex",
 													"RCIndex"}}}},
 				{"Global",   {{"Method",            11},
 							{"Cell Range",        2},
-				{"Matrix K",          {1,
-							1}},
-				{"Expression Text", "if ([Walk Drop Flag] = null) then [InVehGT5]"},                     
-					{"Force Missing",     "Yes"}}}}
+							{"Matrix K",          {1,1}},	
+								{"Expression Text", "if ([Walk Drop Flag] = null) then [InVehGT5]"},                     
+								{"Force Missing",     "Yes"}}}}
 
 		if !RunMacro("TCB Run Operation", 16, "Fill Matrices", Opts) then goto badmatrixop
 
 	end else do
-
+		if time_period = "AM" or time_period = "PM" then
 		Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_PBusD.mtx",
 													"InVehGT5",
 													"RCIndex",
@@ -342,6 +383,16 @@ setview("Vehicle Routes")
 							1}},
 				{"Expression Text", "if [Total Distance] > 0.0 and [Highway Skim] > 0.75 then [In-Vehicle Time]"},                     
 					{"Force Missing",     "Yes"}}}}
+		else
+		 Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_OPBusD.mtx",
+                                                  "InVehGT5",
+                                                  "RCIndex",
+                                                  "RCIndex"}}}},
+             {"Global",   {{"Method",            11},
+                           {"Cell Range",        2},
+						   {"Matrix K",          {1,1}},
+						 {"Expression Text", "if [Total Distance] > 0.0 and [Highway Skim] > 0.75 then [In-Vehicle Time]"},                     
+        			    	{"Force Missing",     "Yes"}}}}
 
 		if !RunMacro("TCB Run Operation", 17, "Fill Matrices", Opts) then goto badmatrixop
 
