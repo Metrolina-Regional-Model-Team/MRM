@@ -99,8 +99,8 @@ setview("Vehicle Routes")
 
 // ----------------------------------- Loop by 4 time periods  -----------------------------------
 
-  time_periods = {"AM", "PM", "MD","NT"}
-   
+  //time_periods = {"AM", "PM", "MD","NT"}
+  time_periods = {"AM"}
     for time_period in time_periods do
 
 // ----------------------------------- STEP 1: Build Transit Network  -----------------------------------
@@ -147,19 +147,19 @@ setview("Vehicle Routes")
         Opts.Input.[Destination Set] = {net_file + "|" + node_lyr, node_lyr,"Centroids"}
         Opts.Global.[OD Layer Type] = 2
         Opts.Output.[Skim Matrix].Label = "Skim Matrix (Pathfinder)"
-        if time_period = "AM" or time_period = "PM" then do
-            Opts.Global.[Skim Modes] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+        Opts.Global.[Skim Modes] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
+        if time_period = "AM" then do
             Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Access Drive Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Access Drive Distance", "Length", "BRT_Flag", "TTPkLoc*", "TTWalk*"}
             Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_PPrmDrop.mtx"
             Opts.Output.[Parking Matrix].Label = "TR_PARK_PPRMDROP"
             Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_PPrmDrop.mtx"
         end
-        if time_period = "MD" or time_period = "NT" then do
-            Opts.Global.[Skim Modes] = { 5, 6, 7, 8, 9, 10, 11}
-            Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Access Drive Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Access Drive Distance", "Length", "TTWalk*"}
-            Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_OPBusDrop.mtx"
-            Opts.Output.[Parking Matrix].Label = "TR_PARK_OPBusDrop"
-            Opts.Output.[Parking Matrix].[File Name] = Dir + Dir + "\\skims\\TR_PARK_OPBusDrop.mtx"
+        if time_period = "MD" then do
+            Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Access Drive Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Access Drive Distance", "Length", "BRT_Flag", "TTFrLoc*", "TTWalk*"}
+            Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_OPPrmDrop.mtx"
+            Opts.Output.[Parking Matrix].Label = "TR_PARK_OPPrmDrop"
+            Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_OPPrmDrop.mtx"
+
         end
         ret_value = RunMacro("TCB Run Procedure", 3, "Transit Skim PF", Opts)
         if !ret_value then goto badtranskim
@@ -173,7 +173,7 @@ setview("Vehicle Routes")
         if time_period = "AM" then
             tnwOpts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_knr_peak_noCBD.mtx", "TTPkAssn*", "Origin", "Destination"}
         else
-            tnwOpts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_knr_offpeak_noCBD.mtx", "TTfree*", "Origin", "Destination"}
+             tnwOpts.Input.[OP Time Currency] = {Dir + "\\skims\\skim_knr_offpeak_noCBD.mtx", "TTfree*", "Origin", "Destination"}
             
         ret_value = RunMacro("TCB Run Operation", 4, "Transit Network Setting PF", tnwOpts)
         if !ret_value then goto badtransettings
@@ -186,15 +186,14 @@ setview("Vehicle Routes")
         Opts.Input.[Destination Set] = {net_file + "|" + node_lyr, node_lyr,"Centroids"}
         Opts.Global.[OD Layer Type] = 2
         Opts.Output.[Skim Matrix].Label = "Skim Matrix (Pathfinder)"
+        Opts.Global.[Skim Modes] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
         if time_period = "AM" then do
-            Opts.Global.[Skim Modes] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11}
             Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Access Drive Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Access Drive Distance", "Length", "BRT_Flag", "TTPkLoc*", "TTWalk*"}
             Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_PPrmDrop_NoCBD.mtx"
             Opts.Output.[Parking Matrix].Label = "TR_PARK_PPRMDROP_NoCBD"
             Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_PPrmDrop_NoCBD.mtx"
         end
         if time_period = "MD" then do
-            Opts.Global.[Skim Modes] = { 5, 6, 7, 8, 9, 10, 11}
             Opts.Global.[Skim Var] = {"Generalized Cost", "Fare", "In-Vehicle Time", "Initial Wait Time", "Transfer Wait Time", "Transfer Penalty Time", "Transfer Walk Time", "Access Walk Time", "Egress Walk Time", "Access Drive Time", "Dwelling Time", "Number of Transfers", "In-Vehicle Distance", "Access Drive Distance", "Length", "BRT_Flag", "TTFrLoc*", "TTWalk*"}
             Opts.Output.[Skim Matrix].[File Name] = Dir + "\\skims\\TR_SKIM_OPPrmDrop_NoCBD.mtx"
             Opts.Output.[Parking Matrix].Label = "TR_PARK_OPPrmDrop_NoCBD"

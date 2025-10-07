@@ -360,18 +360,19 @@ setview("Vehicle Routes")
 						{"Force Missing",     "Yes"}}}}
 	else
 		Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_OPBusD.mtx",
-													"IVTT",
-													"RCIndex",
-													"RCIndex"}}}},
-				{"Global",   {{"Method",            11},
-							{"Cell Range",        2},
-							{"Matrix K",          {1,1}},	
-								{"Expression Text", "if ([Walk Drop Flag] = null) then [InVehGT5]"},                     
-								{"Force Missing",     "Yes"}}}}
+                                                  "IVTT",
+                                                  "RCIndex",
+                                                  "RCIndex"}}}},
+             {"Global",   {{"Method",            11},
+                           {"Cell Range",        2},
+						   {"Matrix K",          {1,1}},	
+			 				 {"Expression Text", "if ([Walk Drop Flag] = null) then [InVehGT5]"},                     
+            				{"Force Missing",     "Yes"}}}}
 
 		if !RunMacro("TCB Run Operation", 16, "Fill Matrices", Opts) then goto badmatrixop
 
 	end else do
+
 		if time_period = "AM" or time_period = "PM" then
 		Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_PBusD.mtx",
 													"InVehGT5",
@@ -396,8 +397,12 @@ setview("Vehicle Routes")
 
 		if !RunMacro("TCB Run Operation", 17, "Fill Matrices", Opts) then goto badmatrixop
 
+		if time_period = "AM" or time_period = "PM" then
+			M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_PBusD.mtx", "True")
+		else
+			M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_OPBusD.mtx", "True")
 
-		M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
+		//M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
 		c1 = CreateMatrixCurrency(M1, "InVehGT5", "RCIndex", "RCIndex",)
 		c2 = CreateMatrixCurrency(M1, "IVTT", "RCIndex", "RCIndex",)
 			MatrixOperations(c2, {c1}, {1},,, {{"Operation", "Add"}, {"Force Missing", "Yes"}})
@@ -407,7 +412,7 @@ setview("Vehicle Routes")
 		M1 = null
 
 	end
-
+		if time_period = "AM" or time_period = "PM" then
 		Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_PBusD.mtx",
 													"ParkTime",
 													"RCIndex",
@@ -418,7 +423,18 @@ setview("Vehicle Routes")
 							1}},
 							{"Expression Text",   "if [InVehGT5] <> null then 1.0 else 0"},
 							{"Force Missing",     "Yes"}}}}
+		else
 
+		 Opts = {{"Input",    {{"Matrix Currency",   {Dir + "\\skims\\TR_SKIM_OPBusD.mtx",
+                                                  "ParkTime",
+                                                  "RCIndex",
+                                                  "RCIndex"}}}},
+             {"Global",   {{"Method",            11},
+                           {"Cell Range",        2},
+						   {"Matrix K",          {1,1}},
+                           {"Expression Text",   "if [InVehGT5] <> null then 1.0 else 0"},
+                           {"Force Missing",     "Yes"}}}}
+							
 		if !RunMacro("TCB Run Operation", 18, "Fill Matrices", Opts) then goto badmatrixop
 
 		M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
@@ -438,9 +454,15 @@ setview("Vehicle Routes")
 		c7 = null
 		M1 = null
 
-		M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
-			c1 = CreateMatrixCurrency(M1, "Fare", "RCIndex", "RCIndex",)
-			c2 = CreateMatrixCurrency(M1, "Access Drive Distance", "RCIndex", "RCIndex",)
+		//M1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PBusD.mtx", "True")
+
+		if time_period = "AM" or time_period = "PM" then
+			M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_PBusD.mtx", "True")
+		else
+			M1 = OpenMatrix(Dir+"\\skims\\TR_SKIM_OPBusD.mtx", "True")
+
+		c1 = CreateMatrixCurrency(M1, "Fare", "RCIndex", "RCIndex",)
+		c2 = CreateMatrixCurrency(M1, "Access Drive Distance", "RCIndex", "RCIndex",)
 		c3 = CreateMatrixCurrency(M1, "Cost", "RCIndex", "RCIndex",)
 			MatrixOperations(c3, {c1, c2}, {100, 10},,, {{"Operation", "Add"}, {"Force Missing", "No"}})
 		c1 = null
@@ -450,12 +472,15 @@ setview("Vehicle Routes")
 
 
 		// -- Populate the Skim Values in the Output Skim Matrix for use as an input to the Mode Split Model
-
-		input_matrix = Dir + "\\skims\\TR_SKIM_PbusD.mtx"
-		modesplit_matrix = Dir + "\\skims\\PK_DRVTRAN_SKIMS.mtx"
-
+		if time_period = "AM" or time_period = "PM" then do
+			input_matrix = Dir + "\\skims\\TR_SKIM_PbusD.mtx"
+			modesplit_matrix = Dir + "\\skims\\PK_DRVTRAN_SKIMS.mtx"
+		end
+		if time_period = "MD" or time_period = "NT" then do
+			input_matrix = Dir + "\\skims\\TR_SKIM_OPbusD.mtx"
+			modesplit_matrix = Dir + "\\skims\\OFFPK_DRVTRAN_SKIMS.mtx"
+		end
 		
-
 	Opts = null
 
 	Opts.Input.[Target Currency] = { modesplit_matrix, "IVTT - Bus Drive", "Rows", "Columns"}
