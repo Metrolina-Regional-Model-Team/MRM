@@ -41,7 +41,39 @@ invisible(capture.output({
 }))
 ```
 
-The map below shows the changes made in the TAZ structure moving from 3,578 TAZs in MRM22v1.0 to 3,896 TAZs in MRM25v1.0 
+The table below summarizes the Traffic Analysis Zones (TAZs) across MRM region for MRM22v1.0 and map below shows the changes made in the TAZ structure moving from 3,578 TAZs in MRM22v1.0 to 3,896 TAZs in MRM25v1.0 
+
+```{r create-table, message=FALSE, warning=FALSE}
+library(knitr)
+library(kableExtra)
+
+# Create the data frame manually
+table_df <- data.frame(
+  `State Code` = c(37, 37, 37, 37, 37, 37, 37, 37, 37, 37, 45, 45, NA, NA),
+  `County Code` = c("025", "035", "045", "071", "097", "109", "119", "159", "167", "179", "057", "091", NA, NA),
+  `County Name` = c("Cabarrus", "Catawba", "Cleveland", "Gaston", "Iredell", "Lincoln",
+                    "Mecklenburg", "Rowan", "Stanly", "Union", "Lancaster", "York",
+                    "External Stations", "Total"),
+  `Range of TAZs` = c("1 – 307", "6512–6624", "4001 – 4209", "2001 – 2301", "5006 – 5353",
+                      "6001 – 6124", "10001 – 11171", "1001 – 1225", "8001 – 8172", "9001 – 9403",
+                      "7001 – 7023", "3001 – 3409", "12001 – 12113", ""),
+  `Number of TAZs` = c(304, 6, 208, 249, 324, 109, 1170, 225, 172, 356, 23, 344, 88, 3578),
+  check.names = FALSE
+)
+
+# Display the table using kable
+table <- table_df %>%
+  kable("html", align = "c", caption = "<span style='color:black; font-weight:bold;'>Table: County-level TAZ Information</span>") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "bordered", "hover", "condensed"),
+    full_width = FALSE,
+    position = "center"
+  ) %>%
+  row_spec(0, background = "#f0f0f0")  # Light grey header background
+
+# Display the table
+table
+```
 
 ```{r create-map}
 # Create the interactive map

@@ -188,3 +188,264 @@ reactable(df_filtered,
 
 
 ```
+
+## Land Use Statistics
+
+The tables below provide a summary of land use statistics for each of the Metrolina counties.
+
+```{r, echo=FALSE, results='asis'}
+
+# Load required libraries
+library(readxl)
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Cabarrus County**  \n")
+cat("**Sq. Mi = 364.46**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Cabarrus3.2")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Rowan County**  \n")
+cat("**Sq. Mi = 523.68**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Rowan3.3")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Iredell County**  \n")
+cat("**Sq. Mi = 596.81**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Iredell3.4")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Mecklenburg County**  \n")
+cat("**Sq. Mi = 545.91**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Mecklenburg3.5")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Union County**  \n")
+cat("**Sq. Mi=	639.56**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Union3.6")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Stanly County**  \n")
+cat("**Sq. Mi=	404.84**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Stanly3.7")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Cleveland County**  \n")
+cat("**Sq. Mi=	468.19**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Cleveland3.8")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Gaston County**  \n")
+cat("**Sq. Mi=	364.10**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Gaston3.9")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Lincoln County**  \n")
+cat("**Sq. Mi=	307.03**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Lincoln3.10")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Lancaster County**  \n")
+cat("**Sq. Mi=	67.16**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Lancaster3.11")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**York County**  \n")
+cat("**Sq. Mi=	695.84**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "York3.12")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
+```{r, echo=FALSE, results='asis'}
+
+# Output plain text above the table (NOT markdown headers)
+cat("**Catawba County (partial)**  \n")
+cat("**Sq. Mi=	695.84**  \n\n")
+
+# Read data from an Excel (.xlsx) file
+data <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Catawba3.13")
+
+# Render the interactive datatable
+datatable(
+  data,
+  filter = "top",
+  options = list(
+    pageLength = 20,
+    autoWidth = TRUE
+  ),
+  rownames = FALSE
+)
+```
+
