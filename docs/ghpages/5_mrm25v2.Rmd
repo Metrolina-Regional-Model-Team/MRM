@@ -17,6 +17,22 @@ The MRM25v2.0 model was prepared for th2 2026-2035  N.C. Department of Transport
 
 As of June 2025, MRM25v2.0 is being reviewed by N.C. Department of Environmental Quality (NC DEQ). The projects represented in the MRM for this model version are described below.
 
+## Model Area
+
+The model area covers a twelve county, bi-state region. In North Carolina, all of Cabarrus, Cleveland, Gaston, Iredell, Lincoln, Mecklenburg, Rowan, Stanly, and Union Counties are included. In South Carolina, all of York County and the northern panhandle of Lancaster County are included. This represents an expansion of the previous model area to include the area of Iredell County north of the Yadkin River. In addition, staff opted to include the southeast corner of Catawba County to capture travel patterns along NC 150 and in the Lake Norman area in general. Figure 1 1 shows the area included in the Metrolina Model.
+
+## Surveys and Studies
+MRM22v2.0 builds on the major model update process undertaken with the 2010 Census that included the collection of new travel behavior data as well as building on previously collected data. Tour frequency, destination choice, and time of day models are calibrated based on data collected in the 2012 Household Travel Survey. The mode choice component of the model is calibrated based on data collected in the 2012 Household Travel Survey and the 2013 Transit On-Board Survey.
+
+## Model Years
+The official base year validation of MRM22v2.0 is 2018. MTP-based forecast years include 2025, 2035, 2045, and 2050. For conformity, the budget year 2026 was also modeled.
+
+## Highway Networks
+The MRM is a regional model. All projects are included where practical and possible. Projects that do not add capacity, are minor intersection improvements, or are small widenings on non-regionally significant roadways may be below the scope of the model and omitted from analysis. All regionally significant projects are included. 
+
+Model projects are referenced by the project index number. A project is selected for a particular model year by index number. Project characteristics (e.g., lanes, facility type, intersection controls) are added to the network before capacities and speeds are estimated. The tables below are grouped by county and sorted by the year the project is to open to traffic. TIP numbers are included where possible.  Some projects cross county and MPO boundaries; these are included at the end of one of the county lists. 
+
+
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 # this stuff should be on github not calling local environment
 #[Click here to download spreadsheet](https://raw.githubusercontent.com/yourusername/repository/branch/path/to/MRM25v1_Projects.xlsx)
