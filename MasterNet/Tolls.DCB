@@ -1,0 +1,10 @@
+
+53,codepage=65001
+"FACILITY",C,1,25,0,25,0,,"","",,"Blank",
+"PROJNUM",I,26,4,0,12,0,,"","",,"Blank",
+"FUNCL",I,30,4,0,12,0,,"","",,"Blank",
+"YEAR",I,34,4,0,12,0,,"","",,"Blank",
+"TOLL_MILE",F,38,4,0,10,2,,"","",,"Blank",
+"TOLL_GATE",F,42,4,0,10,2,,"","",,"Blank",
+"HOT_MILE",F,46,4,0,10,2,,"","",,"Blank",
+"HOT_GATE",F,50,4,0,10,2,,"","",,"Blank",
