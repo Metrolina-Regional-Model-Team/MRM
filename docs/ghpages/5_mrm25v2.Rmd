@@ -28,10 +28,17 @@ MRM22v2.0 builds on the major model update process undertaken with the 2010 Cens
 The official base year validation of MRM22v2.0 is 2018. MTP-based forecast years include 2025, 2035, 2045, and 2050. For conformity, the budget year 2026 was also modeled.
 
 ## Highway Networks
+MRM22v2.0 was validated to the year 2018. Future year highway and transit networks for 2025, 2035, 2045, and 2050 were created for the long-range planning efforts. Projects included in the future year networks are based on the financially constrained Metropolitan Transportation Plans (MTP) for each of the respective MPOs. Highway projects in non-MPO (RPO) were added ONLY if they were included in their respective NC or SC Transportation Improvement Plans (TIP) documents. Financial constraint calculations and project selection criteria can be found in the respective MTP documents:
+
+CRTPO 2050 Metropolitan Transportation Plan; (need to add link)
+GCLMPO 2050 Metropolitan Transportation Plan; (need to add link)
+Cabarrus Rowan MPO 2050 Metropolitan Transportation Plan; and (need to add link)
+RFATS 2050 Long Range Transportation Plan.(need to add link)
+
+## Highway Projects
 The MRM is a regional model. All projects are included where practical and possible. Projects that do not add capacity, are minor intersection improvements, or are small widenings on non-regionally significant roadways may be below the scope of the model and omitted from analysis. All regionally significant projects are included. 
 
 Model projects are referenced by the project index number. A project is selected for a particular model year by index number. Project characteristics (e.g., lanes, facility type, intersection controls) are added to the network before capacities and speeds are estimated. The tables below are grouped by county and sorted by the year the project is to open to traffic. TIP numbers are included where possible.  Some projects cross county and MPO boundaries; these are included at the end of one of the county lists. 
-
 
 ## Project Database
 
