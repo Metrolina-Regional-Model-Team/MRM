@@ -200,47 +200,30 @@ setview("Vehicle Routes")
             Opts.Output.[Parking Matrix].[File Name] = Dir + "\\skims\\TR_PARK_OPPrmDrop_NoCBD.mtx"
         end
 
-        ret_value = RunMacro("TCB Run Operation", 4, "Transit Network Setting PF", tnwOpts)
-    if !ret_value then goto badtransettings
-
         ret_value = RunMacro("TCB Run Procedure", 5, "Transit Skim PF", Opts)
         if !ret_value then goto badtranskim
 
-        zone_file=Dir+"\\TAZ_ATYPE.bin"
+        zone_file= Dir+"\\TAZ_ATYPE.bin"
         
         zone_vw = OpenTable("TAZ_ATYPE", "FFB", {zone_file, })
         setview(zone_vw)
 
-        if time_period = "AM" then do
-            skim_matrix =   Dir + "\\skims\\TR_SKIM_PPrmDrop.mtx"
-            skim_cbd_matrix = Dir + "\\skims\\TR_SKIM_PPrmDrop_NoCBD.mtx"
-            park_matrix = Dir + "\\skims\\TR_PARK_PPrmDrop.mtx"
-            park_cbd_matrix = Dir + "\\skims\\TR_PARK_PPrmDrop_NoCBD.mtx"
-        end
-
-        if time_period = "MD" then do
-            skim_matrix =   Dir + "\\skims\\TR_SKIM_OPPrmDrop.mtx"
-            skim_cbd_matrix = Dir + "\\skims\\TR_SKIM_OPPrmDrop_NoCBD.mtx"
-            park_matrix = Dir + "\\skims\\TR_PARK_OPPrmDrop.mtx"
-            park_cbd_matrix = Dir + "\\skims\\TR_PARK_OPPrmDrop_NoCBD.mtx"
-        end
-
+        // this needs updating
         matx1 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PPrmDrop.mtx", "FALSE")
         midx1 = GetMatrixIndex(matx1)
         core1 = GetMatrixCoreNames(matx1)
 
-        matx2 = OpenMatrix(skim_cbd_matrix, "FALSE")
+        matx2 = OpenMatrix(Dir + "\\skims\\TR_SKIM_PPrmDrop_NoCBD.mtx", "FALSE")
         midx2 = GetMatrixIndex(matx2)
         core2 = GetMatrixCoreNames(matx2)
 
-        matx3 = OpenMatrix(park_matrix, "FALSE")
+        matx3 = OpenMatrix(Dir + "\\skims\\TR_PARK_PPrmDrop.mtx", "FALSE")
         midx3 = GetMatrixIndex(matx3)
         core3 = GetMatrixCoreNames(matx3)
 
-        matx4 = OpenMatrix(park_cbd_matrix, "FALSE")
+        matx4 = OpenMatrix(Dir + "\\skims\\TR_PARK_PPrmDrop_NoCBD.mtx", "FALSE")
         midx4 = GetMatrixIndex(matx4)
         core4 = GetMatrixCoreNames(matx4)
-
         cur1 = CreateMatrixCurrency(matx1, core1[1], midx1[1], midx1[2], )
         // Replace CBD Attaction drop-off skims from set without drop-off at CBD option
         rowID           = GetMatrixRowLabels(cur1)
