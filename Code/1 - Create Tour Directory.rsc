@@ -94,8 +94,7 @@ Macro "CreateDir" (Args)
             {"TAZNeighbors_pct.asc", "TAZNeighbors_pct.dct", "Parking_Cost_Base06.dbf", "PUMAequiv.prn"}},
 
         {"\\Pgm",
-            {"CaliperMTXF.dll","CaliperMTXF.lib","capspd.exe","SHW32.DLL",
-            "tdmet_mtx.exe", "tgmet2015_171013.exe"}},
+            {"CaliperMTXF.dll","CaliperMTXF.lib","capspd.exe","SHW32.DLL"}},
 
         {"\\Pgm\\ModeChoice",  
             {"Add_Shadow_Price.exe","CALIBMS.exe","Caliperb.dll","CaliperMTX.dll","CaliperMTXF.dll","CaliperMTXF.lib",
