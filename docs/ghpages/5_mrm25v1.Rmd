@@ -19,173 +19,29 @@ Model projects are referenced by the project index number. A project is selected
 The MRM25v1.0 model was prepared for the Rock Hill-Fort Mill Transportation Study (RFATS) 2055 Metropolitan Transportation Plan. As of January 2025, it is currently being reviewed by S.C. Department of Environmental Services (SCDES). The projects represented in the MRM for this model version are described below.
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-# this stuff should be on github not calling local environment
-#[Click here to download spreadsheet](https://raw.githubusercontent.com/yourusername/repository/branch/path/to/MRM25v1_Projects.xlsx)
 
+# Load required libraries
+library(readxl)
 library(DT)
 library(dplyr)
-library(reactable)
-library(htmltools)
 
-# Function to read a fixed-width character field
-read_fixed_char <- function(con, length) {
-  raw_data <- readBin(con, "raw", n = length)  # Read exact length
-  clean_data <- raw_data[raw_data != as.raw(0)]  # Remove null bytes
-  rawToChar(clean_data)
+# Define a function to render a datatable
+render_datatable <- function(data) {
+  datatable(
+    data,
+    filter = "top",
+    options = list(
+      pageLength = 20,
+      autoWidth = TRUE
+    ),
+    rownames = FALSE
+  )
 }
 
-# Open binary file
-con <- file("C:/MRM/MasterNet/Projects.bin", "rb")
+data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v1_Projects.xlsx") %>%
+  mutate(YEAR = as.character(YEAR)) %>%
+  select(YEAR, TIP_NO, PROJECT, CATEGORY, TYPE, COUNTY)
 
-# Initialize vectors
-indices <- integer()
-years <- integer()
-tip_nos <- character()
-projects <- character()
-limits <- character()
-categories <- character()
-types <- character()
-descriptions <- character()
-counties <- character()
-ec_50mtps <- character()
-mtp50_nos <- integer()
-projset50s <- character()
+# Render the interactive datatable for project list
+render_datatable(data_project)
 
-# Read records
-while (TRUE) {
-  # Read integers (4 bytes each)
-  index <- readBin(con, "integer", n = 1, size = 4, endian = "little")
-  if (length(index) == 0) break  # Stop at EOF
-  
-  year <- readBin(con, "integer", n = 1, size = 4, endian = "little")
-  
-  # Read fixed-length character fields
-  tip_no <- read_fixed_char(con, 20)
-  project <- read_fixed_char(con, 75)
-  limit <- read_fixed_char(con, 70)
-  category <- read_fixed_char(con, 50)
-  type <- read_fixed_char(con, 50)
-  description <- read_fixed_char(con, 150)
-  county <- read_fixed_char(con, 20)
-  ec_50mtp <- read_fixed_char(con, 4)
-  
-  # Read another integer (4 bytes)
-  mtp50_no <- readBin(con, "integer", n = 1, size = 4, endian = "little")
-  
-  # Read last fixed-length character field
-  projset50 <- read_fixed_char(con, 10)
-  
-  # Append to vectors
-  indices <- c(indices, index)
-  years <- c(years, year)
-  tip_nos <- c(tip_nos, tip_no)
-  projects <- c(projects, project)
-  limits <- c(limits, limit)
-  categories <- c(categories, category)
-  types <- c(types, type)
-  descriptions <- c(descriptions, description)
-  counties <- c(counties, county)
-  ec_50mtps <- c(ec_50mtps, ec_50mtp)
-  mtp50_nos <- c(mtp50_nos, mtp50_no)
-  projset50s <- c(projset50s, projset50)
-}
-
-close(con)
-
-# Create data frame with the correct structure
-df <- data.frame(
-  Index = indices,
-  Year = years,
-  TIP_NO = tip_nos,
-  Project = projects,
-  Limits = limits,
-  Category = categories,
-  Type = types,
-  Description = descriptions,
-  County = counties,
-  EC_50MTP = ec_50mtps,
-  MTP50_NO = mtp50_nos,
-  PROJSET50 = projset50s,
-  stringsAsFactors = FALSE
-) %>% 
-  select(-EC_50MTP,-MTP50_NO,-PROJSET50) %>% 
-  subset(Year <= 2055) %>% 
-  arrange(Year, County)
-
-# Convert all character columns to UTF-8 to handle any encoding issues
-df[] <- lapply(df, function(x) {
-  if (is.character(x)) {
-    iconv(x, from = "latin1", to = "UTF-8", sub = "byte")
-  } else {
-    x
-  }
-})
-
-
-```
-
-## Projects Database
-```{r, echo=FALSE, warning=FALSE, message=FALSE} 
-
-# Select only the relevant columns
-df_filtered <- df %>% 
-  select(Year, TIP_NO, Project, Category, Type, County)
-
-# Create a filterable table
-reactable(df_filtered, 
-          filterable = TRUE,
-          searchable = TRUE,
-          defaultPageSize = 15,
-          striped = TRUE,
-          highlight = TRUE,
-          bordered = TRUE,
-          resizable = TRUE,
-          wrap = FALSE,
-          defaultColDef = colDef(align = "left"),
-         columns = list(
-            Year = colDef(filterable = TRUE, width = 100),
-            TIP_NO = colDef(filterable = TRUE, width = 150),
-            Project = colDef(filterable = TRUE, width = 300, cell = function(value) {
-              div(title = value, value)  # Tooltip on hover
-            }),
-            Category = colDef(filterable = TRUE, width = 200, cell = function(value) {
-              div(title = value, value)
-            }),
-            Type = colDef(filterable = TRUE, width = 200, cell = function(value) {
-              div(title = value, value)
-            }),
-            County = colDef(filterable = TRUE, width = 200, cell = function(value) {
-              div(title = value, value)
-            })
-          ),
-          theme = reactableTheme(
-            borderColor = "#dee2e6",        
-            stripedColor = "#f9f9f9",        
-            highlightColor = "lightblue",     
-            backgroundColor = "#ffffff",
-            headerStyle = list(
-              backgroundColor = "#e9ecef",    
-              color = "black",            
-              fontWeight = 500,              
-              textAlign = "left",
-              fontSize = "14px",             
-              fontFamily = "Segoe UI, -apple-system, system-ui, BlinkMacSystemFont, Roboto, sans-serif"
-            ),
-            cellStyle = list(
-              padding = "12px 8px",          
-              fontSize = "14px",             
-              fontFamily = "Segoe UI, -apple-system, system-ui, BlinkMacSystemFont, Roboto, sans-serif",
-              borderBottom = "1px solid #dee2e6"
-            ),
-            inputStyle = list(
-              backgroundColor = "#ffffff",
-              borderColor = "#ced4da",      
-              color = "#495057",            
-              fontSize = "14px"
-            )
-          ),
-          width = "100%" 
-)
-
-
-```

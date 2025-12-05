@@ -1,0 +1,58 @@
+---
+title: "MRM25v3.0"
+output:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+      number_sections: false
+    toc_depth: 4
+    css: "styles.css"
+---
+
+This model was prepared for the North Carolina Department of Transportation (NCDOT) for development of the 2055 Metropolitan Transportation Plans (MTP’s) of the following jurisdictions:
+
+Cabarrus-Rowan Metropolitan Planning Organization (CRMPO)
+Charlotte Regional Transportation Planning Organization (CRTPO)
+Gaston-Cleveland-Lincoln Metropolitan Planning Organization (GCLMPO)
+
+The model is currently being reviewed by North Carolina Department of Air Quality (NCDAQ) and is not official. Release notes will be updated once this model is confirmed as official by NCDAQ and NCDOT.
+
+Key updates from previous model:
+
+Updates to master network, transit routes and project list to incorporate the Draft 2055 MTP Fiscally Constrained Project Lists as of October 2025.
+
+
+## Project Database
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Load required libraries
+library(readxl)
+library(DT)
+library(dplyr)
+
+# Define a function to render a datatable
+render_datatable <- function(data) {
+  datatable(
+    data,
+    filter = "top",
+    options = list(
+      pageLength = 20,
+      autoWidth = TRUE
+    ),
+    rownames = FALSE
+  )
+}
+
+data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v3_Projects.xlsx") %>%
+  mutate(YEAR = as.character(YEAR)) %>%
+  select(YEAR, MTP55_ID, PROJECT, CATEGORY, TYPE, COUNTY)
+
+# Render the interactive datatable for project list
+render_datatable(data_project)
+
+```
