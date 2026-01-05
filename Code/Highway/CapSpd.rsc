@@ -132,7 +132,7 @@ Macro "CapSpd" (Args)
 	HwyName = Hwy[3]
 
 	CapSpdLookUpFile = METDir + "\\Pgm\\Capspdfactors\\CapSpd_lookup.csv"
-	GuidewayFile = METDir + "\\Pgm\\Capspdfactors\\capspd_guideway.asc"
+	GuidewayFile = METDir + "\\Pgm\\Capspdfactors\\capspd_guideway.bin"
 
 	timeweight = Args.TimeWeight
 	distweight = Args.DistWeight
@@ -191,12 +191,12 @@ Macro "CapSpd" (Args)
         {FieldName: "ErrLayer", Type: "String", Width: 7, Decimals: 0},
         {FieldName: "ErrLevel", Type: "String", Width: 7, Decimals: 0},
         {FieldName: "ErrField", Type: "String", Width: 12, Decimals: 0},
-        {FieldName: "ErrVal", Type: "String", Width: 12, Decimals: 0},
+        {FieldName: "ErrVal", Type: "Short", Width: 20, Decimals: 0},
         {FieldName: "ErrMsg", Type: "String", Width: 120, Decimals: 0}
     }
 
 	CapSpdErr = CreateObject("Table", {Fields:a_fields})
-
+	
 	CapSpdErr.Export({FileName: CapSpdErrFile})
 
 	cnterrlvl1 = 0
@@ -224,7 +224,7 @@ Macro "CapSpd" (Args)
 	end
 		
 	// Area type by TAZ - to be joined to HwyView by TAZ no.  
-	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.asc"
+	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.bin"
 	exist = GetFileInfo(AreaTypeFile)
 	if exist = null
 		then do
@@ -257,22 +257,29 @@ Macro "CapSpd" (Args)
 	ErrField[ErrFileRec.length],
 	ErrVal[ErrFileRec.length],
 	ErrMsg[ErrFileRec.length]
-
-	for i = 1 to ErrFileRec.length do
-		ID[i] = ErrFileRec[i][1]
-		ErrLayer[i] = ErrFileRec[i][2]
-		ErrLevel[i] = ErrFileRec[i][3]
-		ErrField[i] = ErrFileRec[i][4]
-		ErrVal[i] = ErrFileRec[i][5]
-		ErrMsg[i] = ErrFileRec[i][6]
-		CapSpdErr.ID = A2V(ID)
-		CapSpdErr.ErrLayer = A2V(ErrLayer)
-		CapSpdErr.ErrLevel = A2V(ErrLevel)
-		CapSpdErr.ErrField = A2V(ErrField)
-		CapSpdErr.ErrVal = A2V(ErrVal)
-		CapSpdErr.ErrMsg = A2V(ErrMsg)
+	CapSpdErr.AddRows(ErrFileRec.length)
+	if ErrFileRec <> null then do
+		for i = 1 to ErrFileRec.length do
+			/*CapSpdErr.ID       = ErrFileRec[i][1]
+			CapSpdErr.ErrLayer = ErrFileRec[i][2]
+			CapSpdErr.ErrLevel = ErrFileRec[i][3]
+			CapSpdErr.ErrField = ErrFileRec[i][4]
+			CapSpdErr.ErrVal   = ErrFileRec[i][5]
+			CapSpdErr.ErrMsg   = ErrFileRec[i][6]*/
+			ID[i] = ErrFileRec[i][1]
+			ErrLayer[i] = ErrFileRec[i][2]
+			ErrLevel[i] = ErrFileRec[i][3]
+			ErrField[i] = ErrFileRec[i][4]
+			ErrVal[i] = ErrFileRec[i][5]
+			ErrMsg[i] = ErrFileRec[i][6]
+			CapSpdErr.ID = A2V(ID)
+			CapSpdErr.ErrLayer = A2V(ErrLayer)
+			CapSpdErr.ErrLevel = A2V(ErrLevel)
+			CapSpdErr.ErrField = A2V(ErrField)
+			CapSpdErr.ErrVal = A2V(ErrVal)
+			CapSpdErr.ErrMsg = A2V(ErrMsg)
+		end
 	end
-
 	// Write error/warning messages
 	/*if ErrFileRec <> null 
 		then do
@@ -480,7 +487,7 @@ Macro "CapSpd" (Args)
 				cnterrlvl2 = cnterrlvl2 + 1
 				ErrFileRec = ErrFileRec + {{ID, "Link", "Severe", "funcl", i2s(funcl), "Illegal funcl, default=6"}}
 				tbl_hwy.funcl[row] = 6
-				funcl = 6
+				//funcl = 6
     		end
 
 			// fedfuncl : Federal functional class, DEFAULT = LU
@@ -493,7 +500,7 @@ Macro "CapSpd" (Args)
 				
 				// Correct the field in the table
 				tbl_hwy.fedfuncl[row] = "LU"
-				fedfuncl = "LU"   // optional: keep variable updated for later use
+				//fedfuncl = "LU"   // optional: keep variable updated for later use
 			end
 			
 			// factype : facility type,  DEFAULT = U
@@ -506,7 +513,7 @@ Macro "CapSpd" (Args)
 				
 				// Correct the field in the table
 				tbl_hwy.factype[row] = "U"
-				factype = "U"  // optional: keep variable updated for later use
+				//factype = "U"  // optional: keep variable updated for later use
 			end
 
 			chkABlanes:
@@ -531,7 +538,7 @@ Macro "CapSpd" (Args)
 
 			/* Correct with table class */
 			tbl_hwy.lanesAB[row] = 0
-			lanesAB = 0   /* optional update */
+			//lanesAB = 0   /* optional update */
 			end
 
 			/* lanesBA must be 0 when TrafficDir = 1 */
@@ -545,7 +552,7 @@ Macro "CapSpd" (Args)
 
 			/* Correct with table class */
 			tbl_hwy.lanesBA[row] = 0
-			lanesBA = 0   /* optional update */
+			//lanesBA = 0   /* optional update */
 			end
 
 			/* Fill the combined Lanes field */
@@ -563,25 +570,25 @@ Macro "CapSpd" (Args)
 				tbl_hwy.parking[row] = "N"
 			end
 
-						chkbcontrol:
+			chkbcontrol:
 
 			/* Lookup in legal control list */
-			pos = ArrayPosition(legalcntl, {tbl_hwy.B_Control[row]},)
+			pos = ArrayPosition(legalcntl, {tbl_hwy.B_control[row]},)
 
 			/* --- If TrafficDir = -1 (reverse), B_Control must be "X" --- */
 			if tbl_hwy.Dir[row] = -1 then do
 
-				if tbl_hwy.B_Control[row] <> "X" then do
+				if tbl_hwy.B_control[row] <> "X" then do
 					cnterrlvl1 = cnterrlvl1 + 1
 
 					ErrFileRec = ErrFileRec + {{
-						tbl_hwy.ID[row], "Link", "Warning", "B_Control",
+						tbl_hwy.ID[row], "Link", "Warning", "B_control",
 						tbl_hwy.B_Control[row],
-						"B_Control on B->A coded. Changed to \"X\" (no movement)"
+						"B_control on B->A coded. Changed to \"X\" (no movement)"
 					}}
 
 					/* Fix and write back */
-					tbl_hwy.B_Control[row] = "X"
+					tbl_hwy.B_control[row] = "X"
 				end
 
 				/* Go to next section (as in your original logic) */
@@ -593,13 +600,13 @@ Macro "CapSpd" (Args)
 				cnterrlvl2 = cnterrlvl2 + 1
 
 				ErrFileRec = ErrFileRec + {{
-					tbl_hwy.ID[row], "Link", "Severe", "B_Control",
-					tbl_hwy.B_Control[row],
+					tbl_hwy.ID[row], "Link", "Severe", "B_control",
+					tbl_hwy.B_control[row],
 					"Illegal B_Control code, default = S (stop)"
 				}}
 
 				/* Fix and write back */
-				tbl_hwy.B_Control[row] = "S"
+				tbl_hwy.B_control[row] = "S"
 			end
 
 			/* --- Freeway rule: For funcl = 1, B_Control must be T (pos = 1) --- */
@@ -610,9 +617,9 @@ Macro "CapSpd" (Args)
 				cnterrlvl2 = cnterrlvl2 + 1
 
 				ErrFileRec = ErrFileRec + {{
-					tbl_hwy.ID[row], "Link", "Severe", "B_Control",
-					tbl_hwy.B_Control[row],
-					"Illegal B_Control on Freeway"
+					tbl_hwy.ID[row], "Link", "Severe", "B_control",
+					tbl_hwy.B_control[row],
+					"Illegal B_control on Freeway"
 				}}
 			end
 
@@ -711,126 +718,7 @@ Macro "CapSpd" (Args)
 				tbl_hwy.A_Prohibit[row] = "N"
 			end
 
-									chkbintlanes:
-
-						/* If reverse direction, skip B-side checks */
-						if tbl_hwy.Dir[row] = -1 then goto chkaintlanes
-
-						/* Compute B intersection lanes */
-						BIntlns =  tbl_hwy.B_LeftLns[row] +
-								tbl_hwy.B_ThruLns[row] +
-								tbl_hwy.B_RightLns[row]
-
-						/* Too few B intersection lanes */
-						if BIntlns - tbl_hwy.lanesAB[row] < 0 then do
-							cnterrlvl1 = cnterrlvl1 + 1
-							ErrFileRec = ErrFileRec + {{
-								tbl_hwy.ID[row], "Link", "Warning", "B_Int Lns",
-								i2s(tbl_hwy.lanesAB[row]),
-								"Too few B intersection lns: lanesAB=" +
-								i2s(tbl_hwy.lanesAB[row]) +
-								" Int L/T/R=" +
-								i2s(tbl_hwy.B_LeftLns[row]) + "," +
-								i2s(tbl_hwy.B_ThruLns[row]) + "," +
-								i2s(tbl_hwy.B_RightLns[row])
-							}}
-						end
-
-						/* Too many B intersection lanes */
-						else if BIntlns - tbl_hwy.lanesAB[row] > 4 then do
-							cnterrlvl1 = cnterrlvl1 + 1
-							ErrFileRec = ErrFileRec + {{
-								tbl_hwy.ID[row], "Link", "Warning", "B_Int Lns",
-								i2s(tbl_hwy.lanesAB[row]),
-								"Too many B intersection lns: lanesAB=" +
-								i2s(tbl_hwy.lanesAB[row]) +
-								" Int L/T/R=" +
-								i2s(tbl_hwy.B_LeftLns[row]) + "," +
-								i2s(tbl_hwy.B_ThruLns[row]) + "," +
-								i2s(tbl_hwy.B_RightLns[row])
-							}}
-						end
-
-						/* ============================================================
-						A-SIDE CHECKS
-						============================================================ */
-						chkaintlanes:
-
-						/* If TrafficDir = 1 (A→B only), skip to next section */
-						if tbl_hwy.Dir[row] = 1 then goto chkspdlimit
-
-						/* Compute A intersection lanes */
-						AIntlns =  tbl_hwy.A_LeftLns[row] +
-								tbl_hwy.A_ThruLns[row] +
-								tbl_hwy.A_RightLns[row]
-
-						/* Too few A intersection lanes */
-						if AIntlns - tbl_hwy.lanesBA[row] < 0 then do
-							cnterrlvl1 = cnterrlvl1 + 1
-							ErrFileRec = ErrFileRec + {{
-								tbl_hwy.ID[row], "Link", "Warning", "A_Int Lns",
-								i2s(tbl_hwy.lanesBA[row]),
-								"Too few A intersection lns: lanesBA=" +
-								i2s(tbl_hwy.lanesBA[row]) +
-								" Int L/T/R=" +
-								i2s(tbl_hwy.A_LeftLns[row]) + "," +
-								i2s(tbl_hwy.A_ThruLns[row]) + "," +
-								i2s(tbl_hwy.A_RightLns[row])
-							}}
-						end
-
-						/* Too many A intersection lanes */
-						else if AIntlns - tbl_hwy.lanesBA[row] > 4 then do
-							cnterrlvl1 = cnterrlvl1 + 1
-							ErrFileRec = ErrFileRec + {{
-								tbl_hwy.ID[row], "Link", "Warning", "A_Int Lns",
-								i2s(tbl_hwy.lanesBA[row]),
-								"Too many A intersection lns: lanesBA=" +
-								i2s(tbl_hwy.lanesBA[row]) +
-								" Int L/T/R=" +
-								i2s(tbl_hwy.A_LeftLns[row]) + "," +
-								i2s(tbl_hwy.A_ThruLns[row]) + "," +
-								i2s(tbl_hwy.A_RightLns[row])
-							}}
-						end
-
-						chkspdlimit:
-
-						/* Temporary logic variables (allowed, not table fields) */
-						changespeed = "false"
-						changespdmsg = null
-
-						/* Check invalid or missing speed limit */
-						if tbl_hwy.SpdLimit[row] = null
-						or tbl_hwy.SpdLimit[row] < 10
-						or tbl_hwy.SpdLimit[row] > 80 then do
-
-							/* High-speed facilities → default 55 */
-							if  tbl_hwy.funcl[row] = 1  or  /* Freeway */
-								tbl_hwy.funcl[row] = 2  or  /* Expressway */
-								tbl_hwy.funcl[row] = 9  or
-								tbl_hwy.funcl[row] = 22 or
-								tbl_hwy.funcl[row] = 23 or
-								tbl_hwy.funcl[row] = 24 or
-								tbl_hwy.funcl[row] = 25 or
-								tbl_hwy.funcl[row] = 82 or
-								tbl_hwy.funcl[row] = 83
-							then do
-								NewSpdLimit = "55"
-								changespeed = "true"
-								changespdmsg = "High speed facility, Speed limit changed to default = " + NewSpdLimit
-							end
-
-							/* All other facilities → default 35 */
-							else do
-								NewSpdLimit = "35"
-								changespeed = "true"
-								changespdmsg = "Surface street, Speed limit changed to default = " + NewSpdLimit
-							end
-
-						end  /* — if invalid SpdLimit */
-
-						chkbintlanes:
+			chkbintlanes:
 
 			/* If reverse direction, skip B-side checks */
 			if tbl_hwy.Dir[row] = -1 then goto chkaintlanes
@@ -948,6 +836,8 @@ Macro "CapSpd" (Args)
 				end
 
 			end  /* — if invalid SpdLimit */
+
+
 
 			/* Year parameters */
 			LastCapYear = 2100
@@ -1375,8 +1265,34 @@ Macro "CapSpd" (Args)
 			ptr = GetNextRecord(HwyView + "|", null,)*/
 		//end //while ptr <> null
 	
-		// Write Error / warning messages
+		// Write error/warning messages
+		dim ID[ErrFileRec.length],
+		ErrLayer[ErrFileRec.length],
+		ErrLevel[ErrFileRec.length],
+		ErrField[ErrFileRec.length],
+		ErrVal[ErrFileRec.length],
+		ErrMsg[ErrFileRec.length]
+		CapSpdErr.AddRows(ErrFileRec.length)
 		if ErrFileRec <> null 
+			then do
+				for i = 1 to ErrFileRec.length do
+				ID[i] = ErrFileRec[i][1]
+				ErrLayer[i] = ErrFileRec[i][2]
+				ErrLevel[i] = ErrFileRec[i][3]
+				ErrField[i] = ErrFileRec[i][4]
+				ErrVal[i] = ErrFileRec[i][5]
+				ErrMsg[i] = ErrFileRec[i][6]
+				CapSpdErr.ID = A2V(ID)
+				CapSpdErr.ErrLayer = A2V(ErrLayer)
+				CapSpdErr.ErrLevel = A2V(ErrLevel)
+				CapSpdErr.ErrField = A2V(ErrField)
+				CapSpdErr.ErrVal = A2V(ErrVal)
+				CapSpdErr.ErrMsg = A2V(ErrMsg)
+				end
+			end
+
+		// Write Error / warning messages
+		/*if ErrFileRec <> null 
 			then do
 				SetView(CapSpdErr)
 				for i = 1 to ErrFileRec.length do
@@ -1385,9 +1301,9 @@ Macro "CapSpd" (Args)
 								 {"ErrVal", ErrFileRec[i][5]}, {"ErrMsg", ErrFileRec[i][6] }}
 					AddRecord (CapSpdErr, errvals)
 		 		end // for i	
-			end
+			end*/
 		ErrFileRec = null
-		if cnterrlvl3 > 0 then goto badquit	
+		if cnterrlvl3 > 0 then goto badquit
 	
 		// End of first read 
 		

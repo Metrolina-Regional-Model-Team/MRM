@@ -1,0 +1,11 @@
+
+106,codepage=65001
+"ID",I,1,4,0,11,0,,"","",,"Blank",
+"Guideway_name",C,5,22,0,22,0,,"","",,"Blank",
+"Guideway_A",C,27,22,0,22,0,,"","",,"Blank",
+"Guideway_B",C,49,22,0,22,0,,"","",,"Blank",
+"SeqNo",I,71,4,0,11,0,,"","",,"Blank",
+"AB_TT",R,75,8,0,15,4,,"","",,"Blank",
+"BA_TT",R,83,8,0,15,4,,"","",,"Blank",
+"AB_NonStop",R,91,8,0,15,4,,"","",,"Blank",
+"BA_NonStop",R,99,8,0,15,4,,"","",,"Blank",
