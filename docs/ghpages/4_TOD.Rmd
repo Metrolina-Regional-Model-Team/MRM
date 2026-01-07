@@ -218,3 +218,21 @@ table_model <- kable(combined_data,
 table_model
 
 ```
+
+### External Trip Fractions for Commercial Vehicles & Trucks
+```{r,  echo=FALSE, message=FALSE, warning=FALSE}
+# Display as nicely formatted HTML table
+library(readxl)     # For reading Excel files
+library(knitr)      # For rendering tables
+library(kableExtra) # For styling tables
+
+data_eetrips <- read_excel("C:/MRM/docs/other/xlsx/EE Trip Fractions for Commercial Vehicles.xlsx")
+data_eetrips %>%
+   kable("html", align = "c", caption = "<span style='color:black; font-weight:bold;'>Table: External Trip Fractions for Commercial Vehicles & Trucks by Time of Day </span>") %>%
+  kable_styling(
+    bootstrap_options = c("striped", "hover", "condensed", "bordered"),
+    full_width = TRUE,
+    position = "left"
+  ) %>%
+  row_spec(0, background = "#d9d9d9", bold = TRUE)  # Gray header background
+```
