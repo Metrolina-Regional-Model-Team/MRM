@@ -13,7 +13,7 @@ output:
     css: "styles.css"
 ---
 
-This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It is currently being reviewed by North Carolina Department of Air Quality (NCDAQ) and is not official. Release notes will be updated once this model is confirmed for official by NCDAQ and NCDOT.
+This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It has been approved by North Carolina Department of Air Quality (NCDAQ) and is official version as of December 2025. Release notes will be updated once this model is confirmed for official by NCDAQ and NCDOT.
 
 Key updates from previous model:
 

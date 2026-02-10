@@ -19,8 +19,11 @@ output:
 library(readxl)
 library(DT)
 
+render_datatable <- function(data, digits = 2) {
+  numeric_cols <- names(data)[sapply(data, is.numeric)]
+
 # Define a function to render a datatable
-render_datatable <- function(data) {
+#render_datatable <- function(data) {
   datatable(
     data,
     filter = "top",
@@ -29,7 +32,8 @@ render_datatable <- function(data) {
       autoWidth = TRUE
     ),
     rownames = FALSE
-  )
+  )%>%
+    formatRound(columns = numeric_cols, digits = digits)
 }
 
 # Output plain text for Anson County
