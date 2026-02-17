@@ -62,15 +62,13 @@ navbar:
          href: 4_feedback.html
        - text: "Validation"
          href: 4_validation.html
-    - text: "MRM Versions"
+    - text: "Model Versions"
       menu:
-       - text: "MRM25v1.0"
-         href: 5_mrm25v1.html
-       - text: "MRM25v2.0"
-         href: 5_mrm25v2.html
-       - text: "MRM25v3.0"
-         href: 5_mrm25v3.html
-           
+       - text: "Versions"
+         href: 5_versions.html
+       - text: "Model Output"
+         href: 5_output.html
+      
   right:
     - icon: fa-github
       href: https://github.com/Metrolina-Regional-Model-Team/MRM
