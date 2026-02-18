@@ -1,0 +1,303 @@
+---
+title: "MRM Versions"
+output:
+  html_document:
+    theme: cosmo
+    highlight: tango
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+      number_sections: false
+    toc_depth: 4
+    css: "styles.css"
+---
+
+# Model Versions and Updates
+
+Model versions are produced to support planning activities that require updates to assumptions, data inputs, or transportation projects. Each model version reflects a defined set of changes and is documented to ensure transparency, reproducibility, and compliance with federal and state requirements.
+
+## Major Model Updates
+
+Major model updates are developed in support of Metropolitan Transportation Plans (MTPs). These updates typically incorporate:
+
+* Updated socioeconomic forecasts, including households, population, and employment
+* Revised or new transportation projects specific to the MTP horizon years
+* Incorporation of new travel survey data, including household travel surveys and on-board transit surveys
+* Model recalibration and validation based on updated survey data to ensure consistency with observed travel behavior
+
+MTP-related model updates represent comprehensive planning efforts and generally involve multiple coordinated updates across socioeconomic data, networks, and modeling procedures.
+
+## Minor Model Updates
+
+In addition to MTP updates, minor model updates are completed as needed to reflect changes outside of major planning cycles. These updates are most often associated with revisions to projects contained in the State Transportation Improvement Program (STIP) administered by NCDOT. Minor updates may include adjustments to individual projects, schedules, or network coding that do not constitute a full MTP update.
+
+## Conformity Analysis
+
+All model versions—whether major or minor—are subject to transportation conformity analysis, as required under federal regulations. Each version used for plan, program, or project-level analysis must demonstrate consistency with applicable air quality standards and conformity determinations.
+
+# Available Model Versions
+
+The following sections describe the current travel demand model versions available for download and use. Each model version reflects a specific set of planning assumptions, data inputs, and transportation projects and has been developed in accordance with the model update and versioning framework described above.
+
+For each model version, the corresponding section provides:
+
+* A summary of the key updates incorporated since the prior version
+* Identification of the planning context (e.g., MTP, STIP update)
+* A project list table associated with the model version
+
+Project lists are provided in filterable table format to allow users to easily identify projects by attributes such as facility type, jurisdiction, mode, horizon year, or funding program. These tables are intended to support transparency and efficient review of the projects included in each model version.
+
+The MRM is a regional travel demand model and includes transportation projects where practical and appropriate for regional analysis. Projects that do not add capacity, consist of minor intersection improvements, or involve small widenings on non-regionally significant roadways may fall below the resolution of the model and are therefore not explicitly coded. All regionally significant projects are included.
+
+Model projects are referenced using a project index number, which is used to select projects for inclusion in specific model years. Project characteristics—such as number of lanes, facility type, and intersection controls—are coded into the network prior to the estimation of capacities and speeds.
+
+The project tables below are grouped by county and sorted by the year the project opens to traffic. Transportation Improvement Program (TIP) numbers are included where available. Some projects cross county or MPO boundaries.
+
+## Numbering Convention
+
+Model versions are named using the following standardized convention:
+
+`MRM(a)v(b).(c).(d)`
+
+Where:  
+
+- (a) = Model build, calibration, and validation cycle  
+- (b) = Major changes completed  
+  - Examples: study area expansion, socioeconomic forecast revisions, MTP project edits  
+- (c) = Moderate changes completed  
+  - Examples: capacity-restrained assignment type changes or mode choice model parameter modifications  
+- (d) = Minor changes completed  
+  - Examples: network coding error corrections or zonal centroid connector modifications  
+
+**Example:**  
+`MRM25v1.3.1` indicates a model built under the **MRM25** framework with **one major update**, **three moderate updates**, and **one minor update** since the initial version.
+
+
+
+<div style="border: 2px solid black; padding: 15px; background-color: #f9f9f9; margin: 10px 0;"> Notes on applicable conformity analysis and intended use - The following descriptions are intended to help users select the appropriate model version for their planning, programming, or project-level analysis and to ensure consistent application of model assumptions across studies. </div>  
+
+## MRM25v2.0
+
+**This is the current official model.** This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It was reviewed by North Carolina Division of Air Quality (NCDAQ) and is official as of December 17, 2025.
+
+Key updates from previous model:
+
+* Sets user threads to support matching runs across different computer specs
+* Updates to master network, transit routes and project list to support STIP
+* Updates to truck model friction factors
+
+### Project Table
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(readxl)
+library(DT)
+library(dplyr)
+
+# Load and prepare project data
+data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v2_Projects.xlsx") %>%
+  mutate(
+    YEAR = as.character(YEAR),
+    PROJECT = gsub("\n", " ", PROJECT),
+    CATEGORY = gsub("\n", " ", CATEGORY),
+    TYPE = gsub("\n", " ", TYPE),
+    COUNTY = gsub("\n", " ", COUNTY)
+  ) %>%
+  select(YEAR, TIP_NO, PROJECT, CATEGORY, TYPE, COUNTY)
+
+colnames(data_project) <- c(
+  "Opening Year",
+  "TIP Number",
+  "Project Name",
+  "Category",
+  "Facility Type",
+  "County"
+)
+
+datatable(
+  data_project,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 5,                 # default view: 5 rows
+    lengthMenu = c(5, 10, 20, 50, 100), 
+    scrollX = TRUE,
+    fixedHeader = TRUE,
+    autoWidth = FALSE,
+    order = list(list(0, "asc")),
+    dom = "Bfrtip",
+    buttons = list(
+      list(
+        extend = "csv",
+        text = "Download CSV",
+        filename = "MRM25v1_Project_List"
+      )
+    ),
+    columnDefs = list(
+      list(width = '120px', targets = 0),
+      list(width = '120px', targets = 1),
+      list(width = '300px', targets = 2),
+      list(width = '150px', targets = 3),
+      list(width = '150px', targets = 4),
+      list(width = '150px', targets = 5)
+    )
+  ),
+  rownames = FALSE
+) %>%
+  formatStyle(
+    columns = colnames(data_project),
+    `white-space` = 'normal',
+    `word-break` = 'break-word',
+    `font-size` = '13px'  
+  )
+
+```
+
+## MRM25v1.0 
+
+This model was prepared for the Rock Hill-Fort Mill Transportation Study (RFATS) 2055 Metropolitan Transportation Plan.
+
+Key updates from previous model:
+
+* Update to External Station Models
+* Updates to master network, transit routes and project list to support RFATS 2055 MTP
+
+### Project Table
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Load and prepare project data
+data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v1_Projects.xlsx") %>%
+  mutate(
+    YEAR = as.character(YEAR),
+    PROJECT = gsub("\n", " ", PROJECT),
+    CATEGORY = gsub("\n", " ", CATEGORY),
+    TYPE = gsub("\n", " ", TYPE),
+    COUNTY = gsub("\n", " ", COUNTY)
+  ) %>%
+  select(YEAR, TIP_NO, PROJECT, CATEGORY, TYPE, COUNTY)
+
+colnames(data_project) <- c(
+  "Opening Year",
+  "TIP Number",
+  "Project Name",
+  "Category",
+  "Facility Type",
+  "County"
+)
+
+datatable(
+  data_project,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 5,                 # default view: 5 rows
+    lengthMenu = c(5, 10, 20, 50, 100), 
+    scrollX = TRUE,
+    fixedHeader = TRUE,
+    autoWidth = FALSE,
+    order = list(list(0, "asc")),
+    dom = "Bfrtip",
+    buttons = list(
+      list(
+        extend = "csv",
+        text = "Download CSV",
+        filename = "MRM25v1_Project_List"
+      )
+    ),
+    columnDefs = list(
+      list(width = '120px', targets = 0),
+      list(width = '120px', targets = 1),
+      list(width = '300px', targets = 2),
+      list(width = '150px', targets = 3),
+      list(width = '150px', targets = 4),
+      list(width = '150px', targets = 5)
+    )
+  ),
+  rownames = FALSE
+) %>%
+  formatStyle(
+    columns = colnames(data_project),
+    `white-space` = 'normal',
+    `word-break` = 'break-word',
+    `font-size` = '13px'  
+  )
+
+```
+
+## MRM2503
+
+**This is the current working model.**This model was prepared for the North Carolina Department of Transportation (NCDOT) for development of the 2055 Metropolitan Transportation Plans (MTP’s) of the following jurisdictions:
+
+* Cabarrus-Rowan Metropolitan Planning Organization (CRMPO)
+* Charlotte Regional Transportation Planning Organization (CRTPO)
+* Gaston-Cleveland-Lincoln Metropolitan Planning Organization (GCLMPO)
+
+The model is currently being reviewed by North Carolina Department of Air Quality (NCDAQ) and is not official.
+
+Key updates from previous model:
+
+* Updates to master network, transit routes and project list to incorporate the Draft 2055 MTP Fiscally Constrained Project Lists as of October 2025.
+
+### Project Table
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Load and prepare project data
+data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v3_Projects.xlsx") %>%
+  mutate(
+    YEAR = as.character(YEAR),
+    PROJECT = gsub("\n", " ", PROJECT),
+    CATEGORY = gsub("\n", " ", CATEGORY),
+    TYPE = gsub("\n", " ", TYPE),
+    COUNTY = gsub("\n", " ", COUNTY)
+  ) %>%
+  select(YEAR, TIP_NO, PROJECT, CATEGORY, TYPE, COUNTY)
+
+colnames(data_project) <- c(
+  "Opening Year",
+  "TIP Number",
+  "Project Name",
+  "Category",
+  "Facility Type",
+  "County"
+)
+
+datatable(
+  data_project,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 5,                 # default view: 5 rows
+    lengthMenu = c(5, 10, 20, 50, 100), 
+    scrollX = TRUE,
+    fixedHeader = TRUE,
+    autoWidth = FALSE,
+    order = list(list(0, "asc")),
+    dom = "Bfrtip",
+    buttons = list(
+      list(
+        extend = "csv",
+        text = "Download CSV",
+        filename = "MRM25v1_Project_List"
+      )
+    ),
+    columnDefs = list(
+      list(width = '120px', targets = 0),
+      list(width = '120px', targets = 1),
+      list(width = '300px', targets = 2),
+      list(width = '150px', targets = 3),
+      list(width = '150px', targets = 4),
+      list(width = '150px', targets = 5)
+    )
+  ),
+  rownames = FALSE
+) %>%
+  formatStyle(
+    columns = colnames(data_project),
+    `white-space` = 'normal',
+    `word-break` = 'break-word',
+    `font-size` = '13px'  
+  )
+
+```
