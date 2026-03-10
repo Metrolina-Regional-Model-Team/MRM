@@ -1,5 +1,5 @@
 ---
-title: "MRM Versions"
+title: "Model Versions"
 output:
   html_document:
     theme: cosmo
@@ -12,8 +12,7 @@ output:
     toc_depth: 4
     css: "styles.css"
 ---
-
-# Model Versions and Updates
+# MRM Versions
 
 Model versions are produced to support planning activities that require updates to assumptions, data inputs, or transportation projects. Each model version reflects a defined set of changes and is documented to ensure transparency, reproducibility, and compliance with federal and state requirements.
 
@@ -38,13 +37,15 @@ All model versions—whether major or minor—are subject to transportation conf
 
 # Available Model Versions
 
-The following sections describe the current travel demand model versions available for download and use. Each model version reflects a specific set of planning assumptions, data inputs, and transportation projects and has been developed in accordance with the model update and versioning framework described above.
+The following section describes the current travel demand model versions available for download and use. All models are available for download from the [MRM Releases Page](https://github.com/Metrolina-Regional-Model-Team/MRM/releases) on GitHub. Each model version reflects a specific set of planning assumptions, data inputs, and transportation projects and has been developed in accordance with the model update and versioning framework described above.
 
 For each model version, the corresponding section provides:
 
 * A summary of the key updates incorporated since the prior version
 * Identification of the planning context (e.g., MTP, STIP update)
 * A project list table associated with the model version
+
+## Project Tables
 
 Project lists are provided in filterable table format to allow users to easily identify projects by attributes such as facility type, jurisdiction, mode, horizon year, or funding program. These tables are intended to support transparency and efficient review of the projects included in each model version.
 
@@ -227,7 +228,7 @@ datatable(
 
 ## MRM2503
 
-**This is the current working model.**This model was prepared for the North Carolina Department of Transportation (NCDOT) for development of the 2055 Metropolitan Transportation Plans (MTP’s) of the following jurisdictions:
+**This is the current working model.**This model was prepared for the development of the 2055 Metropolitan Transportation Plans (MTP’s) of the following jurisdictions:
 
 * Cabarrus-Rowan Metropolitan Planning Organization (CRMPO)
 * Charlotte Regional Transportation Planning Organization (CRTPO)
