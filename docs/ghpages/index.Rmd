@@ -89,8 +89,10 @@ map
 
 ```
 
-## Model Team
-Charlotte Department of Transportation (CDOT) serves as the model custodian for the Metrolina Regional Model. The MRM is maintained and operated by a team of modelers from the following agencies: 
+## Model Team & Planning and Applications Oversight Committee
+Charlotte Department of Transportation (CDOT) serves as the model custodian for the Metrolina Regional Model. The MRM is maintained and operated by an additional team of modelers from the North Carolina Department of Transportation (NCDOT) and the South Carolina Department of Transportation (SCDOT).
+ 
+The Planning and Applications Oversight Committee (PAOC) oversees the forecasting of socioeconomic data needed for application of the MRM in current and future years, regular updates of network data, ensuring that the MRM meets the requirements for regional air quality conformity determinations, following the development of an Annual Work Program for model maintenance, and collaboration among all agencies for special studies or activities that may be required to maintain the MRM.  The PAOC includes representatives from the following agencies:
 
 * North Carolina Department of Transportation (NCDOT)
 * South Carolina Department of Transportation (SCDOT)
@@ -98,8 +100,8 @@ Charlotte Department of Transportation (CDOT) serves as the model custodian for 
 * Gaston – Cleveland – Lincoln Metropolitan Planning Organization (GCLMPO)
 * Cabarrus-Rowan Metropolitan Planning Organization (CRMPO)
 * Rock Hill-Forth Mill Area Transportation Study (RFATS)
-* Rocky River Rural Planning Organization (RRRPO) 
-
+* Rocky River Rural Planning Organization (RRRPO)
+* Catawba Regional Council of Governments (Catawba COG)
 
 ## Note
 This documentation reflects MRM25v1.0. The official base year is 2022. The horizon years include 2025, 2035, 2045, and 2055. For conformity purposes, the year 2026 is also modeled. Please refer to the MRM Versions tab for more information on the project lists that are used for the respective model versions.
