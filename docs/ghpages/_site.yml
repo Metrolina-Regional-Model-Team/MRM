@@ -24,10 +24,8 @@ navbar:
   left:
     - text: "Databases"
       menu:
-        - text: "TAZs"
+        - text: "TAZs & SE"
           href: 1_taz.html
-        - text: "Land Use"
-          href: 1_land_use.html
         - text: "Networks"
           href: 1_networks.html
         - text: "Transit"

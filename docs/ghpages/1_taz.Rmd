@@ -41,7 +41,7 @@ invisible(capture.output({
 }))
 ```
 
-The table below summarizes the Traffic Analysis Zones (TAZs) across MRM region for MRM22v3.0 and map below shows the changes made in the TAZ structure moving from 3,578 TAZs in MRM22v1.0 to 3,896 TAZs in MRM25v3.0 
+The table below summarizes the model's current TAZ structure. The map below shows the changes made with the most recent major model update, moving from 3,578 TAZs in MRM22v1.0 to 3,896 TAZs in MRM25v1.0.
 
 ```{r,  message=FALSE, warning=FALSE}
 # Display as nicely formatted HTML table

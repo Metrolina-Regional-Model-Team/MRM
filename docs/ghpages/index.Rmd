@@ -89,7 +89,7 @@ map
 
 ```
 
-## Model Team & Planning and Applications Oversight Committee
+## Model Team & PAOC
 Charlotte Department of Transportation (CDOT) serves as the model custodian for the Metrolina Regional Model. The MRM is maintained and operated by an additional team of modelers from the North Carolina Department of Transportation (NCDOT) and the South Carolina Department of Transportation (SCDOT).
  
 The Planning and Applications Oversight Committee (PAOC) oversees the forecasting of socioeconomic data needed for application of the MRM in current and future years, regular updates of network data, ensuring that the MRM meets the requirements for regional air quality conformity determinations, following the development of an Annual Work Program for model maintenance, and collaboration among all agencies for special studies or activities that may be required to maintain the MRM.  The PAOC includes representatives from the following agencies:

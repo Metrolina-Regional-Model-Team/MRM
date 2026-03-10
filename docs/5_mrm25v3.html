@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>MRM25v3.0</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.33/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="site_libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.1/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.1/js/crosstalk.min.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MRM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Databases
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="1_taz.html">TAZs &amp; SE</a>
+    </li>
+    <li>
+      <a href="1_networks.html">Networks</a>
+    </li>
+    <li>
+      <a href="1_routes.html">Transit</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Surveys &amp; Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="2_surveys.html">Surveys</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resident Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="3_hhsynth.html">Household Synthesis</a>
+    </li>
+    <li>
+      <a href="3_purpose.html">Tour Purpose &amp; Frequency</a>
+    </li>
+    <li>
+      <a href="3_dc.html">Destination Choice</a>
+    </li>
+    <li>
+      <a href="3_stops.html">Intermediate Stops</a>
+    </li>
+    <li>
+      <a href="3_mode.html">Mode Choice</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Other Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="4_ext.html">Externals</a>
+    </li>
+    <li>
+      <a href="4_freight.html">Freight</a>
+    </li>
+    <li>
+      <a href="4_TOD.html">TOD</a>
+    </li>
+    <li>
+      <a href="4_assignment.html">Assignment</a>
+    </li>
+    <li>
+      <a href="4_feedback.html">Feedback</a>
+    </li>
+    <li>
+      <a href="4_validation.html">Validation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Model Versions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="5_versions.html">Versions</a>
+    </li>
+    <li>
+      <a href="5_output.html">Model Output</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Metrolina-Regional-Model-Team/MRM">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">MRM25v3.0</h1>
+
+</div>
+
+
+<p>This model was prepared for the North Carolina Department of
+Transportation (NCDOT) for development of the 2055 Metropolitan
+Transportation Plans (MTP’s) of the following jurisdictions:</p>
+<p>Cabarrus-Rowan Metropolitan Planning Organization (CRMPO) Charlotte
+Regional Transportation Planning Organization (CRTPO)
+Gaston-Cleveland-Lincoln Metropolitan Planning Organization (GCLMPO)</p>
+<p>The model is currently being reviewed by North Carolina Department of
+Air Quality (NCDAQ) and is not official. Release notes will be updated
+once this model is confirmed as official by NCDAQ and NCDOT.</p>
+<p>Key updates from previous model:</p>
+<p>Updates to master network, transit routes and project list to
+incorporate the Draft 2055 MTP Fiscally Constrained Project Lists as of
+October 2025.</p>
+<div id="project-database" class="section level2">
+<h2>Project Database</h2>
+<div class="datatables html-widget html-fill-item" id="htmlwidget-dcd5a6215b519d16d414" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-dcd5a6215b519d16d414">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["2026","2060","2075","2060","2060","2075","2060","2075","2060","2035","2035","2060","2045","2045","2045","2035","2045","2045","2035","2035","2035","2035","2025","2035","2035","2055","2035","2035","2035","2035","2060","2035","2075","2060","2055","2055","2045","2035","2035","2035","2055","2075","2045","2035","2035","2025","2035","2045","2025","2035","2025","2045","2045","2035","2035","2060","2035","2035","2035","2045","2035","2035","2035","2026","2060","2025","2055","2060","2055","2035","2035","2035","3000","2045","2035","2035","2035","2035","2025","2075","2026","2075","2035","2035","2035","2075","2035","2055","2075","2035","2035","2025","2055","2045","2045","2070","2060","2060","2045","2055","2035","2035","2045","2035","2035","2035","2035","2035","2035","2035","2035","2035","2060","2045","2045","2035","2035","2045","2055","2035","2035","2035","2035","2035","2035","2025","2035","2035","2025","2060","2055","2035","2045","2045","2025","2035","2075","2075","2075","2045","2075","2045","2055","2045","2060","2060","2055","2035","2035","2035","2999","2035","2035","2035","2035","2999","2035","2025","2025","2025","2060","2075","2075","2025","2035","2065","2035","3000","2060","2060","2060","2045","2045","2045","2045","2075","2045","2045","2045","2045","2045","2045","2045","2055","2045","2045","2045","2045","2075","2075","2060","2075","2075","2055","2060","2075","2070","2999","2075","2075","2075","2075","2060","2075","2060","2075","2035","2025","2035","2025","2075","2045","2045","2075","2075","2075","2075","2075","2045","2055","2045","2075","2045","2075","2070","2045","2055","2060","2075","2055","2055","2070","2060","2065","2065","2075","2075","2999","2075","2075","2055","2075","2075","2075","2075","2075","2075","2060","2075","2075","2075","2025","2075","2065","2055","2065","2065","2065","2075","2065","2075","2075","2075","2065","2065","2060","2060","2075","2065","2065","2075","2065","2060","2025","2060","2065","2065","2035","2065","2070","2065","2065","2065","2065","2035","2025","2035","2075","2055","2075","2075","2075","2035","2065","2065","2065","2065","2065","2065","2065","2065","2065","2065","2060","2075","2065","2075","2060","2075","2075","2075","2025","2075","2075","2075","2055","2075","2075","2065","2075","2075","2075","2075","2060","2045","2035","2060","2075","2075","2075","2070","2060","3000","3000","2060","2060","2045","2055","2075","2075","2055","2070","2075","2075","2075","2075","2060","2025","2075","2075","2075","2075","2065","2075","2045","2075","2045","2075","2075","2075","2060","2060","2060","2075","2060","2075","2075","2075","2035","2025","2065","2065","2025","2065","2065","2075","2065","2060","2075","2075","2065","2065","2065","2035","2025","2065","2065","2075","2065","2065","2065","2026","2025","2065","2035","2065","2035","2035","2035","2026","2025","2065","2035","2065","2035","2075","2075","2075","2075","2075","2025","2075","2055","2055","2025","2065","2999","2999","2999","2999","2999","2999","2065","2035","2999","2075","2999","2999","2999","2045","2999","2999","2999","2035","2045","2035","2035","2075","2045","2060","2045","2075","2035","2035","2035","2035","2035","2075","2024","2025","2025","2035","2025","2025","2075","2035","9999","2075","2035","2035","2055","2025","2075","2025","2075","2075","2075","2075","2070","2060","2075","2060","2045","2060","2045","2070","2070","2070","2075","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2075","2060","2075","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2070","2035","2070","2070","2070","2060","2070","2070","2060","2070","2070","2075","2060","2070","2045","2070","2070","2060","2070","2070","2070","2070","2070","2070","2070","2060","2060","2070","2060","2075","2070","2070","2070","2075","2060","2035","2060","2135","2045","2045","2135","2135","2045","2035","2055","2055","2026","2035","2025","2025","2035","2035","2035","2035","2035","2026","2035","2035","2035","2035","2026","2060","2060","2045","2075","2075","2075","2100","2045","2060","2045","2045","2060","2045","2045","2045","2060","2055","2055","2045","2045","2055","2060","2045","2060","2060","2060","2055","2045","2045","8888","2055","2999","2055","2075","8000","2055","2060","2060","2060","2025","2035","2035","2055","2045","2060","2060","2060","2060","2060","2060","8001","2035","2035","2035","2060","2075","2075","2075","2075","2035","2045","2045","2045","2055","2055","2055","2055","2055","2045","2045","2045","2045","2055","2045","2026","2045","2045","2035","2035"],["U-6239","TRM-3","Not Listed","INT-1/MON-7","CLT-11",null,"MAT-1","Not Listed","H170691","H170685","H172124","H170271","H171306","H170989","H172121","H170830","U-6109","U-6109","U-6106","U-6105","U-6103","Not Listed","U-6088","U-6087","H150542",null,"U-6078  H150542","U-6054","H150539","H090439","MSV-3","U-6032","Not Listed","CLT-9","HTV-29","CLT-24","H090601","H141272","U-5964","H150202","MSV-15","Not Listed","U-5957",null,"U-5955B","U-5955A","U-5931","U-5929","U-5908A","U-5907","U-5905A",null,null,"U-5874","H090612","H141299","U-5817","U-5816","U-5808","HTV-11","U-5805","U-5803","U-5799","U-5780","STA-1","U-5775",null,null,"CLT-30","U-5771","U-5769B","U-5769A",null,"U-5767","U-5766A, U-5766B","U-5765","U-5764","U-5763",null,null,"Not Listed","MHL-3, MHL-4","U-4913A","U-4714B","U-4714AC","MAT-10","U-4713A","MON-12",null,"U-3467","U-3467",null,null,null,"U-2567",null,"H090331-B","H090331-B","MAT-7. MAT-8","MAT-15","U-2509EB","U-2509B","CLT-22","U-2509EA","U-2509AD","U-2509AB","U-2509AD","U-2509AC","U-2509AB","U-2509AA",null,"R-5721B","H090185-A","HTV-24","H111181","R-5712","R-5711",null,null,"R-5706A","R-5100","Not Listed","R-3833C","H090186-E","H090186-D","Not Listed","R-2632AB","R-2555B",null,"TRM-2","R-2307A","R-2307B",null,"H090049-C","R-0211EC","Not Listed","Not Listed","Not Listed","Not Listed","CLT-20","Not Listed","CLT-I9","CLT-I19","CLT-I7","DOT-I2","I-5985B","I-5985A","I-5962","H129671","U-5800",null,"I-5718","I-5718","I-5718","I-5718","I-5718","I-5715","I-5714","I-5507","I-5507","COR-I1","Not Listed","Not Listed","I-3819B","C-5621",null,"B-6051",null,"MSH-1/UNI-1","H184607","H191616",null,null,"H184868","H184911","Not Listed","H184878","H190678","H231188","H184210","H184215","H184885","H184901","H184875","H184825","H191842","H191670","H184221","Not Listed","Not Listed","DOT-I1","Not Listed","Not Listed","INT-2","HTV-10",null,null,null,null,null,"Not Listed",null,"CLT-31",null,"MSV-17","Not Listed","HL-0023",null,"Not Listed",null,"Not Listed","H170836","H150211","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","H150212","H171281","H170856","Not Listed","H170845","Not Listed",null,null,"COR-3","CLT-2/MHL-1 B","Not Listed","MHL-5","MON-3",null,"MON-2",null,null,"Not Listed","Not Listed",null,null,null,"CLT-33","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","CLT-15","Not Listed","Not Listed","Not Listed",null,null,null,"MSV-11",null,null,null,null,null,null,null,null,null,null,"MSV-5","MSV-6",null,null,null,null,null,"TRM-4",null,"MSV-14",null,null,null,null,null,null,null,null,null,null,"I-5507",null,"Not Listed","H171301",null,null,null,null,null,null,null,null,null,null,null,null,null,null,"STA-3",null,null,"Not Listed","HTV-25B",null,null,null,null,"Not Listed",null,null,"CLT-34","Not Listed","Not Listed",null,"Not Listed","Not Listed",null,null,"COR-5","U-5768","HL-0118","HTV-36",null,"HTV-34, HTV-35",null,null,"UNI-2",null,null,"COR-4","HTV-26B","CLT-26","MAT-14",null,null,"CLT-I13",null,"Not Listed","Not Listed","Not Listed","Not Listed","HTV-16",null,"Not Listed","Not Listed",null,"Not Listed",null,null,"CLT-13","Not Listed","U-5768","Not Listed","Not Listed","Not Listed","HTV-33","HTV-32","MON-5, MON-6","Not Listed","CLT-10","Not Listed","Not Listed",null,"P-5730",null,null,null,null,null,null,null,null,"TRM-1","Not Listed",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed","Not Listed",null,null,null,null,null,null,null,null,null,null,null,"I-5718",null,null,null,null,null,null,null,null,null,"Not Listed","U-6109","Not Listed","HL-0053","Not Listed","CLT-19",null,null,null,null,"U-5723","Not Listed","Not Listed","Not Listed",null,null,null,null,"I-6016","I-5973",null,null,null,null,null,null,"Not Listed",null,null,"Not Listed",null,"Not Listed","Not Listed","Not Listed","Not Listed",null,"MSV-8B","Not Listed","HTV-7","HTV-4","HTV-20","COR-2",null,null,null,"Not Listed",null,null,null,null,null,null,null,null,null,null,"Not Listed","MSV-7","Not Listed",null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,null,"HL-0025",null,null,null,"CLT-3",null,null,"HTV-8, HTV-9",null,null,"Not Listed","HTV-6",null,"CLT-4",null,null,"HTV-30",null,null,null,null,null,null,null,"HTV-37","WAX-4",null,"COR-7","Not Listed",null,null,null,null,"HTV-39","HL-0138","CLT-I8",null,"CLT-I6","CLT-17",null,null,"DOT-1",null,null,null,null,null,null,null,"Not Listed","HL-0116","HL-0135","HL-0055","HL-0024","Not Listed","U-5906","Not Listed","Not Listed","Not Listed",null,"COR-8","MSV-8A","HTV-25A",null,null,null,"MAT-2","MAT-9","MSV-10","CLT-1","MHL-3","MHL-4","MAT-12","CLT-23","MSV-20","MON-9","MON-4","CLT-28","HTV-13","CLT-35","CLT-5","MSV-13","MSV-19","HTV-26A","HTV-28","HTV-35","CLT-16","CLT-2/MHL-1 A","CLT-7",null,"HTV-22","Not Listed","CLT-I4","Not Listed",null,"CLT-14","HTV-34","CLT-06","MSV-7",null,"HL-0115",null,null,null,null,null,null,null,null,"HTV-38",null,null,"U-4714AB","HL-0112","CLT-I1",null,null,null,null,"HL-0134","H170792","HTV-I2","CLT-36","H190681","H230480","H150203","H224043","H230231","CLT-I10","CLT-I28","CLT-I20A","H224061","H184933","H230201","EB-5950","H191177","CLT-I3",null,"Not Listed"],["East-West Connector","Old Mountain Rd Widening","Lawyers Rd","Old Charlotte Highway","Carowinds Blvd Extension","Ardrey Kell Rd","Eastern Circumferential","Park Rd","NC 273 /South Point Rd. Intersection Improvements","US 29/74 South Fork River Bridge","US 74/NC 7 Intersection Improvements","NC 73 Extension","Redbud Dr Connector Improvements","NC 27 (E Main St) Improvements","NC 279 (N New Hope Rd)","NC-16 at Optimist Club Rd Interchange","Johnston Rd (US 521)","Johnston Rd (US 521)","Gilead Rd","Bailey Rd Extension","US 74 Managed Lanes","Davidson-Concord Rd at Robert Walker Dr","New Town Rd at Marvin Rd","Potter Rd at Wesley Chapel Rd","NC 275 Intersection Improvements","US 52 Bypass (Granite Quarry)","Main St (SR 1008)","Brookdale Drive-US 21 Connector","Cox Rd Widening","US 29-74 (Franklin Blvd)","US 21 (Charlotte Hwy)","Mallard Creek Rd (Odell School Rd) Widening","Charlotte Ave","Ballantyne Commons Pkwy","Poplar Tent Rd","Mallard Creek Rd","US 321 Access Management","US 29/74 / NC 274 Intersection Improvements","US 21 and US 64 Roundabout Conversion","Union Rd Widening","Oakridge Farm Hwy (NC-150)","US 74/NC 273 Intersection Improvements","Freedom Dr","Union Cemetery Rd Relocation","NC 16 (Brookshire Blvd)","NC 16 (Brookshire Blvd)","US-74 at Seacrest Shortcut Rd Intersection Improvement","US 74 and NC 226 Intersection Improvements","NC 115 Two-Way Pair","Potts - Sloan - Beatty Connector","Lakeview Rd Widening (Reames Rd to NC 115)","Airport Pkwy Extension","NC 150","North University Research Park Bridge","S. New Hope Rd (NC 279)","W Charlotte Ave Intersection Improvements","Fairview Rd Overpass Over I-77","Midnight Ln/Oates Rd Overpass Over I-77","Chestnut Parkway Extension","Gilead Rd","Monroe/Rama/Idlewild Rds Intersection Improvements","Eastway Dr and Shamrock Dr Intersection Improvements","US 21 Widening","NC 150 and Wiggins Rd Intersection Improvements","Wilkesboro Hwy (NC 115)","Marion St Intersection","Union St","NC 3","NC 115 (Old Statesville Rd)","US 21","NC 16 (Providence Rd)","NC 16 (Providence Rd)","NC 49 (University City Blvd)","US 21 (Statesville Rd)","NC 160 (Steele Creek Rd)","NC 73 W","US 74","NC 51 (Pineville-Matthews Rd)","Julian-Heilig Rd","Westmoreland Rd","Northcross Dr (U-5108)","NC 51 (Matthews-Mint Hill Rd)","Idlewild Rd Widening","Old Monroe Rd","John St/Old Monroe Rd","John St","McKee Rd","US 601","Indian Trail Rd (SR 1008)","NC 84","Rea Rd Extension","NC 3","Poplar Tent Rd","Poplar Tent Rd","US 74 (Dixon Blvd)/NC 150 (Dekalb St) Interchange","Monroe Northern Loop","Lower Dallas Hwy Intersection Improvements","NC 279","Independence Pointe Pkwy","US 74 Managed Lanes","Independence Pointe Pkwy","US 74 Managed Lanes","Krefeld Dr Extension","Arequipa Dr/Northeast Parkway","Northeast Pkwy Extension","US 74 &amp; Sardis Rd N/Sam Newell Road Area","US 74 Expressway-- Matthews Mint Hill Interchange","Independence Pointe Pkwy","US 74 &amp; Sardis Rd N/Sam Newell Road Area","US 74 &amp; Harris Blvd/Village Lake Dr/Sharon Forest Dr Area","US 52 Widening","NC 73 W","NC 73 W (Lincoln Only)","NC 73 W (Mecklenburg Only)","Dixon Blvd Access Management","NC 16 Business/Unity Church Rd/Triangle Cr Intersection Improvements","US21 and Houston Rd/Flower House Loop Rd Intersection Improvements","NC 73","NC 73","NC 73 East","Williamson Rd","US 74 Upgrade","Brawley School Rd","US 74 Bypass/Shelby Bypass","US 74 Bypass","US 74 Bypass/Shelby Bypass","NC 73 (Sam Furr Rd)","W. Catawba Ave","NC 24-27","US 21/NC 115 (Main St/Shelton Ave)","NC 150","NC 150","George Liles Parkway","NC 150 Relocation","I-485 / Weddington Rd","I-77 North Peak Period Shoulder Lanes","I-77 at Sunset Rd","I-85 at Sugar Creek Rd","I-277 (Brookshire Frwy) Reconfiguration","I-277 Reconfiguration incl. I-277 / US 74 Interchange Improvements","I-277 Improvements (between US 74 and Belk Freeway)","I-85 at Brookshire Blvd","I-485 at NC 49","I-85 at Mallard Creek Church Rd","I-485 at NC 51 (Pineville-Matthews Rd)","I-85 Widening","I-85 Widening","I-77 and Cornelius Rd Interchange","I-85 Widening","NC 7 (N Main St) Widening","I-277 (Brookshire) to I-77 N Ramp Widening","I-77 South Widening (HOT)","I-77 South Widening (HOT)","I-77 South Widening (HOT)","I-77 South Widening (HOT)","I-77 South Widening (HOT)","I-77 and NC 73 (Exit 25) Intersection Improvements","I-77 and Gilead Rd (Exit 23) Intersection Improvements","I-485 HOT3+ DC to Westinghouse Blvd","I-485 (S) Fast Lanes - Meck with access points","I-77 at Westmoreland Interchange","I-77 Widening (North)","I-77 Widening (Iredell)","I-40/I-77; I-40/US 21; I-40 Widening","US 21 and Catawba Ave","NC 115 and David Cox Rd Intersection Improvements","Catawba River Bridge","NC 49 (University City Blvd)","Marshville Bypass","NC 16 BUS Widening","NC 150 (College Ave) Modernization","NC 152 Intersection Improvements","I-85 at McCanless Rd Interchange","Lowell Bethesda Rd Modernization","SR 1379 (Webbs Rd) Modernization","NC 27/Grove St Intersection Improvements","Beaty Rd Modernization","NC 274/Jenkins Rd/Brown St/Milton Ave Intersection Improvements","US-29/74 and NC 273 Intersection Improvements","NC 273/NC 7 Intersection Improvements","US 74 BUS/NC 161 Intersection Improvements","Wilma Sigmon Rd/US 321 BUS Intersection Improvements","US 321 Business Widening","US 321 Business Widening","Redbud Dr Widening","Optimist Club Road Extension","Webbs Rd Extension","NC 7/Cox Rd Intersection Improvements","I-277 (John Belk Fwy)","Providence Rd (NC 16)","I-85 at I-485","I-485 at Rocky River Rd","Johnston Rd (US 521)","Wesley Chapel-Stouts Rd","Gilead Rd","US 21 Widening","Southwest Bypass","Ardrey Kell Rd","Lancaster Hwy","Providence Rd","Pineville-Matthews Rd","Westinghouse Blvd","Shopton Rd West","Mecklenburg Hwy (NC 115)","Plaza Dr","Salisbury Rd","Rea Road Widening (I-485 to Williams Pond Lane)","Panthers Facility Interchange and New Roadway Connection","Iverson Way / Publix SE LRT Station","Bryant Farms Rd","Armstrong Ford Rd Realignment","W Catawba Ave Extension","Lakewood Rd Intersection Improvements","Gaston Day School Rd Extension","Southridge Parkway West Extension","SR 1380 (Optimist Club Rd/Triangle Cir) Widening","St. James Church Rd/N Little Egypt Rd Widening","Alabama Ave","West Catawba Ave Intersection Improvements","Motz Ave Extension","Hazeline Ave Extension","3rd St Extension","E Maine Ave Intersection Improvements","NC 16 BUS Widening","Brandon Oaks Pkwy Extension","Eastern Circumferential Rd","Main St (NC 115)","Albemarle Rd","Albemarle Rd","Fairview Rd (NC 218)","Morgan Mill Rd (NC 200)","Monroe Northern Loop","Martin Luther King Jr Blvd (NC 200)","Weddington Rd","McKee Rd","S Tryon St (NC 49)","S Tryon St (NC 49)","Westinghouse Blvd","Westinghouse Blvd","Tyvola Rd","Steele Creek Rd","I-485/Western Pkwy Interchange","Western Pkwy (Relocation of West Blvd)","Western Pkwy","Brookshire Fwy","Brookshire Blvd","Brookshire Blvd","Eastern Circumferential Rd","Eastern Circumferential Rd","WT Harris Blvd","WT Harris Blvd","Riverview Rd","Ebinport Rd","Pleasant Rd","Langtree Rd Widening","Amity Hill Rd Widening","Tomlin Mill Rd Widening","Rocky River Rd Widening","Bluefield Rd","Perth Rd","Perth Rd","Talbert Rd Improvements","Shearers Rd Widening","Shearers Rd Widening","Mazeppa Rd Widening","Connector Rd Widening","Cornelius Rd Widening","Cornelius Rd Widening","Old Mountain Rd Widening","Wilkesboro Highway Widening","Charlotte Highway Widening","Charlotte Highway Widening","S. Main St (US 21/NC 115) Widening","S-133 (Pole Branch Rd)/SC274/NC279","NC-3 (Coddle Creek Hwy) Widening","I-485 HOT3+ (East)","I-485 HOT3+ (East)","Fort Mill; Southern Bypass","US 521","I-85 Widening","Rock Hill; Mt Gallant Rd","New Bridge East-West Connector","Doby's Bridge Rd","John Ross Pkwy","Mt Gallant Rd","I-485 HOT3+ DC to Johnston Rd South (US-521)","SC-160 Widening and I-77 Interchange Reconfiguration","Gaston Mall Dr Extension","Edgewood Rd Widening","I-77 Widening (South)","I-77 Widening (South)","I-77 Widening (South)","SC 160","Springfield Pkwy (Fort Mill N. Bypass)","Barberville Rd","Harrisburg Rd","Marvin Rd","Shelley Mullis Rd","Springsteen Rd","Doby's Bridge Rd","Munn Rd","Ridge Rd","Eastside Dr","Garner Bagnal Blvd","Idlewild Rd","NC 49 (University City Blvd)","S. Tryon St","NC-115 Widening","Silver Line Full Build","I-77 Widening (North)","NC 115 (Old Statesville Rd)","NC 160 (West Blvd) Airport Relocation","US 29/74 (Wilkinson Blvd)","US 29/74 (Wilkinson Blvd)","Westmoreland Rd Extension","NC 160 (West Blvd) Widening","NC 160 (West Blvd) Relocation","NC 160 (West Blvd)","Wesley Chapel Rd","WT Harris Blvd (NC 24)","WT Harris Blvd","WT Harris Blvd","WT Harris Blvd","US 21","NC 49 (University City Blvd)","Stumptown Rd Extension","US 21","US 21","US-21 Widening","NC 49 (S. Tryon St)","Northcross Dr","NC 84","NC 51 (Pineville-Matthews Rd)","NC 115 (Old Statesville Rd)","NC 115 (Old Statesville Rd) Widening","NC 115 (Old Statesville Rd) Widening","NC 27 ( Mt. Holly Rd)","McKee Rd Extension","McKee Rd","Lawyers Rd","I-85 at Billy Graham Pkwy","Hugh Torrence Pkwy/McKee Blvd Extension","Hucks Rd Extension","Hucks Rd Extension","Hucks Rd Extension","Hucks Rd Extension","Hambright Rd Extension","West Blvd Extension","Fred D. Alexander Blvd","Fred D. Alexander Blvd","Faith Church Extension","Eastway Dr","Eastfield Rd","Eastfield Rd","Eastern Circumferential","Eastern Circumferential Rd","Eastern Circumferential (Back Creek Church Rd Realign)","Eastern Circumferential","Eastern Circumferential","Eastern Circumferential","Church St Extension","Church St Extension","Charlotte Ave","Bryant Farms Rd","Bryant Farms Rd","Billy Graham Pkwy","Ardrey Kell Extension","NC 24-27 (Albermarle Rd)","Clanton Road Extension","Albemarle Pkwy (SE Connector)","Albemarle Western Bypass","Leonard Ave Extension","Woodhurst Ln - Henson St Connector","Albemarle SE-SW Connector","Albemarle NE Connector","Langtree-Fairview Connector","NC 150","US21/NC115","I-77 Widening (Iredell)","Eden Terrace (B5)","Manchester Flyover/Commerce Dr Extension","River Industrial (A8, B4)","Riverview Rd Extension","Cel-River Rd Widening","Galleria Area (B1, B2, B3)","SC 49","Pleasant Rd","Fort Mill; Southern Bypass","Doby's Bridge Rd","India Hook","Dave Lyle Blvd. Extension","SC 72","High Mills Highway (SC 274/29)","Rock Hill; Mt Gallant Rd","Fort Mill; Sutton Rd S-49","Rock Hill; Ebenezer Rd","Fort Mill; US 21","Fort Mill; US 21","Fort Mill; US 21","SC 557","Fort Mill; SC 160","Fort Mill; Springhill Farm Rd","Rock Hill; Mt Gallant Rd","Eden Terrace","Fort Mill; SC 51","Puetts Chapel Rd","Dallas; US 321","Lineberger Connector Extension","Spencer Mountain Rd Widening","Lowell-Bethesda Rd","Aberdeen Rd and Lineberger Connector Extension","Ratchford Rd Widening &amp; Extension","NC 152 Bypass (China Grove)","US 601","Plaza Rd Extension (Farmington Ridge Pkwy)","I-485 Fast Lanes - (Direct Access-I-485(S) E-I-74N)","I-485(W) Fast Lanes - (Midpoint Access)","I-85 Fast Lanes - Rowan - interchange acess","I-85 Fast Lanes - Rowan - mid point access","I-85 Fast Lanes - Rowan  acc.proj 865 or 866","I-85 Fast Lanes - Cabarrus - interchange access","I-85 Fast Lanes - Cabarrus - mid point access","I-485 Fast Lanes - direct access-I-485(S)E-I-74N","I-485 Fast Lanes - direct access-I-485(S) W-I-77N","US 521 BRT","I-485 E HOV/HOT","I-485 (W) fast Lanes - Meck - acc. prj. 877 or 878","I-85 HOV/HOT Rowan","I-85 Fast Lanes Cabarrus-access proj.862 or 863","US 21 BRT","West BRT","NE BRT","West StreetCar","McCullough Dr Extension (CIP-60)","Johnston Rd (US 521)","NC-115 &amp; Hickory Street Intersection Improvements","Robinson Church Rd - Widen corridor","Idlewild Rd Widening","US 74 Managed Lanes","Wadesboro Bypass","Wadesboro Bypass","US 74 Access Management","US-74 Improvements","US 74 at US 601 Interchange","NC 75 at Old Providence Rd","Weddington Rd (NC 84) at Rocky River Rd","Weddington Rd (NC 84) at Potter Rd","Catawba Crossings","7th Street Reversible Lanes Removal","Lawyers Rd at Mill Grove Rd","Gilead Rd at Bud Henderson Rd","I-85 at I-485","I-485 at NC-16 (Brookshire Blvd)","College St","Fort Mill Pkwy","Red Line Commuter Rail - Track and Stations","Holding projects previously coded","Blue Line Extension South Full (I-485 to Ballantyne)","Red Line Commuter Rail - PNR Facilities","Hambright Rd PNR","Gold Line Phase 3 - Hawthorne to Central Loop","New Traffic Signals + Intersection Improvements","Dixie River Rd","Old Dowd Road Realignment","Old Dowd Road Relocation","Whitewater Center Pkwy Ext","Performance Pkwy Ext","Dixie River Rd Ext","Pence Road Relocation","East-West Connector","East-West Connector","Ervin Cook Rd Ext","Birkdale Commons Pkwy Ext","Meachum Farm Dr Ext","Bailey Rd I-77 Flyover","Arrowood-Shopton Connector","Shopton Rd Ext","Eastway Drive/General Industrial Road Connector","Caldwell Rd Ext","Pavilion Blvd Ext","Caldwell Connector","Davidson-Concord Rd Ext","Stegall Rd Ext","Lawyers Rd Ext","Carolina Place Pkwy Ext","Moores Chapel Rd Relocation","Thirty-Sixth Street - Atando Avenue Connector","Edinmeadow Lane Ext","Johnston Oehler Rd - Ridge Rd Connector","Timber Rd Ext","Exmore Rd Flyover (T2 Interchange: Proj 5356)","Bluefield Rd Realignment","Old Dutch Rd Realignment","Greenbriar Rd Ext","Bell Farm Rd Realignment","Berkshire Dr Ext","Harris St Ext","Wood Bridge Rd Realignment","Arey Rd- Bluebird Ln Connector","Old Mocksville Rd Realignment","Pilch Rd Ext","Lawyers Rd Relocation","Lawyers Rd Ext","Summerlin Dairy Rd Ext","Forest Hills School Rd Ext","Northside Drive Ext - Gaither Rd Connector","Teeter Rd Realignment","Allen St Ext - Goldmine St Ext","Troutman Southwest Bypass","Waxhaw Parkway - Southwest Leg","Sadler Rd Extension","Mt-Holly - Tom Sadler Connector","Greylock Bridge Rd","New IndianTrail Fairview Realign","Prosperity Ridge Rd. (eastern leg, south)","University East Drive","Archdale-Shopton Connector","Arlington Church Rd","Arlington Church Rd","Ferrelltown Pkwy Ext/ Asbury Chapel Reloc","Auten Road Extension","Blair Rd Extension","Carowinds Blvd Extension","Church Street Ext/Widening","Dixie River-Old Dowd Connector","Archdale Dr Relocation","Martin Luther King Blvd Extension","NE Huntersville Minor Thoroughfare","Prosperity Church Rd Extension","Remount Rd","Ridge Rd Extension","Sam Wilson Rd Extension","Secrest Ave Extension","Shopton Rd W Extension","Monroe Southern Loop","Monroe Southern Loop","Vance Rd Extension","Waxhaw Parkway","Euclid Ave Extension","Zion Ave Extension","Verhoeff Dr East","Waxhaw Monroe Connector","Waxhaw Parkway","Coxe Rd","McKee Rd Extension","Verhoeff Dr Extension","Brown Grier Rd Widening","I-485 at Beatties Ford Rd Interchange","I-77 South HOT Lanes (Placeholder)","I-85 at NC-24 (WT Harris Blvd) Interchange","I-485 Express Lanes (Projects 829+878)","I-85 Widening (Placeholder for split project)","I-85 Widening (Placeholder for split project)","US-74 Widening","Mazeppa Rd Grade Separation Over NC-115","NC-152 at Miller Rd Intersection Improvements","US-52 Bypass (Rockwell)","NC-153 at Cannon Farm Rd/ Mt Moriah Church Rd","I-77 at Celanese Rd/ Cherry Rd (Exit 82) Interchange Reconfiguration","Parkwood Ave Road Diet","NC-218 and NC-200 Intersection Improvements","NC-218 and Love Mill Rd Intersection Improvements","Bonds Grove Church Rd and Waxhaw Marvin Rd Intersection Improvements","New Town Rd and Cuthbertson Rd Intersection Improvements","Potter Rd and Forest Lawn Dr Intersection Improvements","Weddington Rd and McKee Rd Intersection Improvements","NC-115 aand Potts St Intersection Improvement","Torrence Chapel Rd Improvements","NC-115 and Langtree Rd Intersection Improvements","NC-115 Improvements","NC-115 and Beaty St Intersection Improvements","Rogers Lake Rd Railroad Grade Seperation","I-77 Widening","East-West Connector (5219+5220)","NC-115 Improvements","NC 73 W","Independence Pointe Pkwy (MAT-7)","Independence Pointe Pkwy (MAT-8)","Fullwood Lane Improvements","John St Improvements","I-77 HOT Lanes Widening","3rd Street/4th Street (NC 16)","NC 51 (Matthews-Mint Hill Rd) MHL-3","NC 51 (Matthews-Mint Hill Rd) MHL-4","NC-51 (Matthews Township Pkwy) Widening","Lancaster Hwy Widening","Grayson Dr","Rocky River Rd Widening","Old Charlotte Hwy Widening","Mt Holly-Huntersville Rd Widening","Hambright Rd Widening","Westinghouse Blvd","Ardrey Kell Rd (CLT-5 Only)","NC-115 Improvements","Talbert Rd Widening","NC 115 (Old Statesville Rd) Improvements","NC 115 (Old Statesville Rd) Improvements","US-21 Widening","Harrisburg Rd Widening (Eastern Circumferential)","Albemarle Rd Improvements","Arequipa Dr Segment C7B (Tier 2 Analysis)","Holding projects pending coding","Mt Holly-Huntersville Rd Widening","Blue Line Extension North to PNC Pavilion","I-485 at NC-16 (Providence Rd)","I-77 at I-85 Interchange","Holding roadways to be deleted","Eastern Circumferential Rd","Statesville Road (US 21)","Ardrey Kell Rd (CLT-6 Only)","I-77 and Cornelius Rd/ Exmore Rd Interchange (Turn off Proj 3743)","New Ballantyne Roadways","NC-16 (Waxhaw) Improvements","Poplar Tent Rd at Harris Rd","Blue Line Ext South 1 (I-485 to Carolina Place Mall)","Silver Line - Airport to Coliseum","Silver Line - East Ext 1 Coliseum to CPCC Levine","Silver Line - East Ext 2 CPCC Levine to Indian Triail","Silver Line - West Ext 1 Airport to I-485","Silver Line - West Ext 2 I-485 to Belmont","Blue Line Ext South 2 (Pineville to Ballantyne)","Vance Rd Ext","Holding roadways to be added","US-52 and Merner Ter (SR 1654) Intersection Improvements","I-485 at John Street/Old Monroe Road","Dearmon Rd Improvements","Krefield Dr at US-74","Garden Parkway (Freeway Variant)","Garden Parkway Ext (Freeway Variant)","Garden Parkway (Boulevard Variant)","Garden Parkway Ext (Boulevard Variant)","Main Street (US 21/NC 115) at Murdock Rd/ Old Mountain Rd","NC 273 (Mountain Island Hwy) at Lucia Riverbend Hwy (SR 1992)","NC-115 at Gilead Road/Huntersville-Concord Road","Woodlawn Road Improvements","NC 274 (Union Rd) Widening","Slanting Bridge Road Improvements","NC 273 and Sandy Ford Rd Intersection Improvements","NC-27 and NC-182 Intersection Improvements","NC-150 and W Hwy 150 Intersection Improvements","South Blvd at Tyvola Rd Intersection Improvements","I-485 at Future Arrowood-Whitehall Connector","Billy Graham Pkwy at Morris Field Dr Grade Separation","Hudson Blvd Extention","NC-150 and Patrick Ave Intersection Improvements","NC-16 and Lucia Riverbend Hwy Intersection Improvements","Kensington Dr Imrpovements","Cox Rd and Aberdeen Blvd Intersection Improvements","Albemarle Rd at WT Harris Blvd Intersection Improvements","New Traffic Signals + Intersection Improvements","Oakdale Rd at Sunset Blvd/Miranda Rd Intersection Improvements"],["New Facility","Widening","Widening","Widening","New Facility","Widening","New Facility","Widening","Intersection Improvements","Widening","Intersection Improvements","New Facility","Intersection Improvements","Upgrade Existing Facility","Intersection Improvements","Intersection Improvements","Widening","Widening","Widening","New Facility","Widening","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","New Facility","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Upgrade Existing Facility","Intersection Improvements","Intersection Improvements","Widening","Widening","Intersection Improvements","Widening","Relocate Existing Facility","Intersection Improvements","Interchange Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","New Facility","Intersection Improvements","New Facility","Widening","New Facility","Widening","Intersection Improvements","New Facility","New Facility","New Facility","Upgrade Existing Facility","Intersection Improvements","Intersection Improvements","Widening","Intersection Improvements","Widening","Relocate Existing Facility","Widening","Widening","Widening","Widening","Widening","Widening","Other","Widening","Widening","Widening","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","New Facility","Widening","Upgrade Existing Facility","Widening","New Facility","Widening","Widening","Widening","Intersection Improvements","New Facility","Intersection Improvements","Widening","New Facility","Widening","New Facility","Widening","New Facility","New Facility","New Facility","New Facility","Intersection Improvements","New Facility","New Facility","New Facility","Widening","Widening","Widening","Widening","Upgrade Existing Facility","Intersection Improvements","Relocate Existing Facility","Widening","Widening","Widening","Widening","Upgrade Existing Facility","Widening","Upgrade Existing Facility","New Facility","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Relocate Existing Facility","New Facility","New Facility","Upgrade Existing Facility","Interchange Improvements","Interchange Improvements","Upgrade Existing Facility","Interchange Improvements","Interchange Improvements","Interchange Improvements","Interchange Improvements","Interchange Improvements","Interchange Improvements","Widening","Widening","New Facility","Widening","Widening","Interchange Improvements","Interchange Improvements","Widening","Widening","Widening","Interchange Improvements","Interchange Improvements","Interchange Improvements","New Facility","Other","New Facility","Widening","Widening","Interchange Improvements","Intersection Improvements","Intersection Improvements","Widening","Other","New Facility","Widening","New Facility","Intersection Improvements","New Facility","Upgrade Existing Facility","Upgrade Existing Facility","Intersection Improvements","Upgrade Existing Facility","Relocate Existing Facility","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Widening","Widening","Widening","New Facility","New Facility","Upgrade Existing Facility","Interchange Improvements","Intersection Improvements","Interchange Improvements","Interchange Improvements","Upgrade Existing Facility","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Upgrade Existing Facility","Widening","Other","Widening","New Facility","Transit","New Facility","Relocate Existing Facility","New Facility","Intersection Improvements","New Facility","New Facility","Widening","Widening","Intersection Improvements","Intersection Improvements","New Facility","New Facility","New Facility","Intersection Improvements","Widening","New Facility","Widening","Upgrade Existing Facility","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Interchange Improvements","New Facility","New Facility","Widening","Widening","Widening","New Facility","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Upgrade Existing Facility","Upgrade Existing Facility","Upgrade Existing Facility","Upgrade Existing Facility","Upgrade Existing Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Other","Other","Widening","Widening","Other","Widening","New Facility","Widening","Widening","Widening","New Facility","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Transit","Widening","Upgrade Existing Facility","Relocate existing facility","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Interchange Improvements","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Widening","Widening","Widening","New Facility","New Facility","Widening","New Facility","New Facility","New Facility","New Facility","New Facility","Widening","New Facility","New Facility","Widening","New Facility","Upgrade Existing Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Widening","Widening","Widening","New Facility","New Facility","New Facility","New Facility","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","Widening","New Facility","New Facility","Widening","Upgrade Existing Facility","New Facility","New Facility","New Facility","Widening","New Facility","Other","Other","Other","Other","Other","Other","Other","Other","New Facility","Transit","Other","Other","Other","Other","Transit","Transit","Transit","Transit","New Facility","Widening","Intersection Improvements","Intersection Improvements","Widening","Widening","New Facility","New Facility","Upgrade Existing Facility","Upgrade Existing Facility","Widening","Intersection Improvements","Intersection Improvements","Intersection Improvements","New Facility","Other","Intersection Improvements","Other","Interchange Improvements","Interchange Improvements","Other","Widening","Transit",null,"Transit","Transit","Transit","Transit",null,"New Facility","New Facility","Relocate Existing Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Relocate Existing Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Relocate Existing Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Relocate Existing Facility","Relocate Existing Facility","New Facility","Relocate Existing Facility","New Facility","New Facility","Relocate Existing Facility","New Facility","Relocate Existing Facility","New Facility","Relocate Existing Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Relocate Existing Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","New Facility","Widening","New Facility","Widening","Intersection Improvements","Widening","Widening","Widening","Widening","Other","Intersection Improvements","New Facility","Intersection Improvements","Interchange Improvements","Other","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","Widening","Intersection Improvements","Intersection Improvements","Widening","New Facility","Upgrade Existing Facility","Widening","New Facility","New Facility","Upgrade Existing Facility","Upgrade Existing Facility","Widening","Other","Widening","Widening","Widening","Widening","New Facility","Widening","Widening","Widening","Widening","Widening","Widening","Upgrade Existing Facility","Widening","Upgrade Existing Facility","Upgrade Existing Facility","Widening","Widening","Upgrade Existing Facility","New Facility",null,"Widening","Transit","Interchange Improvements","Interchange Improvements",null,"New Facility","Widening","Widening","New Facility","New Facility","Upgrade Existing Facility","Widening","Transit","Transit","Transit","Transit","Transit","Transit",null,"New Facility",null,"Intersection Improvements","Interchange Improvements","Upgrade Existing Facility","Intersection Improvements","New Facility","New Facility","New Facility","New Facility","Intersection Improvements","Intersection Improvements","Intersection Improvements","Upgrade Existing Facility","Upgrade Existing Facility","Upgrade Existing Facility","Intersection Improvements","Intersection Improvements","Intersection Improvements","Intersection Improvements","New Facility","Intersection Improvements","New Facility","Intersection Improvements","Intersection Improvements","Upgrade Existing Facility","Intersection Improvements","Intersection Improvements",null,"Intersection Improvements"],["Construct new 4-lane roadway with median","Widen to 4 lanes with median","Widen to 4 lanes","Widen to 4 lanes with median","Construct new 2-lane roadway with median","Widen to 4 lanes with median","Construct new 4-lane roadway with median","Widen to 4 lanes with median","Convert intersection to roundabout","Widen to 6 lanes with median","See Description","Construct new 4-lane roadway with median","See Description","See Description","See Description","Convert intersection to interchange","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Construct new 2-lane roadway","See Description","Convert intersection to roundabout","Convert intersection to roundabout","Convert intersection to roundabout","See Description","Construct new 3-lane roadway","Widen to 3 lanes","Construct new 2-lane roadway","Widen to 7 lanes","See Description","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","See Description","See Description","Convert intersection to roundabout","Widen to 4 lanes with median","Widen to 4 lanes with median","See Description","Widen to 4 lanes","See Description","See Description","See Description","Convert intersection to RCI","Convert intersection to interchange","See Description","See Description","Convert intersection to roundabout","Construct new 2-lane roadway","Widen to 4 lanes","Construct new 2-lane roadway","Widen to 4 lanes","See Description","Construct new 3-lane roadway","Construct new 3-lane roadway","Construct new 4-lane roadway with median","Widen to 3 lanes","See Description","See Description","Widen to 4 lanes with median","Install Signal","Widen to 4 lanes","Realign Intersection","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","See description","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Construct new 3-lane roadway","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes","Construct new 2-lane roadway","Widen to 4 lanes with median","See Description","Widen to 4 lanes with median","Construct new 4-lane roadway","Widen to 4 lanes","Widen to 4 lanes with median","Widen to 4 lanes with median","Convert intersection to interchange","Construct new 4-lane roadway with median","See Description","Widen to 4 lanes","Construct new 2-lane roadway with median","See Description","Construct new 2-lane roadway with median","See Description","Construct new 2-lane roadway with median","Construct new 2-lane roadway with median","Construct new 2-lane roadway","See Description","Convert intersection to interchange","Construct new 2-lane roadway with median","See Description","See Description","Widen to 3 lanes","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","See Description","See Description","See Description","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","See Description","Widen to 4 lanes","See Description","Construct new 4-lane freeway","Construct new 4-lane freeway","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Construct new 4-lane roadway with median","Construct new interchange","See Description","See Description","See Description","See description","Improve existing interchange","See Description","See Description","Improve exisitng interchange","See Description","Improve existing interchange","Widen to 8 lanes","Widen to 6 lanes","Construct new interchange","Widen to 8 lanes","Widen to 4 lanes","See Description","See Description","See Description","See Description","See Description","See Description","Improve existing interchange","Improve exsiting interchange","See Description","See Description","Construct new interchange","Widen to 6 lanes","Widen to 6 lanes","Improve exsiting interchange","See Description","See Description","Widen to 6 lanes with median","See Description","Construct new 4-lane freeway","Widen to 4 lanes","See Description",null,"Construct new interchange","See Description","See Description","Convert intersection to roundabout","See Description","See Description","See Description","See Description","See Description","See Description","Widen to 4 lanes","Widen to 4 lanes with median","Widen to 4 lanes","Construct new 2-lane roadway","Construct new 2-lane roadway","See Description",null,"See Description","Improve existing interchange","See Description","See Description","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Construct new 2-lane roadway","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 7 lanes","Widen to 6 lanes with median","Widen to 4 lanes with median","See Description","Widen to 6 lanes","See Description","Widen to 6 lanes","Construct new 4-lane roadway","Construct new LRT station","Construct new 2-lane roadway with median","Realign Roadway","Construct new 2-lane roadway","Convert intersection to roundabout","Construct new 3-lane roadway","Construct new 3-lane roadway","Widen to 4 lanes with median","Widen to 3 lanes","Convert intersection to roundabout","Convert intersection to roundabout","Construct new 2-lane roadway","Construct new 2-lane roadway","See Description","See Description","Widen to 4 lanes","Construct new 2-lane roadway","Widen to 4 lanes","See Description","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Construct new 2-lane roadway with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes","Widen to 4 lanes with median","See Description","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 3 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 6 lanes with median","Widen to 4 lanes","Widen to 3 lanes","Widen to 4 lanes with median","See Description","See Description","See Description","See Description","See Description","Widen to 3 lanes","Widen to 4 lanes with median","Widen to 4 lanes","Widen to 4 lanes","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 3 lanes","Widen to 4 lanes with median","See Description","See Description","Widen to 5 lanes","Widen to 7 lanes","See Description","Widen to 3 lanes","Construct new 5-lane roadway","Widen to 3 lanes","Widen to 4 lanes","Widen to 5 lanes","See Description","Widen to 6 lanes with median; Improve interchange","Construct new 2-lane roadway","Widen to 3 lanes","Widen to 8 lanes","Widen to 10 lanes","Widen to 10 lanes","Widen to 5 lanes","Widen to 5 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 5 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 4 lanes with median","Widen to 4 lanes","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","See description","Widen to 8 lanes","See Description","See description","Widen to 6 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes","Construct new 4-lane roadway","Widen to 4 lanes with median","Widen to 4 lanes","Widen to 6 lanes","Widen to 6 lanes","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Construct new 2-lane roadway with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Construct new 3-lane roadway","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Construct new 2-lane roadway with median","Widen to 4 lanes with median","Widen to 4 lanes with median","See Description","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Widen to 6 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Widen to 4 lanes with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway","Widen to 4 lanes with median","Construct new 2-lane roadway with median","Construct new 2-lane roadway with median","Widen to 6 lanes with median","Construct new 2-lane roadway with median","See Description","Construct new 2-lane roadway with median","Construct new 2-lane roadway","Construct new 4-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 4-lane roadway","Construct new 2-lane roadway","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 3-lane roadway","Widen to 5 lanes","Construct new 3-lane roadway","Widen to 7 lanes","Widen to 3 lanes","Widen to 5 lanes","Widen to 5 lanes","Widen to 5 lanes","Construct new 4-lane Roadway with median","Widen to 3 lanes","Widen to 5 lanes","Widen to 3 lanes","Widen to 5 lanes","Widen to 3 lanes","Widen to 5 lanes","Widen to 5 lanes","Widen to 5 lanes","Widen to 5 lanes","Widen to 3 lanes","Widen to 5 lanes","Widen to 3 lanes","Widen to 3 lanes","Widen to 5 lanes","Widen to 3 lanes","See Description","Construct new 3-lane roadway","Widen to 4 lanes","See Description","New 2-lane roadway","Construct new 3-lane roadway","Construct new 3-lane roadway","Widen to 4 lanes with median","Construct new 2-lane roadway","See Description","See Description","See Description","See Description","See Description","See Description","See Description","See Description","See Description","See description","See Description","See Description","See Description","See Description","See Description","See description","See description","See description","Construct new 2-lane roadway","Widen to 6 lanes with median","See Description","See Description","Widen to 4 lanes","See Description","Construct new 4-lane freeway","Construct new 4-lane freeway","See Description","See Description","Widen to 4 lanes; See Description","See Description","See Description","See Description","Construct new 4-lane roadway","See Description","See Description","See Description","See Description","Improve existing interchange","Other","Widen to 4 lanes","See Description",null,"See Description","See Description","See Description","See Description",null,"Construct new 2-lane roadway with median","Construct new 2-lane roadway","Realign Roadway","Construct new 2-lane roadway","Construct new 2-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway with median","Realign Roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Realign Roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Realign Roadway","Realign Roadway","Construct new 2-lane roadway","Realign Roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Realign Roadway","Construct new 2-lane roadway","Realign Roadway","Construct new 2-lane roadway","Realign Roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 3-lane roadway","Realign Roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 3-lane roadway","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 5-lane roadway with median","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Construct new 4-lane roadway with median","Construct new 2-lane roadway","Widen to 4 lanes with median","Construct new interchange","See Description","See Description","See Description","Widen to 8 lanes","Widen to 8 lanes","Widen to 6 lanes","See Description","Convert intersection to roundabout","Construct new 3-lane roadway","Convert intersection to roundabout","See Description","See Description","Convert intersection to roundabout","Convert intersection to roundabout","Convert intersection to roundabout","Convert intersection to roundabout","Convert intersection to roundabout","See Description","Convert intersection to roundabout","See Description","See Description","See Description","See Description","See Description","Widen to 6 lanes","Construct new 4-lane roadway with median","Widen to 3 lanes","Widen to 4 lanes with median","Construct new 2-lane roadway with median","Construct new 2-lane roadway with median","See Description","See Description","Widen to 4 lanes","See Description","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes","Widen to 4 lanes with median","Construct new 2-lane roadway","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 4 lanes with median","Widen to 6 lanes with median","Widen to 4 lanes with median","See Description","Widen to 4 lanes with median","See Description","See Description","Widen to 4 lanes with median","Widen to 4 lanes with median","See Description","Construct new 2-lane roadway with median",null,"Widen to 4 lanes with median","See Description","Improve existing interchange","Improve existing interchange",null,"Construct new 2-lane roadway","Widen to 4 lanes with median","Widen to 4 lanes with median","Construct new interchange","See Description","Widen to 3 lanes","Widen to 4 lanes with median",null,null,null,null,null,null,null,"Construct new 4-lane roadway with median",null,"Convert intersection to roundabout","See Description","See Description","See Description","Construct new 4-lane freeway","Construct new 4-lane freeway","Construct new 4-lane roadway","Construct new 4-lane roadway","See Description","Convert intersection to roundabout","Convert intersection to roundabout","See Description","See Description","See Description","See Description","See Description","See Description","See Description","Construct new 2-lane roadway","Convert Intersection to Interchange","Construct new 4-lane roadway with median","See Description","See Description","See Description","See Description","See Description",null,"Convert intersection to roundabout"],["Iredell","Iredell","Mecklenburg-Union","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Gaston","Gaston","Gaston","Lincoln","Gaston","Lincoln","Gaston","Lincoln","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Union","Gaston","Rowan","Rowan","Iredell","Gaston","Gaston","Iredell","Mecklenburg-Cabarrus","Union","Mecklenburg","Mecklenburg-Cabarrus","Mecklenburg","Gaston","Gaston","Iredell","Gaston","Iredell","Gaston","Mecklenburg","Cabarrus","Mecklenburg","Mecklenburg","Union","Cleveland","Mecklenburg","Mecklenburg","Mecklenburg","Rowan","Rowan","Mecklenburg","Gaston","Gaston","Iredell","Iredell","Union","Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Iredell","Iredell","Cleveland","Cabarrus","Cabarrus","Mecklenburg","Mecklenburg","Union","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Rowan","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg, Union","Union","Mecklenburg","Mecklenburg-Union","Mecklenburg","Union","Union","Union","Union","Cabarrus","Cabarrus","Cabarrus","Cleveland","Union","Gaston","Gaston","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Rowan","Mecklenburg","Lincoln","Mecklenburg","Cleveland","Lincoln","Iredell","Cabarrus","Cabarrus","Mecklenburg","Iredell","Cleveland","Iredell","Cleveland","Cleveland","Cleveland","Mecklenburg","Mecklenburg","Stanly","Iredell","Catawba","Iredell","Cabarrus","Lincoln","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Gaston","Cleveland","Iredell","Gaston","Gaston","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Iredell-Meck","Iredell","Iredell","Mecklenburg","Mecklenburg","Gaston","Mecklenburg","Union","Lincoln","Cleveland","Rowan","Rowan","Gaston","Lincoln","Lincoln","Gaston","Gaston","Gaston","Gaston","Cleveland","Lincoln","Lincoln","Lincoln","Gaston","Lincoln","Lincoln","Gaston","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Iredell","Iredell","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Mecklenburg","Mecklenburg","Mecklenburg","York","Mecklenburg","Mecklenburg","Gaston","Gaston","Gaston","Gaston","Gaston","Lincoln","Lincoln","Gaston","Gaston","Lincoln","Gaston","Gaston","Gaston","Lincoln","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg-Union","Union","Union","Union","Mecklenburg-Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","York","York","York","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","York","Iredell","Mecklenburg","Mecklenburg","York","York","Mecklenburg","York","York","York","York","York","Mecklenburg","York","Gaston","Gaston","Mecklenburg","Mecklenburg","Mecklenburg","York","York","Lancaster","Lancaster","Lancaster","Lancaster","York","Lancaster","York","York","Iredell","Iredell","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Iredell-Meck","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg-Union","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Iredell","Iredell","Iredell","Iredell","York","York","York","York","York","York","York","York","York","York","York","York-Lancaster","York","York","York","York","York","York","York","York","York","York","York","York","York","York","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Rowan","Cabarrus","Cabarrus","Mecklenburg","Mecklenburg","Rowan","Rowan","Rowan","Cabarrus","Cabarrus","Mecklenburg","Mecklenburg","Mecklenburg-Lancaste","Mecklenburg","Mecklenburg","Rowan","Cabarrus","York","Mecklenburg","Mecklenburg-Cabarrus","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Anson","Anson","Anson","Anson","Union","Union","Union","Union","Mecklenburg","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","York","Mecklenburg",null,"Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg",null,null,"Mecklenburg",null,null,null,null,null,null,null,null,null,"Mecklenburg","Mecklenburg","Mecklenburg",null,null,null,"Mecklenburg","Mecklenburg","Mecklenburg-Iredell","Union","Union",null,null,null,null,null,"Iredell","Iredell","Iredell","Union",null,null,"Iredell","Iredell","Iredell","Iredell",null,null,null,null,"Union","Union",null,null,null,null,null,null,null,"Mecklenburg",null,"Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Mecklenburg","Union","Union","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Union","Union","Mecklenburg","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg",null,null,"Union","Iredell","Rowan","Rowan","Rowan","York","Mecklenburg","Union","Union","Union","Union","Union","Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Mecklenburg","Mecklenburg","Cabarrus","Mecklenburg, Iredell","Iredell","Mecklenburg","Mecklenburg, Lincoln","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Union","Union","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Iredell","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg",null,"Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg",null,"Mecklenburg","Mecklenburg","Mecklenburg","Iredell","Mecklenburg","Union","Cabarrus",null,null,null,null,null,null,null,"Mecklenburg",null,"Stanley","Mecklenburg","Mecklenburg","Mecklenburg","Gaston","Gaston","Gaston","Gaston","Iredell","Gaston","Mecklenburg","Mecklenburg","Gaston","Catawba","Gaston","Lincoln","Lincoln","Mecklenburg","Mecklenburg","Mecklenburg","Gaston","Cleveland","Gaston","Union","Gaston","Mecklenburg","Mecklenburg","Mecklenburg"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>YEAR<\/th>\n      <th>MTP55_ID<\/th>\n      <th>PROJECT<\/th>\n      <th>CATEGORY<\/th>\n      <th>TYPE<\/th>\n      <th>COUNTY<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":20,"autoWidth":true,"columnDefs":[{"name":"YEAR","targets":0},{"name":"MTP55_ID","targets":1},{"name":"PROJECT","targets":2},{"name":"CATEGORY","targets":3},{"name":"TYPE","targets":4},{"name":"COUNTY","targets":5}],"order":[],"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,20,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
