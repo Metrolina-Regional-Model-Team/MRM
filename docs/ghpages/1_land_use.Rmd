@@ -11,160 +11,72 @@ output:
       number_sections: false
     toc_depth: 4
     css: "styles.css"
+  runtime: shiny
 ---
 
-```{r, echo=FALSE, results='asis'}
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
 
-# Load required libraries
-library(readxl)
 library(DT)
+library(dplyr)
+library(readxl)
 
+# Styled datatable function
 render_datatable <- function(data, digits = 2) {
   numeric_cols <- names(data)[sapply(data, is.numeric)]
-
-# Define a function to render a datatable
-#render_datatable <- function(data) {
+  
   datatable(
     data,
     filter = "top",
+    extensions = "Buttons",
     options = list(
-      pageLength = 20,
-      autoWidth = TRUE
+      pageLength = 10,
+      lengthMenu = c(5, 10, 20, 50, 100),
+      scrollX = TRUE,
+      fixedHeader = TRUE,
+      autoWidth = FALSE,
+      dom = "Bfrtip",
+      buttons = list(
+        list(
+          extend = "csv",
+          text = "Download CSV",
+          filename = "County_Data"
+        )
+      ),
+      columnDefs = list(
+        list(width = '120px', targets = 0),
+        list(width = '100px', targets = "_all")
+      )
     ),
     rownames = FALSE
-  )%>%
-    formatRound(columns = numeric_cols, digits = digits)
+  ) %>%
+    formatRound(columns = numeric_cols, digits = digits) %>%
+    formatStyle(
+      columns = names(data),
+      `white-space` = 'normal',
+      `word-break` = 'break-word',
+      `font-size` = '13px'
+    )
 }
 
-# Output plain text for Anson County
-cat("**Anson County**  \n")
-cat("**Sq. Mi = 548.35**  \n\n")
+# Load data
+file_path <- "C:/MRM/docs/other/xlsx/LandUseStat.xlsx"
+counties <- excel_sheets(file_path)
 
-# Read data from Anson County sheet
-data_anson <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Anson")
+data_all <- lapply(counties, function(cty) {
+  df <- read_excel(file_path, sheet = cty)
+  df$County <- cty
+  df
+}) %>% bind_rows()
 
-# Render the interactive datatable for Cabarrus County
-render_datatable(data_anson)
+# UI element
+selectInput("county", "Select County:", choices = unique(data_all$County))
 
-# Output plain text for Cabarrus County
-cat("**Cabarrus County**  \n")
-cat("**Sq. Mi = 364.46**  \n\n")
-
-# Read data from Cabarrus County sheet
-data_cabarrus <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Cabarrus")
-
-# Render the interactive datatable for Cabarrus County
-render_datatable(data_cabarrus)
-
-# Output plain text for Rowan County
-cat("\n**Rowan County**  \n")
-cat("**Sq. Mi = 523.68**  \n\n")
-
-# Read data from Rowan County sheet
-data_rowan <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Rowan")
-
-# Render the interactive datatable for Rowan County
-render_datatable(data_rowan)
-
-# Output plain text for Iredell County
-cat("**Iredell County**  \n")
-cat("**Sq. Mi = 596.81**  \n\n")
-
-# Read data from Iredell County sheet
-data_iredell <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Iredell")
-
-# Render the interactive datatable for Iredell County
-render_datatable(data_iredell)
-
-# Output plain text for Mecklenburg County
-cat("**Mecklenburg County**  \n")
-cat("**Sq. Mi = 545.91**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Mecklenburg <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Mecklenburg")
-
-# Render the interactive datatable for Mecklenburg County
-render_datatable(data_Mecklenburg)
-
-# Output plain text for Union County
-cat("**Union County**  \n")
-cat("**Sq. Mi=	639.56**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Union <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Union")
-
-# Render the interactive datatable for Union County
-render_datatable(data_Union)
-
-# Output plain text for Stanly County
-cat("**Stanly County**  \n")
-cat("**Sq. Mi=	404.84**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Stanly <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Stanly")
-
-# Render the interactive datatable for Stanly County
-render_datatable(data_Stanly)
-
-# Output plain text for Cleveland County
-cat("**Cleveland County**  \n")
-cat("**Sq. Mi=	468.19**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Cleveland <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Cleveland")
-
-# Render the interactive datatable for Cleveland County
-render_datatable(data_Cleveland)
-
-# Output plain text for Gaston County
-cat("**Gaston County**  \n")
-cat("**Sq. Mi=	364.10**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Gaston <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Gaston")
-
-# Render the interactive datatable for Gaston County
-render_datatable(data_Gaston)
-
-# Output plain text for Lincoln County
-cat("**Lincoln County**  \n")
-cat("**Sq. Mi=	307.03**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Lincoln <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Lincoln")
-
-# Render the interactive datatable for Lincoln County
-render_datatable(data_Lincoln)
-
-# Output plain text for Lancaster County
-cat("**Lancaster County**  \n")
-cat("**Sq. Mi=	67.16**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Lancaster <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Lancaster")
-
-# Render the interactive datatable for Lancaster County
-render_datatable(data_Lancaster)
-
-# Output plain text for York County
-cat("**York County**  \n")
-cat("**Sq. Mi=	695.84**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_York <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "York")
-
-# Render the interactive datatable for York County
-render_datatable(data_York)
-
-# Output plain text for Catawba County
-cat("**Catawba County (partial)**  \n")
-cat("**Sq. Mi=	49.25**  \n\n")
-
-# Read data from an Excel (.xlsx) file
-data_Catawba <- read_excel("C:/MRM/docs/other/xlsx/LandUseStat.xlsx", sheet = "Catawba")
-
-# Render the interactive datatable for Catawba County
-render_datatable(data_Catawba)
+# Reactive table
+renderDT({
+  df <- data_all[data_all$County == input$county, ]
+  df$County <- NULL
+  render_datatable(df)
+})
 
 ```
 
