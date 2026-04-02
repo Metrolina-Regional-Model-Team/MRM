@@ -1,7 +1,7 @@
 Macro "Calibrate Tour MCs"(Args)
     purps = {"work", "shop", "other", "school", "univ", "subtour"}
     files = {"dcHBW", "dcHBS", "dcHBO", "dcSch", "dcHBU", "dcATW"}
-    vwTAZ = OpenTable("TAZ", "FFA", {Args.[Run Directory] + "\\LandUse\\TAZ_AreaType.asc"})
+    vwTAZ = OpenTable("TAZ", "FFB", {Args.[Run Directory] + "\\LandUse\\TAZ_AreaType.bin"})
     for i = 1 to purps.length do
         dcFile = Args.[Run Directory] + "\\TD\\" + files[i] + ".bin"
         objT = CreateObject("Table", dcFile)

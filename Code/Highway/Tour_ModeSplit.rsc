@@ -1,7 +1,7 @@
 Macro "Tour Mode Split"(Args)
     purps = {"Work", "Shop", "Other", "School", "Univ", "SubTour"}
     files = {"dcHBW", "dcHBS", "dcHBO", "dcSch", "dcHBU", "dcATW"}
-    vwTAZ = OpenTable("TAZ", "FFA", {Args.[Run Directory] + "\\LandUse\\TAZ_AreaType.asc"})
+    vwTAZ = OpenTable("TAZ", "FFB", {Args.[Run Directory] + "\\LandUse\\TAZ_AreaType.asc"})
     // Loop over each purpose
     for i = 1 to purps.length do
         // Open tours file and add the output mode choice field

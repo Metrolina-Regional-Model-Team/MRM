@@ -91,7 +91,7 @@ Macro "CreateDir" (Args)
 
 
         {"\\TAZ", 
-            {"TAZNeighbors_pct.asc", "TAZNeighbors_pct.dct", "Parking_Cost_Base06.dbf", "PUMAequiv.prn"}},
+            {"TAZNeighbors_pct.bin", "TAZNeighbors_pct.dcb", "Parking_Cost_Base06.dbf", "PUMAequiv.prn"}},
 
         {"\\Pgm",
             {"CaliperMTXF.dll","CaliperMTXF.lib","capspd.exe","SHW32.DLL"}},
@@ -329,7 +329,7 @@ Macro "GetTAZ" (Args)
     if TAZrtn[1] = 1 then goto notaz 
     
     tazpath = SplitPath(TAZUser)
-    TAZID = OpenTable("TAZID", "FFA", {MRMUser + "\\TAZ\\" + tazpath[3] + "_TAZID.asc",})
+    TAZID = OpenTable("TAZID", "FFB", {MRMUser + "\\TAZ\\" + tazpath[3] + "_TAZID.bin",})
     SetView(TAZID)
     selinttaz = "Select * where TAZ < 12000"
     selexttaz = "Select * where TAZ >= 12000"

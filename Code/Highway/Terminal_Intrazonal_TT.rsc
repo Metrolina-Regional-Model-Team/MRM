@@ -36,8 +36,8 @@ Macro "Terminal_Intrazonal_TT" (Args, TermTimeFile, SPMATFile, SPMATCoreName, Pe
 
 	// Area type file (written by Area_Type macro)
 	// on error, notfound goto badatype
-	ATFile = Dir + "\\TAZ_ATYPE.asc"
-	ATView = OpenTable("ATView", "FFA", {ATFile, })
+	ATFile = Dir + "\\TAZ_ATYPE.bin"
+	ATView = OpenTable("ATView", "FFB", {ATFile, })
 
 	// open new matrix - get core labels (xref to ATYPE and SPMAT
 	// on error, notfound goto badTTIntraFile

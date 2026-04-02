@@ -1,6 +1,6 @@
 DBox "AreaType_TAZNeighbors" Title: "Create TAZ Neighbors file for Area Type" 
 
-	// Prior to MRM1703, this was zone_pct file created to build a file with percentage of a TAZ's neighbors within 
+	// Used to creat zone_pct file created to build a file with percentage of a TAZ's neighbors within 
 	// a 1.5 mile buffer.  A new TAZNeighbors_pct file is necessary only when TAZ file changes.  
 	//  McLelland, Aug, 2017
 
@@ -30,7 +30,7 @@ DBox "AreaType_TAZNeighbors" Title: "Create TAZ Neighbors file for Area Type"
 		TAZSplit = SplitPath(TAZFile)
 		TAZDir = TAZSplit[1] + TAZSplit[2]
 		TAZRoot = TAZSplit[3]
-		ZonePctFile = TAZDir + "TAZNeighbors_Pct.asc"
+		ZonePctFile = TAZDir + "TAZNeighbors_Pct.bin"
 
 		//TAZs
 		zonedb  = TAZFile

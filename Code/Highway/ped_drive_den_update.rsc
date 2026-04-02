@@ -17,8 +17,8 @@ macro "ped_drive_den_update" (Args, netview)
 	TagLayer("Value", netview+ "|notaz",netview+".TAZ", tazlayer, tazlayer+".TAZ")
 	droplayer(netview, tazlayer)
 //Opens the TAZ_AREATYPE.asc file and then fills the value of atype (area type) into the regnet's areatp (area type)
-	base = Dir + "\\landuse\\TAZ_AREATYPE.asc"
-	opentable("TAZ_AREATYPE", "FFA", {base,})
+	base = Dir + "\\landuse\\TAZ_AREATYPE.bin"
+	opentable("TAZ_AREATYPE", "FFB", {base,})
 	JoinViews(netview+"+ TAZ_AREATYPE", netview+".TAZ", "TAZ_AREATYPE.TAZ", )
 	
 	hi = GetFirstRecord(netview+"+ TAZ_AREATYPE|",)

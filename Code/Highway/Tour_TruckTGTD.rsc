@@ -35,7 +35,7 @@ Macro "Tour_TruckTGTD" (Args)
 
 //Open tables, networks & matrices and pull data
 	se_vw = OpenTable("SEFile","FFB", {sedata_file,})
-	areatype = OpenTable("areatype", "DBASE", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.dbf",})  
+	areatype = OpenTable("areatype", "FFB", {Dir + "\\landuse\\SE" + theyear + "_DENSITY.bin",})  
 	distExtsta_vw = OpenTable("distextsta", "FFA", {Dir + "\\Ext\\Dist_to_Closest_ExtSta.asc",})
 	basvol_vw = OpenTable("basvol", "FFA", {MetDir + "\\ExtSta\\extstavol.asc",})
 	bthruv_vw = OpenTable("bthruv", "FFA", {MetDir + "\\ExtSta\\bvthru.asc",})
