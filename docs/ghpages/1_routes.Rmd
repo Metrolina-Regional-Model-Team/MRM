@@ -28,7 +28,9 @@ The MRM has the capability to model 10 modes. Premium modes include light rail (
 library(knitr)
 library(kableExtra)
 library(scales)
-
+library(sf)
+library(leaflet)
+library(dplyr)
 mode_data <- data.frame(
   "Mode ID" = 1:9,
   "Mode Classification" = c("Premium", "Premium", "Premium", "Premium", "Bus", "Bus", "Bus", "Bus", "Bus"),
@@ -48,3 +50,134 @@ table_modes <- kable(mode_data, col.names = c("Mode ID", "Mode Classification", 
 # Print the table
 table_modes
 ```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+invisible(capture.output({
+  mrm_boundary <- st_read("C:/MRM/docs/other/shps/Boundaries/MRMBoundary.shp")
+  Transit_22 <- st_read("C:/MRM/docs/other/shps/Transit/TransitNet_2022.shp")
+  Transit_25 <- st_read("C:/MRM/docs/other/shps/Transit/TransitNet_2025.shp")
+  Transit_35 <- st_read("C:/MRM/docs/other/shps/Transit/TransitNet_2035.shp")
+  Transit_45 <- st_read("C:/MRM/docs/other/shps/Transit/TransitNet_2045.shp")
+  Transit_55 <- st_read("C:/MRM/docs/other/shps/Transit/TransitNet_2055.shp")
+
+# Ensure both shapefiles are in the same CRS (WGS84)
+  mrm_boundary <- st_transform( mrm_boundary, 4326)
+  Transit_22 <- st_transform(Transit_22, 4326)
+  Transit_25 <- st_transform(Transit_25, 4326)
+  Transit_35 <- st_transform(Transit_35, 4326)
+  Transit_45 <- st_transform(Transit_45, 4326)
+  Transit_55 <- st_transform(Transit_55, 4326)
+}))
+```
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+# Create the interactive map
+map <- leaflet() %>%
+  # Add base tiles
+  addTiles() %>%
+  
+  # Add first shapefile
+  addPolygons(
+    data =  mrm_boundary,
+    color = "black",
+    weight = 3,
+    opacity = 1,
+    fillOpacity = 0,
+    highlightOptions = highlightOptions(
+      color = "white",
+      weight = 3,
+      bringToFront = TRUE
+    ),
+    group = "MRM Boundary",
+    labelOptions = labelOptions(noHide = FALSE, direction = "auto")
+  ) %>%
+  
+  
+  # Add Transit_2022 shapefile
+  addPolylines(
+    data = Transit_22,
+    color = "blue",
+    weight = 2,
+    opacity = 0.8,
+    highlightOptions = highlightOptions(
+      color = "yellow",
+      weight = 4,
+      bringToFront = TRUE
+    ),
+    label = ~paste(ROUTE_NAME),
+    group = "Transit Network 2022",
+    labelOptions = labelOptions(noHide = FALSE, direction = "auto")
+  ) %>%
+  
+  # Add Transit_2025 shapefile
+  addPolylines(
+    data = Transit_25,
+    color = "green",
+    weight = 2,
+    opacity = 0.8,
+    highlightOptions = highlightOptions(
+      color = "yellow",
+      weight = 4,
+      bringToFront = TRUE
+    ),
+    label = ~paste(ROUTE_NAME),
+    group = "Transit Network 2025",
+    labelOptions = labelOptions(noHide = FALSE, direction = "auto")
+  ) %>%
+  
+    # Add Transit_2035 shapefile
+  addPolylines(
+    data = Transit_35,
+    color = "orange",
+    weight = 2,
+    opacity = 0.8,
+    highlightOptions = highlightOptions(
+      color = "yellow",
+      weight = 4,
+      bringToFront = TRUE
+    ),
+    label = ~paste(ROUTE_NAME),
+    group = "Transit Network 2035",
+    labelOptions = labelOptions(noHide = FALSE, direction = "auto")
+  ) %>%
+  
+    # Add Transit_2045 shapefile
+  addPolylines(
+    data = Transit_45,
+    color = "deeppink",
+    weight = 2,
+    opacity = 0.8,
+    highlightOptions = highlightOptions(
+      color = "yellow",
+      weight = 4,
+      bringToFront = TRUE
+    ),
+    label = ~paste(ROUTE_NAME),
+    group = "Transit Network 2045",
+    labelOptions = labelOptions(noHide = FALSE, direction = "auto")
+  ) %>%
+  
+    # Add Transit_2055 shapefile
+  addPolylines(
+    data = Transit_55,
+    color = "purple",
+    weight = 2,
+    opacity = 0.8,
+    highlightOptions = highlightOptions(
+      color = "yellow",
+      weight = 4,
+      bringToFront = TRUE
+    ),
+    label = ~paste(ROUTE_NAME),
+    group = "Transit Network 2055",
+    labelOptions = labelOptions(noHide = FALSE, direction = "auto")
+  ) %>%
+  
+  # Layer control
+  addLayersControl(
+    overlayGroups = c("MRM Boundary","Transit Network 2022","Transit Network 2025","Transit Network 2035","Transit Network 2045","Transit Network 2055"),
+    options = layersControlOptions(collapsed = FALSE)
+  )
+
+# Display the map
+map
