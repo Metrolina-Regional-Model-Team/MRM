@@ -191,7 +191,7 @@ Macro "CapSpd" (Args)
         {FieldName: "ErrLayer", Type: "String", Width: 7, Decimals: 0},
         {FieldName: "ErrLevel", Type: "String", Width: 7, Decimals: 0},
         {FieldName: "ErrField", Type: "String", Width: 12, Decimals: 0},
-        {FieldName: "ErrVal", Type: "Short", Width: 20, Decimals: 0},
+        {FieldName: "ErrVal", Type: "String", Width: 20, Decimals: 0},
         {FieldName: "ErrMsg", Type: "String", Width: 120, Decimals: 0}
     }
 
@@ -251,7 +251,7 @@ Macro "CapSpd" (Args)
 		else GuidewayOverride = "True"
 
 // Write error/warning messages
-	dim ID[ErrFileRec.length],
+	/*dim ID[ErrFileRec.length],
 	ErrLayer[ErrFileRec.length],
 	ErrLevel[ErrFileRec.length],
 	ErrField[ErrFileRec.length],
@@ -260,12 +260,6 @@ Macro "CapSpd" (Args)
 	CapSpdErr.AddRows(ErrFileRec.length)
 	if ErrFileRec <> null then do
 		for i = 1 to ErrFileRec.length do
-			/*CapSpdErr.ID       = ErrFileRec[i][1]
-			CapSpdErr.ErrLayer = ErrFileRec[i][2]
-			CapSpdErr.ErrLevel = ErrFileRec[i][3]
-			CapSpdErr.ErrField = ErrFileRec[i][4]
-			CapSpdErr.ErrVal   = ErrFileRec[i][5]
-			CapSpdErr.ErrMsg   = ErrFileRec[i][6]*/
 			ID[i] = ErrFileRec[i][1]
 			ErrLayer[i] = ErrFileRec[i][2]
 			ErrLevel[i] = ErrFileRec[i][3]
@@ -279,7 +273,7 @@ Macro "CapSpd" (Args)
 			CapSpdErr.ErrVal = A2V(ErrVal)
 			CapSpdErr.ErrMsg = A2V(ErrMsg)
 		end
-	end
+	end*/
 	// Write error/warning messages
 	/*if ErrFileRec <> null 
 		then do
@@ -316,7 +310,7 @@ Macro "CapSpd" (Args)
 		//   22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 	
 		// Open highway file
-		/*layers = RunMacro("TCB Add DB Layers", HwyFile)
+		layers = RunMacro("TCB Add DB Layers", HwyFile)
 		NodeLayer = layers[1]
 		HwyLayer = layers[2]
 		SetLayer(NodeLayer)
@@ -326,7 +320,7 @@ Macro "CapSpd" (Args)
 		HwyView =GetView()
 		SetView(HwyView)
 		
-		stat = UpdateProgressBar("Add area type - based on link TAZ",10)
+		/*stat = UpdateProgressBar("Add area type - based on link TAZ",10)
 	
 		AT_TAZ = OpenTable("AT_TAZ",	"FFA", {AreaTypeFile},)
 		Join_AT = JoinViews("Join_AT", HwyView+".TAZ", "AT_TAZ.TAZ",)
@@ -370,24 +364,24 @@ Macro "CapSpd" (Args)
 		CloseView(AT_TAZ)
 		vATypeIn = null*/
 
-	tbl_hwy = CreateObject("Table", {FileName: HwyFile, LayerType: "line"})
-	tbl_node = CreateObject("Table", {FileName: HwyFile, LayerType: "node"})
-	tbl_at_taz = CreateObject("Table", {FileName: AreaTypeFile})
+		tbl_hwy = CreateObject("Table", {FileName: HwyFile, LayerType: "line"})
+		tbl_node = CreateObject("Table", {FileName: HwyFile, LayerType: "node"})
+		tbl_at_taz = CreateObject("Table", {FileName: AreaTypeFile})
 
-	tbl_at_taz.AddField({FieldName: "TAZ_AT", Type: "integer", Width: 10, Decimals: 0})
-	tbl_at_taz.TAZ_AT = tbl_at_taz.TAZ
+		tbl_at_taz.AddField({FieldName: "TAZ_AT", Type: "integer", Width: 10, Decimals: 0})
+		tbl_at_taz.TAZ_AT = tbl_at_taz.TAZ
 
-	join = tbl_hwy.Join({
-		Table: tbl_at_taz, 
-		LeftFields: "TAZ",
-		RightFields: "TAZ"
-	})
+		join = tbl_hwy.Join({
+			Table: tbl_at_taz, 
+			LeftFields: "TAZ",
+			RightFields: "TAZ"
+		})
 
-	temp = join.Export()
-	join = null
+		temp = join.Export()
+		join = null
 
-	temp.ATYPE = if (temp.TAZ_AT = null) then 3 else temp.ATYPE
-	temp.ATYPE = if (temp.ATYPE = null or temp.ATYPE < 1 or temp.ATYPE > 6) then 3 else temp.ATYPE
+		temp.ATYPE = if (temp.TAZ_AT = null) then 3 else temp.ATYPE
+		temp.ATYPE = if (temp.ATYPE = null or temp.ATYPE < 1 or temp.ATYPE > 6) then 3 else temp.ATYPE
 	
 		//   33333333333333333333333333333333333333333333333333333333333333333333333333333333333333
 		//		3.  First pass through network - error checks on entry - set defaults
@@ -414,28 +408,52 @@ Macro "CapSpd" (Args)
 			zbrout[i] = 0
 		end*/
 
-	v_n = tbl_node.ID
-	maxnode = r2i(VectorStatistic(v_n, "Max",))
+		v_n = tbl_node.ID
+		maxnode = r2i(VectorStatistic(v_n, "Max",))
 
-	dim nlid[maxnode],
-		nlab[maxnode],
-		nfuncl[maxnode],  
-		ncntl[maxnode], 
-		noppfuncl[maxnode],
-		zbrin[maxnode], 
-		zbrout[maxnode]
+		dim nlid[maxnode],
+			nlab[maxnode],
+			nfuncl[maxnode],  
+			ncntl[maxnode], 
+			noppfuncl[maxnode],
+			zbrin[maxnode], 
+			zbrout[maxnode]
 
-	// initialize zbrin and zbrout to zero
-	for i = 1 to maxnode do
-		zbrin[i] = 0
-		zbrout[i] = 0
-	end
+		// initialize zbrin and zbrout to zero
+		for i = 1 to maxnode do
+			zbrin[i] = 0
+			zbrout[i] = 0
+		end
 	
 		// first pass through HwyView - check legal values for capacity / speed input.  
 		// Warning or Error messages - use defaults if possible
 		stat = UpdateProgressBar("First pass through network looking for illegal codes",15)
-		
-		for row = 1 to tbl_hwy.GetRecordCount() do
+
+    		ID 		   = tbl_hwy.ID
+    		LinkLen    = tbl_hwy.Length
+			TrafficDir = tbl_hwy.DIR
+			funcl      = tbl_hwy.funcl
+			fedfuncl   = tbl_hwy.fedfuncl
+			factype    = tbl_hwy.factype
+			lanesAB    = tbl_hwy.lanesAB
+			lanesBA    = tbl_hwy.lanesBA
+			parking    = tbl_hwy.parking
+			A_Control  = tbl_hwy.A_Control
+			A_Prohibit = tbl_hwy.A_Prohibit
+			A_LeftLns  = tbl_hwy.A_LeftLns
+			A_ThruLns  = tbl_hwy.A_ThruLns
+			A_RightLns = tbl_hwy.A_RightLns
+			B_Control  = tbl_hwy.B_control
+			B_Prohibit = tbl_hwy.B_prohibit
+			B_LeftLns  = tbl_hwy.B_LeftLns
+			B_ThruLns  = tbl_hwy.B_ThruLns
+			B_RightLns = tbl_hwy.B_RightLns		
+			SpdLimit   = tbl_hwy.SpdLimit
+			areatype   = tbl_hwy.areatp	
+		/*ID 			= tbl_hwy.GetDataVectors({FieldNames: {"ID"}})
+		LinkLen 	= tbl_hwy.GetDataVectors({FieldNames: {"Length"}})
+		TrafficDir 	= tbl_hwy.GetDataVectors({FieldNames: {"DIR"}})*/
+		/*for row = 1 to tbl_hwy.GetRecordCount() do
     		ID 		   = tbl_hwy.ID[row]
     		LinkLen    = tbl_hwy.Length[row]
 			TrafficDir = tbl_hwy.DIR[row]
@@ -459,14 +477,267 @@ Macro "CapSpd" (Args)
 			State      = tbl_hwy.State[row]
 			County     = tbl_hwy.County[row]
 			TAZ        = tbl_hwy.TAZ[row]
-			SpdLimit   = tbl_hwy.SpdLimit[row]
+			SpdLimit   = tbl_hwy.SpdLimit[row]*/
+			
+			tbl_CapSpdErr = tbl_hwy.Export()
 
-    		node_ids = GetEndPoints(ID)
-    		tbl_hwy.Anode[row] = node_ids[1]
-    		tbl_hwy.Bnode[row] = node_ids[2]
-		
+			tbl_CapSpdErr.AddFields({
+			Fields: {
+			{FieldName: "fatalflaw", Type: "Short"},
+			{FieldName: "severe", Type: "Short"},
+			{FieldName: "warning", Type: "Short"},			
+			{FieldName: "errorcode", Type: "Short"},
+			{FieldName: "errormessage", Type: "String", Width: 100}
+			}
+			})
+
+				// Loop to get Anode , Bnode : Endpoints
+			//A_node_v = Vector(numrec,"Short", )
+			//B_node_v = Vector(numrec,"Short", )
+			/*for n = 1 to numrec do
+				node_ids = GetEndPoints(ID[n])
+				A_node_v = node_ids[1]
+				B_node_v = node_ids[2]
+				tbl_hwy.Anode = A_node_v
+				tbl_hwy.Bnode = B_node_v
+			end*/
+			
+			//dim i_ID[numrec]
+			/*a_ID = tbl_hwy.GetDataVectors({FieldNames: {"ID"}})
+			for i = 1 to numrec do
+				i_ID[i] = ArrayElementToInteger(a_ID, i)
+			end
+    		//ID = tbl_hwy.GetDataVectors({FieldNames: {"ID"}})
+			//i_ID = A2I(ID,1)
+			node_ids = GetEndPoints(i_ID)
+    		A_node = node_ids[1]
+    		B_node = node_ids[2]
+			tbl_hwy.Anode = A_node
+			tbl_hwy.Bnode = B_node*/
+
+			// Zero length link check (is FATAL!)
+
+            tbl_CapSpdErr.fatalflaw = if LinkLen > 0.001 then 0 else 1
+            tbl_CapSpdErr.errorcode = if LinkLen > 0.001 then 0 else 1
+            tbl_CapSpdErr.errormessage = if LinkLen < 0.001 then "Zero length link" else " "
+
+            // Link direction code,  legaldir = {-1, 0, 1}
+            tbl_CapSpdErr.fatalflaw = if TrafficDir <> -1 and TrafficDir <> 0 and TrafficDir <> 1 then 1 else tbl_CapSpdErr.fatalflaw
+            tbl_CapSpdErr.errorcode = if TrafficDir <> -1 and TrafficDir <> 0 and TrafficDir <> 1 then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if TrafficDir <> -1 and TrafficDir <> 0 and TrafficDir <> 1 then if tbl_CapSpdErr.errormessage = null then "Illegal direction code" else tbl_CapSpdErr.errormessage + "; Illegal direction code" else tbl_CapSpdErr.errormessage
+
+            // funcl : Functional class  DEFAULT = 6
+            tbl_CapSpdErr.severe = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 1 else 0
+            tbl_CapSpdErr.errorcode = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then if tbl_CapSpdErr.errormessage = null then "Illegal funcl" else tbl_CapSpdErr.errormessage + "; Illegal funcl" else tbl_CapSpdErr.errormessage
+            tbl_hwy.funcl = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 6 else funcl
+
+            // fedfuncl : Federal functional class, DEFAULT = LU
+
+            tbl_CapSpdErr.severe = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then 1 else tbl_CapSpdErr.severe
+            tbl_CapSpdErr.errorcode = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then if tbl_CapSpdErr.errormessage = null then "Illegal fedfuncl" else tbl_CapSpdErr.errormessage + "; Illegal fedfuncl" else tbl_CapSpdErr.errormessage
+            tbl_hwy.fedfuncl = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then "LU" else fedfuncl
+
+            // lanesAB , lanesBA :  Lanes A to B and B to A
+            // Fatal - dir indicates lanes, none there.  Warning - dir indicates no lanes, have lanes
+
+            tbl_CapSpdErr.fatalflaw = if ((TrafficDir = 1 or TrafficDir = 0) and lanesAB = 0) then 1 else tbl_CapSpdErr.fatalflaw
+            tbl_CapSpdErr.errorcode = if ((TrafficDir = 1 or TrafficDir = 0) and lanesAB = 0) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if ((TrafficDir = 1 or TrafficDir = 0) and lanesAB = 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) else tbl_CapSpdErr.errormessage
+
+            tbl_CapSpdErr.fatalflaw = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then 1 else tbl_CapSpdErr.fatalflaw
+            tbl_CapSpdErr.errorcode = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesAB) else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesAB) else tbl_CapSpdErr.errormessage
+
+            tbl_CapSpdErr.warning = if (TrafficDir = -1 and lanesAB > 0) then 1 else 0
+            tbl_CapSpdErr.errorcode = if (TrafficDir = -1 and lanesAB > 0) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if (TrafficDir = -1 and lanesAB > 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) + ", set to 0" else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) + ", set to 0" else tbl_CapSpdErr.errormessage
+            tbl_hwy.lanesAB = if (TrafficDir = -1 and lanesAB > 0) then 0 else tbl_hwy.lanesAB
+
+            tbl_CapSpdErr.warning = if (TrafficDir = 1 and lanesBA > 0) then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if (TrafficDir = 1 and lanesBA > 0) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if (TrafficDir = 1 and lanesBA > 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) + ", set to 0" else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) + ", set to 0" else tbl_CapSpdErr.errormessage
+            tbl_hwy.lanesBA = if (TrafficDir = 1 and lanesBA > 0) then 0 else tbl_hwy.lanesBA
+
+            tbl_hwy.Lanes = nz(tbl_hwy.lanesAB)+nz(tbl_hwy.lanesBA) //May be put it after all errors are checked
+
+            // parking : parking on link, DEFAULT = N
+            //  legalprk = {'Y','N','A','P','B'}
+            tbl_CapSpdErr.warning = if parking <> "Y" and parking <> "N" and parking <> "A" and parking <> "P" and parking <> "B" then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if parking <> "Y" and parking <> "N" and parking <> "A" and parking <> "P" and parking <> "B" then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if parking <> "Y" and parking <> "N" and parking <> "A" and parking <> "P" and parking <> "B" then if tbl_CapSpdErr.errormessage = null then "Illegal parking code, default = N" else tbl_CapSpdErr.errormessage + "; Illegal parking code, default = N" else tbl_CapSpdErr.errormessage
+            tbl_hwy.parking = if parking <> "Y" and parking <> "N" and parking <> "A" and parking <> "P" and parking <> "B" then "N" else tbl_hwy.parking
+
+            //Checking B Control
+            tbl_CapSpdErr.warning = if (TrafficDir = -1 and B_Control <> "X") then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if (TrafficDir = -1 and B_Control <> "X") then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if (TrafficDir = -1 and B_Control <> "X") then if tbl_CapSpdErr.errormessage = null then "B_Control on B->A coded. Changed to \"X\" (no movement)" else tbl_CapSpdErr.errormessage + "; B_Control on B->A coded. Changed to \"X\" (no movement)" else tbl_CapSpdErr.errormessage
+
+            tbl_hwy.B_control = if (TrafficDir = -1 and B_Control <> "X") then "X" else tbl_hwy.B_control
+
+            tbl_CapSpdErr.severe = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then 1 else tbl_CapSpdErr.severe
+            tbl_hwy.B_control = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then "S" else tbl_hwy.B_control
+
+            //Freeway - Anything except T (thru) - Severe warning
+            tbl_CapSpdErr.severe = if funcl = 1 and (TrafficDir = 1 or TrafficDir = 0) and B_Control <> "T" then 1 else tbl_CapSpdErr.severe
+            tbl_CapSpdErr.errorcode = if funcl = 1 and (TrafficDir = 1 or TrafficDir = 0) and B_Control <> "T" then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if funcl = 1 and (TrafficDir = 1 or TrafficDir = 0) and B_Control <> "T" then if tbl_CapSpdErr.errormessage = null then "Illegal B_Control on Freeway" else tbl_CapSpdErr.errormessage + "; Illegal B_Control on Freeway" else tbl_CapSpdErr.errormessage
+
+            //Checking A Control
+            tbl_CapSpdErr.warning = if (TrafficDir = 1 and A_Control <> "X") then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if (TrafficDir = 1 and A_Control <> "X") then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if (TrafficDir = 1 and A_Control <> "X") then if tbl_CapSpdErr.errormessage = null then "A_Control on A->B coded. Changed to \"X\" (no movement)" else tbl_CapSpdErr.errormessage + "; A_Control on A->B coded. Changed to \"X\" (no movement)" else tbl_CapSpdErr.errormessage
+
+            tbl_hwy.A_control = if (TrafficDir = 1 and A_Control <> "X") then "X" else tbl_hwy.A_control
+
+            tbl_CapSpdErr.severe = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then 1 else tbl_CapSpdErr.severe
+            tbl_hwy.A_Control = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then "S" else tbl_hwy.A_Control
+
+            //Freeway - Anything except T (thru) - Severe warning
+            tbl_CapSpdErr.severe = if funcl = 1 and (TrafficDir = -1 or TrafficDir = 0) and A_Control <> "T" then 1 else tbl_CapSpdErr.severe
+            tbl_CapSpdErr.errorcode = if funcl = 1 and (TrafficDir = -1 or TrafficDir = 0) and A_Control <> "T" then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if funcl = 1 and (TrafficDir = -1 or TrafficDir = 0) and A_Control <> "T" then if tbl_CapSpdErr.errormessage = null then "Illegal A_Control on Freeway" else tbl_CapSpdErr.errormessage + "; Illegal A_Control on Freeway" else tbl_CapSpdErr.errormessage
+
+            /* ============================================================
+                Here, we are checking A and B node prohibitions. 
+                Existing code only defaults:
+                B node to "N" if TrafficDir = 1 and 0
+                A node to "N" if TrafficDir = -1 and 0
+                But I am also adding default value:
+                B node to "X" if TrafficDir = -1
+                A node to "X" if TrafficDir = 1
+            ============================================================ */
+
+            // B_Prohibit : B node prohibitions, ,  DEFAULT = N
+            //  legalprhb = {'N','L','R','T','C','X'}
+            tbl_CapSpdErr.warning = if (B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if (B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if (B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then if tbl_CapSpdErr.errormessage = null then "Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage + "; Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage
+            tbl_hwy.B_prohibit = if ((TrafficDir = 1 or TrafficDir = 0) and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "N" else tbl_hwy.B_prohibit
+            tbl_hwy.B_prohibit = if (TrafficDir = -1 and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "X" else tbl_hwy.B_prohibit
+            
+            // A_Prohibit : A node prohibitions, ,  DEFAULT = N
+            //  legalprhb = {'N','L','R','T','C','X'}
+            tbl_CapSpdErr.warning = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then if tbl_CapSpdErr.errormessage = null then "Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage + "; Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage
+            tbl_hwy.A_Prohibit = if ((TrafficDir = -1 or TrafficDir = 0) and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "N" else tbl_hwy.A_Prohibit
+            tbl_hwy.A_Prohibit = if (TrafficDir = 1 and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "X" else tbl_hwy.A_Prohibit
+
+            /* ============================================================
+                Here, we are checking number of lanes at the intersection. 
+                Existing code only checked:
+                B node for Trafficdir = 1 and 0
+                A node for TrafficDir -1 and 0
+                But I am checking for all three possible values of TrafficDir (-1, 0, 1)
+            ============================================================ */
+
+            // B node number of lanes at intersection, (A to B direction only) 
+            //   lanes at intersection - fewer than incoming or > 4 more than incoming warning          
+            tbl_CapSpdErr.warning = if ((B_LeftLns + B_ThruLns + B_RightLns - lanesAB) < 0) then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if ((B_LeftLns + B_ThruLns + B_RightLns - lanesAB) < 0) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if ((B_LeftLns + B_ThruLns + B_RightLns - lanesAB) < 0) then if tbl_CapSpdErr.errormessage = null then "Too few B intersection lns: lanesAB="+i2s(lanesAB)+ " Int L/T/R="+i2s(B_LeftLns)+","+i2s(B_ThruLns)+","+i2s(B_RightLns) else tbl_CapSpdErr.errormessage + "; Too few B intersection lns: lanesAB="+i2s(lanesAB)+ " Int L/T/R="+i2s(B_LeftLns)+","+i2s(B_ThruLns)+","+i2s(B_RightLns) else tbl_CapSpdErr.errormessage
+
+            tbl_CapSpdErr.warning = if ((B_LeftLns + B_ThruLns + B_RightLns - lanesAB) > 4) then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if ((B_LeftLns + B_ThruLns + B_RightLns - lanesAB) > 4) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if ((B_LeftLns + B_ThruLns + B_RightLns - lanesAB) > 4) then if tbl_CapSpdErr.errormessage = null then "Too many B intersection lns: lanesAB="+i2s(lanesAB)+ " Int L/T/R="+i2s(B_LeftLns)+","+i2s(B_ThruLns)+","+i2s(B_RightLns) else tbl_CapSpdErr.errormessage + "; Too many B intersection lns: lanesAB="+i2s(lanesAB)+ " Int L/T/R="+i2s(B_LeftLns)+","+i2s(B_ThruLns)+","+i2s(B_RightLns) else tbl_CapSpdErr.errormessage
+
+            // A node number of lanes at intersection, (B to A direction only) 
+            //   lanes at intersection - fewer than incoming or > 4 more than incoming warning
+            tbl_CapSpdErr.warning = if ((A_LeftLns + A_ThruLns + A_RightLns - lanesBA) < 0) then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if ((A_LeftLns + A_ThruLns + A_RightLns - lanesBA) < 0) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if ((A_LeftLns + A_ThruLns + A_RightLns - lanesBA) < 0) then if tbl_CapSpdErr.errormessage = null then "Too few A intersection lns: lanesBA="+i2s(lanesBA)+ " Int L/T/R="+i2s(A_LeftLns)+","+i2s(A_ThruLns)+","+i2s(A_RightLns) else tbl_CapSpdErr.errormessage + "; Too few A intersection lns: lanesBA="+i2s(lanesBA)+ " Int L/T/R="+i2s(A_LeftLns)+","+i2s(A_ThruLns)+","+i2s(A_RightLns) else tbl_CapSpdErr.errormessage
+
+            tbl_CapSpdErr.warning = if ((A_LeftLns + A_ThruLns + A_RightLns - lanesBA) > 4) then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if ((A_LeftLns + A_ThruLns + A_RightLns - lanesBA) > 4) then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if ((A_LeftLns + A_ThruLns + A_RightLns - lanesBA) > 4) then if tbl_CapSpdErr.errormessage = null then "Too many A intersection lns: lanesBA="+i2s(lanesBA)+ " Int L/T/R="+i2s(A_LeftLns)+","+i2s(A_ThruLns)+","+i2s(A_RightLns) else tbl_CapSpdErr.errormessage + "; Too many A intersection lns: lanesBA="+i2s(lanesBA)+ " Int L/T/R="+i2s(A_LeftLns)+","+i2s(A_ThruLns)+","+i2s(A_RightLns) else tbl_CapSpdErr.errormessage
+
+            //  speed limit, default, freeway, expressway = 55, surface streets = 35, transit walk = 10, cenconn = 25
+            //****************************************************************************************
+            //  Includes resetting speed limits for future years based on area type!!!!
+            //****************************************************************************************
+            
+            tbl_CapSpdErr.warning = 
+                if (SpdLimit = null or SpdLimit < 10 or SpdLimit > 80) then
+                    if (funcl = 1 or funcl = 2 or funcl = 9 or funcl = 22 or funcl = 23 or funcl = 24 or funcl = 25 or funcl = 82 or funcl = 83)
+                        then 1 
+                        else 1
+                    else tbl_CapSpdErr.warning
+
+            tbl_CapSpdErr.errorcode = 
+                if (SpdLimit = null or SpdLimit < 10 or SpdLimit > 80) then 
+                    if (funcl = 1 or funcl = 2 or funcl = 9 or funcl = 22 or funcl = 23 or funcl = 24 or funcl = 25 or funcl = 82 or funcl = 83) 
+                        then 1 
+                        else 1 
+                    else tbl_CapSpdErr.errorcode
+
+            tbl_CapSpdErr.errormessage =
+                if (SpdLimit = null or SpdLimit < 10 or SpdLimit > 80) then
+                    if (funcl = 1 or funcl = 2 or funcl = 9 or funcl = 22 or funcl = 23 or funcl = 24 or funcl = 25 or funcl = 82 or funcl = 83) then
+                        if tbl_CapSpdErr.errormessage = null 
+                            then "High speed facility, Speed limit changed to default = 55"
+                            else tbl_CapSpdErr.errormessage + "; High speed facility, Speed limit changed to default = 55"
+                        else
+                            if tbl_CapSpdErr.errormessage = null 
+                                then "Surface street, Speed limit changed to default = 35"
+                                else tbl_CapSpdErr.errormessage + "; Surface street, Speed limit changed to default = 35"
+                    else
+                        tbl_CapSpdErr.errormessage
+
+            tbl_hwy.SpdLimRun = 
+                if (SpdLimit = null or SpdLimit < 10 or SpdLimit > 80) then 
+                    if (funcl = 1 or funcl = 2 or funcl = 9 or funcl = 22 or funcl = 23 or funcl = 24 or funcl = 25 or funcl = 82 or funcl = 83) 
+                        then 55 
+                        else 35 
+                    else tbl_hwy.SpdLimit
+
+            //  v 2.4 - Adjust base year speed limit for rural 55 MPH roads that are now suburban
+            //          only for funcl 4,5,6,7
+            LastCapYear = 2100 
+            BaseYear = 2022         // Speeds will NOT be adjusted for year <= base year
+
+            tbl_CapSpdErr.warning = 
+                if s2i(RunYear) > BaseYear and (funcl = 4 or funcl = 5 or funcl = 6 or funcl = 7) and areatype < 5 and SpdLimit > 49
+                    then 1 
+                    else tbl_CapSpdErr.warning
+
+            tbl_CapSpdErr.errorcode = 
+                if s2i(RunYear) > BaseYear and (funcl = 4 or funcl = 5 or funcl = 6 or funcl = 7) and areatype < 5 and SpdLimit > 49
+                    then 1 
+                    else tbl_CapSpdErr.errorcode
+
+            tbl_CapSpdErr.errormessage = 
+                if s2i(RunYear) > BaseYear and (funcl = 4 or funcl = 5 or funcl = 6 or funcl = 7) and areatype < 5 and SpdLimit > 49 then 
+                    if tbl_CapSpdErr.errormessage = null 
+                        then "No longer rural surface street, Speed limit reduced to 45" 
+                        else tbl_CapSpdErr.errormessage + "; No longer rural surface street, Speed limit reduced to 45" 
+                    else tbl_CapSpdErr.errormessage
+
+            tbl_hwy.SpdLimRun = 
+                if s2i(RunYear) > BaseYear and (funcl = 4 or funcl = 5 or funcl = 6 or funcl = 7) and areatype < 5 and SpdLimit > 49 
+                    then 45
+                    else tbl_hwy.SpdLimit
+
+
+
+
+
+
+
+
+
+
+
+	
+			skipspdlimit:
+	
+	
+			chknext:
+			donerecchecks:
+
 			// Zero length link
-			chklinklen:
+			/*chklinklen:
 			if LinkLen > 0.001 then goto chktrafficdir
 			cnterrlvl3 = cnterrlvl3 + 1
 			ErrFileRec = ErrFileRec + {{ID, "Link", "FATAL", "Length", r2s(LinkLen), "Zero length link"}}
@@ -477,11 +748,11 @@ Macro "CapSpd" (Args)
 			if pos = 0 then do
 				cnterrlvl3 = cnterrlvl3 + 1
 				ErrFileRec = ErrFileRec + {{ID, "Link", "FATAL", "Dir", i2s(TrafficDir), "Illegal direction code"}}
-			end
-
+			end*/
+			
 			// funcl : Functional class  DEFAULT = 6
 			//	legalfun = {1,2,3,4,5,6,7,8,9,22,23,24,25,30,40,82,83,84,85,90,92}
-			chkfuncl:			
+			/*chkfuncl:			
 			pos = ArrayPosition(legalfun, {funcl},)
     		if pos = 0 then do
 				cnterrlvl2 = cnterrlvl2 + 1
@@ -519,30 +790,30 @@ Macro "CapSpd" (Args)
 			chkABlanes:
 
 			/* lanesAB must be > 0 when TrafficDir = 1 or 0 */
-			if ((tbl_hwy.Dir[row] = 1 or tbl_hwy.Dir[row] = 0) and tbl_hwy.lanesAB[row] = 0) then do
+			/*if ((tbl_hwy.Dir[row] = 1 or tbl_hwy.Dir[row] = 0) and tbl_hwy.lanesAB[row] = 0) then do
 				cnterrlvl3 = cnterrlvl3 + 1
 				ErrFileRec = ErrFileRec + {{tbl_hwy.ID[row], "Link", "FATAL", "lanesAB", i2s(tbl_hwy.lanesAB[row]),"Dir = " + i2s(tbl_hwy.Dir[row]) + " and lanesAB = " + i2s(tbl_hwy.lanesAB[row])}}
 			
 			end
 
 			/* lanesBA must be > 0 when TrafficDir = -1 or 0 */
-			if ((tbl_hwy.Dir[row] = -1 or tbl_hwy.Dir[row] = 0) and tbl_hwy.lanesBA[row] = 0) then do
+			/*if ((tbl_hwy.Dir[row] = -1 or tbl_hwy.Dir[row] = 0) and tbl_hwy.lanesBA[row] = 0) then do
 				cnterrlvl3 = cnterrlvl3 + 1
 				ErrFileRec = ErrFileRec + {{tbl_hwy.ID[row], "Link", "FATAL", "lanesBA", i2s(tbl_hwy.lanesBA[row]),"Dir = " + i2s(tbl_hwy.Dir[row]) +" and lanesBA = " + i2s(tbl_hwy.lanesBA[row])}}
 			end
 
 			/* lanesAB must be 0 when TrafficDir = -1 */
-			if (tbl_hwy.Dir[row] = -1 and tbl_hwy.lanesAB[row] > 0) then do
+			/*if (tbl_hwy.Dir[row] = -1 and tbl_hwy.lanesAB[row] > 0) then do
 			cnterrlvl1 = cnterrlvl1 + 1
 			ErrFileRec = ErrFileRec + {{tbl_hwy.ID[row], "Link", "Warning", "lanesAB",i2s(tbl_hwy.lanesAB[row]),"Dir = -1 and lanesAB = " + i2s(tbl_hwy.lanesAB[row]) + ", set to 0"}}
 
 			/* Correct with table class */
-			tbl_hwy.lanesAB[row] = 0
+			/*tbl_hwy.lanesAB[row] = 0
 			//lanesAB = 0   /* optional update */
-			end
+			/*end
 
 			/* lanesBA must be 0 when TrafficDir = 1 */
-			if (tbl_hwy.Dir[row] = 1 and tbl_hwy.lanesBA[row] > 0) then do
+			/*if (tbl_hwy.Dir[row] = 1 and tbl_hwy.lanesBA[row] > 0) then do
 			cnterrlvl1 = cnterrlvl1 + 1
 			ErrFileRec = ErrFileRec + {{
 			tbl_hwy.ID[row], "Link", "Warning", "lanesBA",
@@ -551,15 +822,15 @@ Macro "CapSpd" (Args)
 			}}
 
 			/* Correct with table class */
-			tbl_hwy.lanesBA[row] = 0
+			/*tbl_hwy.lanesBA[row] = 0
 			//lanesBA = 0   /* optional update */
-			end
+			/*end
 
 			/* Fill the combined Lanes field */
-			tbl_hwy.Lanes[row] = nz(tbl_hwy.lanesAB[row]) + nz(tbl_hwy.lanesBA[row])
+			/*tbl_hwy.Lanes[row] = nz(tbl_hwy.lanesAB[row]) + nz(tbl_hwy.lanesBA[row])
 
 			/* Look up the parking code in the legal parking array */
-			pos = ArrayPosition(legalprk, {tbl_hwy.parking[row]},)
+			/*pos = ArrayPosition(legalprk, {tbl_hwy.parking[row]},)
 
 			if pos = 0 then do
 				cnterrlvl1 = cnterrlvl1 + 1
@@ -567,16 +838,16 @@ Macro "CapSpd" (Args)
 				ErrFileRec = ErrFileRec + {{tbl_hwy.ID[row], "Link", "Warning", "parking",tbl_hwy.parking[row],"Illegal parking code, default = N"}}
 
 				/* Correct invalid parking code */
-				tbl_hwy.parking[row] = "N"
+				/*tbl_hwy.parking[row] = "N"
 			end
 
 			chkbcontrol:
 
 			/* Lookup in legal control list */
-			pos = ArrayPosition(legalcntl, {tbl_hwy.B_control[row]},)
+			/*pos = ArrayPosition(legalcntl, {tbl_hwy.B_control[row]},)
 
 			/* --- If TrafficDir = -1 (reverse), B_Control must be "X" --- */
-			if tbl_hwy.Dir[row] = -1 then do
+			/*if tbl_hwy.Dir[row] = -1 then do
 
 				if tbl_hwy.B_control[row] <> "X" then do
 					cnterrlvl1 = cnterrlvl1 + 1
@@ -588,15 +859,15 @@ Macro "CapSpd" (Args)
 					}}
 
 					/* Fix and write back */
-					tbl_hwy.B_control[row] = "X"
-				end
+					/*tbl_hwy.B_control[row] = "X"
+				/*end
 
 				/* Go to next section (as in your original logic) */
-				goto chkacontrol
-			end
+				/*goto chkacontrol
+			/*end
 
 			/* --- Illegal or 'X' B_Control (pos 0 = invalid, pos 7 = X) --- */
-			if (pos = 0 or pos = 7) then do
+			/*if (pos = 0 or pos = 7) then do
 				cnterrlvl2 = cnterrlvl2 + 1
 
 				ErrFileRec = ErrFileRec + {{
@@ -606,11 +877,11 @@ Macro "CapSpd" (Args)
 				}}
 
 				/* Fix and write back */
-				tbl_hwy.B_control[row] = "S"
+				/*tbl_hwy.B_control[row] = "S"
 			end
 
 			/* --- Freeway rule: For funcl = 1, B_Control must be T (pos = 1) --- */
-			if tbl_hwy.funcl[row] = 1
+			/*if tbl_hwy.funcl[row] = 1
 			and (tbl_hwy.Dir[row] = 1 or tbl_hwy.Dir[row] = 0)
 			and pos <> 1 then do
 
@@ -628,10 +899,10 @@ Macro "CapSpd" (Args)
 			/* Local copy for convenience */
 
 			/* Lookup control code */
-			pos = ArrayPosition(legalcntl, {tbl_hwy.A_Control[row]},)
+			/*pos = ArrayPosition(legalcntl, {tbl_hwy.A_Control[row]},)
 
 			/* --- If TrafficDir = 1 (A→B direction), A_Control must be X --- */
-			if tbl_hwy.Dir[row] = 1 then do
+			/*if tbl_hwy.Dir[row] = 1 then do
 
 				if actrl <> "X" then do
 					cnterrlvl1 = cnterrlvl1 + 1
@@ -643,14 +914,14 @@ Macro "CapSpd" (Args)
 					}}
 
 					/* Correct value */
-					tbl_hwy.A_Control[row] = "X"
+					/*tbl_hwy.A_Control[row] = "X"
 				end
 
 				goto chkbprohibit
 			end
 
 			/* --- Illegal or X A_Control (pos 0 = invalid, pos 7 = X) --- */
-			if (pos = 0 or pos = 7) then do
+			/*if (pos = 0 or pos = 7) then do
 				cnterrlvl2 = cnterrlvl2 + 1
 
 				ErrFileRec = ErrFileRec + {{
@@ -660,11 +931,11 @@ Macro "CapSpd" (Args)
 				}}
 
 				/* Correct value */
-				tbl_hwy.A_Control[row] = "S"
+				/*tbl_hwy.A_Control[row] = "S"
 			end
 
 			/* --- Freeway: funcl = 1 and A_Control must be T (thru = pos 1) --- */
-			if tbl_hwy.funcl[row] = 1
+			/*if tbl_hwy.funcl[row] = 1
 			and (tbl_hwy.Dir[row] = -1 or tbl_hwy.Dir[row] = 0)
 			and pos <> 1 then do
 
@@ -680,10 +951,10 @@ Macro "CapSpd" (Args)
 			/* ============================================================
 				B_Prohibit : legalprhb = {'N','L','R','T','C','X'}
 			============================================================ */
-			chkbprohibit:
+			/*chkbprohibit:
 
 			/* If reverse direction, skip to A_Prohibit */
-			if tbl_hwy.Dir[row] = -1 then goto chkaprohibit
+			/*if tbl_hwy.Dir[row] = -1 then goto chkaprohibit
 
 			pos = ArrayPosition(legalprhb, {tbl_hwy.B_Prohibit[row]},)
 
@@ -702,7 +973,7 @@ Macro "CapSpd" (Args)
 			/* ============================================================
 				A_Prohibit : legalprhb = {'N','L','R','T','C','X'}
 			============================================================ */
-			chkaprohibit:
+			/*chkaprohibit:
 
 			pos = ArrayPosition(legalprhb, {tbl_hwy.A_Prohibit[row]},)
 
@@ -721,15 +992,15 @@ Macro "CapSpd" (Args)
 			chkbintlanes:
 
 			/* If reverse direction, skip B-side checks */
-			if tbl_hwy.Dir[row] = -1 then goto chkaintlanes
+			/*if tbl_hwy.Dir[row] = -1 then goto chkaintlanes
 
 			/* Compute B intersection lanes */
-			BIntlns =  tbl_hwy.B_LeftLns[row] +
+			/*BIntlns =  tbl_hwy.B_LeftLns[row] +
 					tbl_hwy.B_ThruLns[row] +
 					tbl_hwy.B_RightLns[row]
 
 			/* Too few B intersection lanes */
-			if BIntlns - tbl_hwy.lanesAB[row] < 0 then do
+			/*if BIntlns - tbl_hwy.lanesAB[row] < 0 then do
 				cnterrlvl1 = cnterrlvl1 + 1
 				ErrFileRec = ErrFileRec + {{
 					tbl_hwy.ID[row], "Link", "Warning", "B_Int Lns",
@@ -744,7 +1015,7 @@ Macro "CapSpd" (Args)
 			end
 
 			/* Too many B intersection lanes */
-			else if BIntlns - tbl_hwy.lanesAB[row] > 4 then do
+			/*else if BIntlns - tbl_hwy.lanesAB[row] > 4 then do
 				cnterrlvl1 = cnterrlvl1 + 1
 				ErrFileRec = ErrFileRec + {{
 					tbl_hwy.ID[row], "Link", "Warning", "B_Int Lns",
@@ -761,18 +1032,18 @@ Macro "CapSpd" (Args)
 			/* ============================================================
 			A-SIDE CHECKS
 			============================================================ */
-			chkaintlanes:
+			/*chkaintlanes:
 
 			/* If TrafficDir = 1 (A→B only), skip to next section */
-			if tbl_hwy.Dir[row] = 1 then goto chkspdlimit
+			/*if tbl_hwy.Dir[row] = 1 then goto chkspdlimit
 
 			/* Compute A intersection lanes */
-			AIntlns =  tbl_hwy.A_LeftLns[row] +
+			/*AIntlns =  tbl_hwy.A_LeftLns[row] +
 					tbl_hwy.A_ThruLns[row] +
 					tbl_hwy.A_RightLns[row]
 
 			/* Too few A intersection lanes */
-			if AIntlns - tbl_hwy.lanesBA[row] < 0 then do
+			/*if AIntlns - tbl_hwy.lanesBA[row] < 0 then do
 				cnterrlvl1 = cnterrlvl1 + 1
 				ErrFileRec = ErrFileRec + {{
 					tbl_hwy.ID[row], "Link", "Warning", "A_Int Lns",
@@ -787,7 +1058,7 @@ Macro "CapSpd" (Args)
 			end
 
 			/* Too many A intersection lanes */
-			else if AIntlns - tbl_hwy.lanesBA[row] > 4 then do
+			/*else if AIntlns - tbl_hwy.lanesBA[row] > 4 then do
 				cnterrlvl1 = cnterrlvl1 + 1
 				ErrFileRec = ErrFileRec + {{
 					tbl_hwy.ID[row], "Link", "Warning", "A_Int Lns",
@@ -804,32 +1075,32 @@ Macro "CapSpd" (Args)
 			chkspdlimit:
 
 			/* Temporary logic variables (allowed, not table fields) */
-			changespeed = "false"
+			/*changespeed = "false"
 			changespdmsg = null
 
 			/* Check invalid or missing speed limit */
-			if tbl_hwy.SpdLimit[row] = null
+			/*if tbl_hwy.SpdLimit[row] = null
 			or tbl_hwy.SpdLimit[row] < 10
 			or tbl_hwy.SpdLimit[row] > 80 then do
 
 				/* High-speed facilities → default 55 */
-				if  tbl_hwy.funcl[row] = 1  or  /* Freeway */
-					tbl_hwy.funcl[row] = 2  or  /* Expressway */
-					tbl_hwy.funcl[row] = 9  or
+				/*if  tbl_hwy.funcl[row] = 1  or  /* Freeway */
+					/*tbl_hwy.funcl[row] = 2  or  /* Expressway */
+					/*tbl_hwy.funcl[row] = 9  or
 					tbl_hwy.funcl[row] = 22 or
 					tbl_hwy.funcl[row] = 23 or
 					tbl_hwy.funcl[row] = 24 or
 					tbl_hwy.funcl[row] = 25 or
 					tbl_hwy.funcl[row] = 82 or
 					tbl_hwy.funcl[row] = 83
-				then do
+				/*then do
 					NewSpdLimit = "55"
 					changespeed = "true"
 					changespdmsg = "High speed facility, Speed limit changed to default = " + NewSpdLimit
 				end
 
 				/* All other facilities → default 35 */
-				else do
+				/*else do
 					NewSpdLimit = "35"
 					changespeed = "true"
 					changespdmsg = "Surface street, Speed limit changed to default = " + NewSpdLimit
@@ -840,11 +1111,11 @@ Macro "CapSpd" (Args)
 
 
 			/* Year parameters */
-			LastCapYear = 2100
+			/*LastCapYear = 2100
 			BaseYear = 2022   /* Speeds will NOT be adjusted for year <= BaseYear */
 
 			/* Reduce speed for certain urbanized rural-surface streets */
-			if s2i(RunYear) > BaseYear
+			/*if s2i(RunYear) > BaseYear
 			and (tbl_hwy.funcl[row] = 4 or tbl_hwy.funcl[row] = 5 or tbl_hwy.funcl[row] = 6 or tbl_hwy.funcl[row] = 7)
 			and tbl_hwy.areatype[row] < 5
 			and tbl_hwy.SpdLimit[row] > 49
@@ -855,7 +1126,7 @@ Macro "CapSpd" (Args)
 			end
 
 			/* Assign final running speed and record warning if changed */
-			if changespeed = "false" then
+			/*if changespeed = "false" then
 				SpdLimRun = tbl_hwy.SpdLimit[row]
 			else do
 				cnterrlvl1 = cnterrlvl1 + 1
@@ -868,7 +1139,7 @@ Macro "CapSpd" (Args)
 			end
 
 			/* Write back to table-class field */
-			tbl_hwy.SpdLimRun[row] = SpdLimRun
+			/*tbl_hwy.SpdLimRun[row] = SpdLimRun
 
 			skipspdlimit:
 
@@ -881,10 +1152,10 @@ Macro "CapSpd" (Args)
 			------------------------------------------------------------*/
 
 			/* Skip centroid connectors */
-			if tbl_hwy.funcl[row] <> 90 or tbl_hwy.funcl[row] <> 92 then do
+			/*if tbl_hwy.funcl[row] <> 90 or tbl_hwy.funcl[row] <> 92 then do
 
 			/* A→B or bidirectional (0 or 1) */
-			if tbl_hwy.Dir[row] = 0 or tbl_hwy.Dir[row] = 1 then do
+			/*if tbl_hwy.Dir[row] = 0 or tbl_hwy.Dir[row] = 1 then do
 				nlid[tbl_hwy.Bnode[row]]      = nlid[tbl_hwy.Bnode[row]] + {tbl_hwy.ID[row]}
 				nlab[tbl_hwy.Bnode[row]]      = nlab[tbl_hwy.Bnode[row]] + {"B"}
 				nfuncl[tbl_hwy.Bnode[row]]    = nfuncl[tbl_hwy.Bnode[row]] + {tbl_hwy.funcl[row]}
@@ -892,12 +1163,12 @@ Macro "CapSpd" (Args)
 				noppfuncl[tbl_hwy.Bnode[row]] = noppfuncl[tbl_hwy.Bnode[row]] + {0}
 
 				/* Zero-balance arrays */
-				zbrin[tbl_hwy.Bnode[row]]  = zbrin[tbl_hwy.Bnode[row]] + 1
+				/*zbrin[tbl_hwy.Bnode[row]]  = zbrin[tbl_hwy.Bnode[row]] + 1
 				zbrout[tbl_hwy.Anode[row]] = zbrout[tbl_hwy.Anode[row]] + 1
 			end
 
 			/* B→A or bidirectional (0 or -1) */
-			if tbl_hwy.Dir[row] = 0 or tbl_hwy.Dir[row] = -1 then do
+			/*if tbl_hwy.Dir[row] = 0 or tbl_hwy.Dir[row] = -1 then do
 				nlid[tbl_hwy.Anode[row]]      = nlid[tbl_hwy.Anode[row]] + {tbl_hwy.ID[row]}
 				nlab[tbl_hwy.Anode[row]]      = nlab[tbl_hwy.Anode[row]] + {"A"}
 				nfuncl[tbl_hwy.Anode[row]]    = nfuncl[tbl_hwy.Anode[row]] + {tbl_hwy.funcl[row]}
@@ -905,13 +1176,13 @@ Macro "CapSpd" (Args)
 				noppfuncl[tbl_hwy.Anode[row]] = noppfuncl[tbl_hwy.Anode[row]] + {0}
 
 				/* Zero-balance arrays */
-				zbrin[tbl_hwy.Anode[row]]  = zbrin[tbl_hwy.Anode[row]] + 1
+				/*zbrin[tbl_hwy.Anode[row]]  = zbrin[tbl_hwy.Anode[row]] + 1
 				zbrout[tbl_hwy.Bnode[row]] = zbrout[tbl_hwy.Bnode[row]] + 1
 			end
 
-			end
+			end*/
 
-		end
+		//end
 			
 		/*SetView(HwyView)
 		ptr = GetFirstRecord(HwyView+"|",)
