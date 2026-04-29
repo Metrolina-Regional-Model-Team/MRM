@@ -490,30 +490,25 @@ Macro "CapSpd" (Args)
 			{FieldName: "errormessage", Type: "String", Width: 100}
 			}
 			})
-
-				// Loop to get Anode , Bnode : Endpoints
-			//A_node_v = Vector(numrec,"Short", )
-			//B_node_v = Vector(numrec,"Short", )
-			/*for n = 1 to numrec do
-				node_ids = GetEndPoints(ID[n])
-				A_node_v = node_ids[1]
-				B_node_v = node_ids[2]
-				tbl_hwy.Anode = A_node_v
-				tbl_hwy.Bnode = B_node_v
-			end*/
 			
-			//dim i_ID[numrec]
-			/*a_ID = tbl_hwy.GetDataVectors({FieldNames: {"ID"}})
-			for i = 1 to numrec do
-				i_ID[i] = ArrayElementToInteger(a_ID, i)
+			// Loop to get Anode , Bnode : Endpoints			
+			vw_hwy = tbl_hwy.GetView()
+
+			ptr = GetFirstRecord(vw_hwy+"|",)
+			while ptr <> null do
+			hwyrec = GetRecordValues(vw_hwy, ptr, {"ID"})
+
+			n_ID = hwyrec[1][2]
+
+			node_ids = GetEndPoints(n_ID)
+
+			A_node = node_ids[1]
+			B_node = node_ids[2]
+			SetRecordValues(vw_hwy, ptr,{{"Anode", A_node}})
+			SetRecordValues(vw_hwy, ptr,{{"Bnode", B_node}})
+			ptr = GetNextRecord(vw_hwy + "|", null,)
 			end
-    		//ID = tbl_hwy.GetDataVectors({FieldNames: {"ID"}})
-			//i_ID = A2I(ID,1)
-			node_ids = GetEndPoints(i_ID)
-    		A_node = node_ids[1]
-    		B_node = node_ids[2]
-			tbl_hwy.Anode = A_node
-			tbl_hwy.Bnode = B_node*/
+
 
 			// Zero length link check (is FATAL!)
 
@@ -719,6 +714,53 @@ Macro "CapSpd" (Args)
                     then 45
                     else tbl_hwy.SpdLimit
 
+
+			vw_hwy = tbl_hwy.GetView()
+
+			ptr = GetFirstRecord(vw_hwy+"|",)
+			while ptr <> null do
+			hwyrec = GetRecordValues(vw_hwy, ptr, {"ID", "Dir", "funcl", "A_Control", "B_control"})
+
+			n_ID = hwyrec[1][2]
+			n_TrafficDir = hwyrec[2][2]
+			n_funcl = hwyrec[3][2]
+			n_A_Control = hwyrec[4][2]
+			n_B_Control = hwyrec[5][2]
+			if n_funcl = 90 or n_funcl = 92 then goto skipnode1
+			if n_TrafficDir = 0 or n_TrafficDir = 1 
+			then do
+			nlid[B_node]
+			= nlid[B_node] + {n_ID}
+			nlab[B_node]
+			= nlab[B_node] + {"B"} 
+			nfuncl[B_node]
+			= nfuncl[B_node] + {n_funcl}
+			ncntl[B_node]
+			= ncntl[B_node] + {n_B_Control}
+			noppfuncl[B_node] = noppfuncl[B_node] + {0}
+			// zbr (zero balance error) approach at B, exit at A
+			zbrin[B_node] = zbrin[B_node] + 1
+			zbrout[A_node] = zbrout[A_node] + 1
+			end
+			// B->A direction - same thing for A node
+			if n_TrafficDir = 0 or n_TrafficDir = -1
+			then do
+			nlid[A_node]
+			= nlid[A_node] + {n_ID}
+			nlab[A_node]
+			= nlab[A_node] + {"A"} 
+			nfuncl[A_node]
+			= nfuncl[A_node] + {n_funcl}
+			ncntl[A_node]
+			= ncntl[A_node] + {n_A_Control}
+			noppfuncl[A_node] = noppfuncl[A_node] + {0}
+			zbrin[A_node] = zbrin[A_node] + 1
+			zbrout[B_node] = zbrout[B_node] + 1
+			end
+			skipnode1:
+
+			ptr = GetNextRecord(vw_hwy + "|", null,)
+			end
 
 
 
