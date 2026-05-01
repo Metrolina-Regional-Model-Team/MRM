@@ -78,9 +78,88 @@ Where:
 
 <div style="border: 2px solid black; padding: 15px; background-color: #f9f9f9; margin: 10px 0;"> Notes on applicable conformity analysis and intended use - The following descriptions are intended to help users select the appropriate model version for their planning, programming, or project-level analysis and to ensure consistent application of model assumptions across studies. </div>  
 
+## MRM25v3.0
+**This is the current official model.** This model was prepared for the development of the 2055 Metropolitan Transportation Plans (MTP’s) of the following jurisdictions: 
+
+* Cabarrus-Rowan Metropolitan Planning Organization (CRMPO)
+* Charlotte Regional Transportation Planning Organization (CRTPO)
+* Gaston-Cleveland-Lincoln Metropolitan Planning Organization (GCLMPO)
+
+It was reviewed by North Carolina Division of Air Quality (NCDAQ) and is official as of April 06, 2026.
+
+Key updates from previous model:
+
+* Updates to master network
+* Updates to transit routes and project list to incorporate the Draft 2055 MTP Fiscally Constrained Project Lists as of October 2025
+
+### Project Table
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+library(readxl)
+library(DT)
+library(dplyr)
+# Load and prepare project data
+data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v3_Projects.xlsx") %>%
+  mutate(
+    YEAR = as.character(YEAR),
+    PROJECT = gsub("\n", " ", PROJECT),
+    CATEGORY = gsub("\n", " ", CATEGORY),
+    TYPE = gsub("\n", " ", TYPE),
+    COUNTY = gsub("\n", " ", COUNTY)
+  ) %>%
+  select(YEAR, TIP_NO, PROJECT, CATEGORY, TYPE, COUNTY)
+
+colnames(data_project) <- c(
+  "Opening Year",
+  "TIP Number",
+  "Project Name",
+  "Category",
+  "Facility Type",
+  "County"
+)
+
+datatable(
+  data_project,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    pageLength = 5,                 # default view: 5 rows
+    lengthMenu = c(5, 10, 20, 50, 100), 
+    scrollX = TRUE,
+    fixedHeader = TRUE,
+    autoWidth = FALSE,
+    order = list(list(0, "asc")),
+    dom = "Bfrtip",
+    buttons = list(
+      list(
+        extend = "csv",
+        text = "Download CSV",
+        filename = "MRM25v1_Project_List"
+      )
+    ),
+    columnDefs = list(
+      list(width = '120px', targets = 0),
+      list(width = '120px', targets = 1),
+      list(width = '300px', targets = 2),
+      list(width = '150px', targets = 3),
+      list(width = '150px', targets = 4),
+      list(width = '150px', targets = 5)
+    )
+  ),
+  rownames = FALSE
+) %>%
+  formatStyle(
+    columns = colnames(data_project),
+    `white-space` = 'normal',
+    `word-break` = 'break-word',
+    `font-size` = '13px'  
+  )
+
+```
+
 ## MRM25v2.0
 
-**This is the current official model.** This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It was reviewed by North Carolina Division of Air Quality (NCDAQ) and is official as of December 17, 2025.
+This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It was reviewed by North Carolina Division of Air Quality (NCDAQ).
 
 Key updates from previous model:
 
@@ -91,9 +170,7 @@ Key updates from previous model:
 ### Project Table
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
-library(readxl)
-library(DT)
-library(dplyr)
+
 
 # Load and prepare project data
 data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v2_Projects.xlsx") %>%
@@ -226,79 +303,3 @@ datatable(
 
 ```
 
-## MRM2503
-
-**This is the current working model.**This model was prepared for the development of the 2055 Metropolitan Transportation Plans (MTP’s) of the following jurisdictions:
-
-* Cabarrus-Rowan Metropolitan Planning Organization (CRMPO)
-* Charlotte Regional Transportation Planning Organization (CRTPO)
-* Gaston-Cleveland-Lincoln Metropolitan Planning Organization (GCLMPO)
-
-The model is currently being reviewed by North Carolina Department of Air Quality (NCDAQ) and is not official.
-
-Key updates from previous model:
-
-* Updates to master network, transit routes and project list to incorporate the Draft 2055 MTP Fiscally Constrained Project Lists as of October 2025.
-
-### Project Table
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-
-# Load and prepare project data
-data_project <- read_excel("C:/MRM/docs/other/xlsx/MRM25v3_Projects.xlsx") %>%
-  mutate(
-    YEAR = as.character(YEAR),
-    PROJECT = gsub("\n", " ", PROJECT),
-    CATEGORY = gsub("\n", " ", CATEGORY),
-    TYPE = gsub("\n", " ", TYPE),
-    COUNTY = gsub("\n", " ", COUNTY)
-  ) %>%
-  select(YEAR, TIP_NO, PROJECT, CATEGORY, TYPE, COUNTY)
-
-colnames(data_project) <- c(
-  "Opening Year",
-  "TIP Number",
-  "Project Name",
-  "Category",
-  "Facility Type",
-  "County"
-)
-
-datatable(
-  data_project,
-  filter = "top",
-  extensions = "Buttons",
-  options = list(
-    pageLength = 5,                 # default view: 5 rows
-    lengthMenu = c(5, 10, 20, 50, 100), 
-    scrollX = TRUE,
-    fixedHeader = TRUE,
-    autoWidth = FALSE,
-    order = list(list(0, "asc")),
-    dom = "Bfrtip",
-    buttons = list(
-      list(
-        extend = "csv",
-        text = "Download CSV",
-        filename = "MRM25v1_Project_List"
-      )
-    ),
-    columnDefs = list(
-      list(width = '120px', targets = 0),
-      list(width = '120px', targets = 1),
-      list(width = '300px', targets = 2),
-      list(width = '150px', targets = 3),
-      list(width = '150px', targets = 4),
-      list(width = '150px', targets = 5)
-    )
-  ),
-  rownames = FALSE
-) %>%
-  formatStyle(
-    columns = colnames(data_project),
-    `white-space` = 'normal',
-    `word-break` = 'break-word',
-    `font-size` = '13px'  
-  )
-
-```
