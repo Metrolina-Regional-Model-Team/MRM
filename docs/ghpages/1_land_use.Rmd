@@ -67,7 +67,7 @@ counties <- excel_sheets(file_path)
 data_all <- lapply(counties, function(cty) {
   df <- read_excel(file_path, sheet = cty)
   
-  # 👇 ADD THIS (detect sections)
+  # SE data drop down
   section_names <- c("Population and Households", "Employment", "Students")
   df$Category <- ifelse(df[[1]] %in% section_names, df[[1]], NA)
   df <- fill(df, Category)
@@ -76,23 +76,24 @@ data_all <- lapply(counties, function(cty) {
   df
 }) %>% bind_rows()
 
-# UI elements (NOW TWO DROPDOWNS)
+# UI elements
 selectInput("county", "Select County:", choices = unique(data_all$County))
 
 selectInput("category", "Select SE Data:",
             choices = unique(data_all$Category))
 
+DTOutput("table")   
+
 # Reactive table
-renderDT({
+output$table <- renderDT({  
   df <- data_all[
     data_all$County == input$county &
     data_all$Category == input$category,
   ]
   
   df$County <- NULL
-  df$Category <- NULL  # keep table looking same
+  df$Category <- NULL
   
-  # 🔥 ONLY ADDITION: fix integer vs decimal display
   num_cols <- sapply(df, is.numeric)
   
   df[num_cols] <- lapply(df[num_cols], function(x) {

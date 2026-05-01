@@ -1,5 +1,5 @@
 ---
-title: "TAZs and Socioeconomic Data"
+title: "TAZs"
 output:
   html_document:
     theme: cosmo
