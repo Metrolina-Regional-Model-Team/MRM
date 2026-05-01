@@ -159,7 +159,7 @@ datatable(
 
 ## MRM25v2.0
 
-This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It was reviewed by North Carolina Division of Air Quality (NCDAQ).
+This model was prepared for the North Carolina Department of Transportation (NCDOT) 2026-2035 State Transportation Improvement Program (STIP) Development. It was reviewed by North Carolina Division of Air Quality (NCDAQ) and was official as of December 17, 2025.
 
 Key updates from previous model:
 
