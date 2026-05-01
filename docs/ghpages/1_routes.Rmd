@@ -19,11 +19,6 @@ The Route System layer contains the transit routes and stop locations of each tr
 Transit routes are coded as closely as possible to actual service routes using the model roadway layer . Inbound and outbound trips of a route are coded as separate routes. If the route changes between peak and off-peak (midday), both versions are coded as separate routes. Different route patterns, such as the case where every-other route makes a diversion into a neighborhood are coded as separate routes. The current version of the MRM does not model weekend routes. Night routes are not modeled but are used in estimation of vehicle hours and miles. 
 
 Six separate transit systems are currently operating in the Metrolina region. They are distinguished in the transit route system using the “company” code. The Charlotte Area Transit System (CATS) operates the LYNX light rail, CityLynx streetcar, regional express service, Charlotte express buses and local routes in the Charlotte region. Gastonia Transit operates local routes in Gastonia. Concord-Kannapolis Rider operates routes in Cabarrus County and Salisbury Transit operates routes in Rowan County. Iredell County Transportation Services (ICATS) operates routes in Iredell County.  My Ride Rock Hill operates fixed routes in Rock Hill. 
-
-## Transit Modes 
-The MRM has the capability to model 10 modes. Premium modes include light rail (mode 1), streetcar (mode 2), commuter rail (mode 3), and Bus rapid transit (mode 4). The fiscally constrained future year networks contain both light rail and streetcar.   Bus modes include regional express (mode 5), express bus (mode 6), feeder bus (mode 7), local bus (mode 8), and shuttles including the Davidson Shuttle in Davidson (mode 9). The table below provides the fare and type of service modeled for each mode. 
-
-**Mode Fare Table** 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(knitr)
 library(kableExtra)
@@ -31,27 +26,7 @@ library(scales)
 library(sf)
 library(leaflet)
 library(dplyr)
-mode_data <- data.frame(
-  "Mode ID" = 1:9,
-  "Mode Classification" = c("Premium", "Premium", "Premium", "Premium", "Bus", "Bus", "Bus", "Bus", "Bus"),
-  "Mode Description" = c("Light Rail Transit", "Streetcar", "Commuter Rail", "Bus Rapid Transit", 
-                         "Regional Express", "Express Bus", "Feeder Bus", "Local Bus", "Downtown Circulator"),
-  "Base Year Fare" = c("$1.75", "$1.75", "N/A", "N/A", "$3.50", "$2.40", "N/A", "$1.75", "$0.00"),
-  "Future Year Fare" = c("$1.75", "$0.00", "N/A", "N/A", "$3.50", "$2.40", "$0.50", "$1.75", "$0.00")
-)
 
-# Create the table with kable
-table_modes <- kable(mode_data, col.names = c("Mode ID", "Mode Classification", "Mode Description", 
-                                   "Base Year Fare", "Future Year Fare")) %>%
-  kable_styling(bootstrap_options = c("bordered", "striped"),
-                full_width = TRUE,
-                font_size = 14)
-
-# Print the table
-table_modes
-```
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
 invisible(capture.output({
   mrm_boundary <- st_read("C:/MRM/docs/other/shps/Boundaries/MRMBoundary.shp")
   Transit_22 <- st_read("C:/MRM/docs/other/shps/Transit/TransitNet_2022.shp")
@@ -181,3 +156,31 @@ map <- leaflet() %>%
 
 # Display the map
 map
+```
+
+## Transit Modes 
+The MRM has the capability to model 10 modes. Premium modes include light rail (mode 1), streetcar (mode 2), commuter rail (mode 3), and Bus rapid transit (mode 4). The fiscally constrained future year networks contain both light rail and streetcar.   Bus modes include regional express (mode 5), express bus (mode 6), feeder bus (mode 7), local bus (mode 8), and shuttles including the Davidson Shuttle in Davidson (mode 9). The table below provides the fare and type of service modeled for each mode. 
+
+**Mode Fare Table** 
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+mode_data <- data.frame(
+  "Mode ID" = 1:9,
+  "Mode Classification" = c("Premium", "Premium", "Premium", "Premium", "Bus", "Bus", "Bus", "Bus", "Bus"),
+  "Mode Description" = c("Light Rail Transit", "Streetcar", "Commuter Rail", "Bus Rapid Transit", 
+                         "Regional Express", "Express Bus", "Feeder Bus", "Local Bus", "Downtown Circulator"),
+  "Base Year Fare" = c("$1.75", "$1.75", "N/A", "N/A", "$3.50", "$2.40", "N/A", "$1.75", "$0.00"),
+  "Future Year Fare" = c("$1.75", "$0.00", "N/A", "N/A", "$3.50", "$2.40", "$0.50", "$1.75", "$0.00")
+)
+
+# Create the table with kable
+table_modes <- kable(mode_data, col.names = c("Mode ID", "Mode Classification", "Mode Description", 
+                                   "Base Year Fare", "Future Year Fare")) %>%
+  kable_styling(bootstrap_options = c("bordered", "striped"),
+                full_width = TRUE,
+                font_size = 14)
+
+# Print the table
+table_modes
+```
+
+
