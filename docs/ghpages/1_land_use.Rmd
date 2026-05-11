@@ -85,7 +85,8 @@ selectInput("category", "Select SE Data:",
 DTOutput("table")   
 
 # Reactive table
-output$table <- renderDT({  
+output$table <- renderDT({
+  
   df <- data_all[
     data_all$County == input$county &
     data_all$Category == input$category,
