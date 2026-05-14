@@ -36,7 +36,93 @@ addBias = 0.8
   CreateProgressBar("Getting Alternative Variables...", "TRUE")
 
 //Open all needed tables, pull out vectors
-	hhdetail = OpenTable("hhdetail", "FFB", {DirArray + "\\HHDETAIL.bin",})
+	tbl_hhdetail = CreateObject("Table", {FileName: DirArray + "\\hhdetail.bin"})
+
+	hhid = tbl_hhdetail.ID
+	tazseq = tbl_hhdetail.TAZ_SEQ
+	size = tbl_hhdetail.SIZE
+	income = tbl_hhdetail.INCOME
+	lc = tbl_hhdetail.LIFE
+	wrkr = tbl_hhdetail.WRKRS
+
+	lc1dum = if (lc = 1) then 1 else 0			//SCH,HBU,
+	lc2dum = if (lc = 2) then 1 else 0			//SCH,HBS,HBO,
+	inc1dum = if (income = 1) then 1 else 0			//SCH,HBU,HBW,HBO,
+	inc2dum = if (income = 2) then 1 else 0			//HBU,
+	inc4dum = if (income = 4) then 1 else 0			//HBO,
+	siz1dum = if (size = 1) then 1 else 0			//HBO,
+	siz2dum = if (size = 2) then 1 else 0			//SCH,
+	siz3dum = if (size = 3) then 1 else 0			//HBU,
+	siz5dum = if (size = 5) then 1 else 0			//SCH,
+	siz34dum = if (size = 3 or size = 4) then 1 else 0	//SCH,
+	siz345dum = if (size > 2) then 1 else 0			//HBW,
+	siz45dum = if (size = 4 or size = 5) then 1 else 0	//SCH,
+	wkr0dum = if (wrkr = 0) then 1 else 0			//HBU,
+	wkr1dum = if (wrkr = 1) then 1 else 0			//HBW,HBS,
+//	wkr2dum = if (wrkr = 2) then 1 else 0			//
+	wkr3dum = if (wrkr = 3) then 1 else 0			//SCH,HBU,
+
+	tbl_se = CreateObject("Table", {FileName: sedata_file})
+	taz = tbl_se.TAZ
+	hh = tbl_se.HH
+	pop = tbl_se.POP
+	medinc = tbl_se.MED_INC
+	avgsize = if (hh > 0) then (pop / hh) else 0
+
+	tbl_areatype = CreateObject("Table", {FileName: Dir + "\\landuse\\SE" + theyear + "_DENSITY.dbf"})
+	atype = tbl_areatype.AREATYPE
+
+//copy the HHdetail file (ouput from HHMET).  This will be the output file of Tour Frequency
+	tourrecFile = DirArray + "\\TourRecords.bin"
+	tbl_hhdetail.Export({FileName: tourrecFile})
+
+//Loop to get alternative variable vectors (the size of these vectors will equal the number of HHs in the region)
+	dim avgsize_ar[hhid.length]
+	dim medinc_ar[hhid.length]
+	dim atype_ar[hhid.length]
+	for n = 1 to hhid.length do
+		origtazseq = tazseq[n]
+		if origtazseq = prevtaz then do
+			avgsize_ar[n] = avgsize_ar[n-1]
+			medinc_ar[n] = medinc_ar[n-1]
+			atype_ar[n] = atype_ar[n-1]
+		end
+		else do
+			avgsize_ar[n] = avgsize[origtazseq]
+			medinc_ar[n] = medinc[origtazseq]
+			atype_ar[n] = atype[origtazseq]
+		end
+		prevtaz = origtazseq
+	end
+	avgsize_v = a2v(avgsize_ar)
+	medinc_v = a2v(medinc_ar)				//HBO,
+	atype_v = a2v(atype_ar)					//HBO,
+	cbddum = if (atype_v = 1) then 1 else 0			//SCH,HBU,HBW,HBS,
+	at2dum = if (atype_v = 2) then 1 else 0			//SCH,HBU,
+	at5dum = if (atype_v = 5) then 1 else 0			//HBU, HBW, HBO	--Bill sometimes calls this rurdum
+	suburb = if (atype_v = 3 or atype_v = 4) then 1 else 0	//HBW, HBS, HBO
+	urbdum = if (atype_v = 2 or atype_v = 3) then 1 else 0			//HBW,
+
+
+
+
+//Go ahead and add new tour frequency fields to tourrecords. 
+	tbl_tourrec = CreateObject("Table", {FileName: tourrecFile})
+
+	a_fields = {
+			{FieldName: "SCH", Type: "Integer", Width: 2},
+			{FieldName: "HBU", Type: "Integer", Width: 2},
+			{FieldName: "HBW", Type: "Integer", Width: 2},
+			{FieldName: "HBS", Type: "Integer", Width: 2},
+			{FieldName: "HBO", Type: "Integer", Width: 2},
+			{FieldName: "ATW", Type: "Integer", Width: 2}
+		}
+
+	tbl_tourrec.AddFields({Fields: a_fields})
+
+
+//Open all needed tables, pull out vectors
+	/*hhdetail = OpenTable("hhdetail", "FFB", {DirArray + "\\HHDETAIL.bin",})
 
 	hhdetail_v = GetDataVectors(hhdetail+"|", {"ID", "TAZ_SEQ", "SIZE", "INCOME", "LIFE", "WRKRS"},{{"Sort Order", {{"ID","Ascending"}}}}) 
 	hhid = hhdetail_v[1]
@@ -108,6 +194,7 @@ end
 	suburb = if (atype_v = 3 or atype_v = 4) then 1 else 0	//HBW, HBS, HBO
 	urbdum = if (atype_v = 2 or atype_v = 3) then 1 else 0			//HBW,
 
+
 //Go ahead and add new tour frequency fields to tourrecords.  
 	tourrecords = OpenTable("tourrecords", "FFB", {DirArray + "\\TourRecords.bin",})
 	strct = GetTableStructure(tourrecords)					
@@ -121,7 +208,7 @@ end
 	strct = strct + {{"HBO", "Integer", 2,,,,,,,,,}}
 	strct = strct + {{"ATW", "Integer", 2,,,,,,,,,}}
 
-	ModifyTable(tourrecords, strct)
+	ModifyTable(tourrecords, strct)*/
 
 // ***********SCHOOL***********SCHOOL***********SCHOOL***********SCHOOL***********SCHOOL***********SCHOOL***********SCHOOL***********SCHOOL***********SCHOOL
   UpdateProgressBar("Calculating SCHOOL Tours.....", 10) 
@@ -158,7 +245,8 @@ end
 	end
 	
 	school_v = choice_v
-	SetDataVector(tourrecords+"|", "SCH", choice_v,)
+	tbl_tourrec.SCH = choice_v
+	//SetDataVector(tourrecords+"|", "SCH", choice_v,)
 
 dim tbysize[5]
 dim tbyincome[4]

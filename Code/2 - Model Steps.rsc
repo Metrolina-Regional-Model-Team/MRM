@@ -46,10 +46,10 @@ Macro "Trip Generation" (Args)
     if Args.[Current Feedback Iter] > 1 then 
         return(1)
     
-    RunMacro("ExtStaforTripGen", Args)
-    RunMacro("HHMET", Args)
-    RunMacro("Tour_Accessibility", Args)
-    RunMacro("Tour_XX", Args)
+    //RunMacro("ExtStaforTripGen", Args)
+    //RunMacro("HHMET", Args)
+    //RunMacro("Tour_Accessibility", Args)
+    //RunMacro("Tour_XX", Args)
     RunMacro("Tour_Frequency", Args)
     return(1)
 endmacro
