@@ -323,8 +323,8 @@ WriteArray(reportfile, pctwkr)
 		end
 	end
 	hbu_v = choice_v
-
-	SetDataVector(tourrecords+"|", "HBU", choice_v,)
+	tbl_tourrec.HBU = choice_v
+	//SetDataVector(tourrecords+"|", "HBU", choice_v,)
 
 tottour = VectorStatistic(choice_v, "Sum",)
 for s = 1 to 5 do
@@ -398,7 +398,8 @@ WriteArray(reportfile, pctwkr)
 	end
 	
 	hbw_v = choice_v
-	SetDataVector(tourrecords+"|", "HBW", choice_v,)
+	tbl_tourrec.HBW= choice_v
+	//SetDataVector(tourrecords+"|", "HBW", choice_v,)
 
 tottour = VectorStatistic(choice_v, "Sum",)
 for s = 1 to 5 do
@@ -470,7 +471,8 @@ WriteArray(reportfile, pctwkr)
 	end
 	
 	hbs_v = choice_v
-	SetDataVector(tourrecords+"|", "HBS", choice_v,)
+	tbl_tourrec.HBS = choice_v
+	//SetDataVector(tourrecords+"|", "HBS", choice_v,)
 
 tottour = VectorStatistic(choice_v, "Sum",)
 for s = 1 to 5 do
@@ -551,7 +553,8 @@ WriteArray(reportfile, pctwkr)
 	end
 	
 	hbo_v = choice_v
-	SetDataVector(tourrecords+"|", "HBO", choice_v,)
+	tbl_tourrec.HBO = choice_v
+	//SetDataVector(tourrecords+"|", "HBO", choice_v,)
 
 
 tottour = VectorStatistic(choice_v, "Sum",)
@@ -592,8 +595,8 @@ WriteArray(reportfile, pctwkr)
 
 // *********** Create & fill total productions table
 
-	se_vw = OpenTable("SEFile", "FFB", {sedata_file,})
-	
+	//se_vw = OpenTable("SEFile", "FFB", {sedata_file,})
+
 	prod_attr = CreateTable("prod_attr", DirArray + "\\Productions_Attractions.bin", "FFB", {
 		{"TAZ", "Short", 5, null, "Yes"},
 		{"P_SCH", "Short", 5, null, "No"}, {"P_HBU", "Short", 5, null, "No"}, {"P_HBW", "Short", 5, null, "No"},
@@ -607,18 +610,35 @@ WriteArray(reportfile, pctwkr)
 		{"DC_IS_HBS", "Short", 5, null, "No"}, {"DC_IS_HBO", "Short", 5, null, "No"}, {"DC_IS_ATW", "Short", 5, null, "No"},
 		{"DC_IS_IX", "Short", 5, null, "No"}, {"DC_IS_XIN", "Short", 5, null, "No"}, {"DC_IS_XIW", "Short", 5, null, "No"}
 		})
-	
-	rh = AddRecords("prod_attr", null, null, {{"Empty Records", taz.length}})
-	SetDataVector(prod_attr+"|", "TAZ", taz,)
-		
-	jointab = JoinViews("jointab", "SEFile.TAZ", "tourrecords.TAZ", {{"A", }, 
+	rh = AddRecords("prod_attr", null, null, {{"Empty Records", taz.length}})	
+	tbl_prodattr = CreateObject("Table", {FileName: DirArray + "\\Productions_Attractions.bin"})
+
+
+	tbl_prodattr.TAZ = tbl_se.TAZ
+	//SetDataVector(prod_attr+"|", "TAZ", taz,)
+
+	jointab = tbl_se.Join({
+		Table: tbl_tourrec,
+		LeftFields: "TAZ",
+		RightFields: "TAZ", 
+		Options: {{"A", }, {"Fields", {{"SCH", {{"Sum"}}}, {"HBU", {{"Sum"}}}, {"HBW", {{"Sum"}}}, {"HBS", {{"Sum"}}}, {"HBO", {{"Sum"}}}}}
+	}})
+
+	tbl_prodattr.P_SCH = jointab.SCH
+	tbl_prodattr.P_HBU = jointab.HBU
+	tbl_prodattr.P_HBW = jointab.HBW
+	tbl_prodattr.P_HBS = jointab.HBS
+	tbl_prodattr.P_HBO = jointab.HBO
+
+
+	/*jointab = JoinViews("jointab", "SEFile.TAZ", "tourrecords.TAZ", {{"A", }, 
 			{"Fields", {{"SCH", {{"Sum"}}}, {"HBU", {{"Sum"}}}, {"HBW", {{"Sum"}}}, {"HBS", {{"Sum"}}}, {"HBO", {{"Sum"}}}}}})
 	flds = {"SCH", "HBU", "HBW", "HBS", "HBO"}
 	flds2 = {"P_SCH", "P_HBU", "P_HBW", "P_HBS", "P_HBO"}
 	for i = 1 to flds.length do
 		p_tot = GetDataVector(jointab+"|", flds[i], )
 		SetDataVector(prod_attr+"|", flds2[i], p_tot, )
-	end
+	end*/
 
     DestroyProgressBar()
     RunMacro("G30 File Close All")
