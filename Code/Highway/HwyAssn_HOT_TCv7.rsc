@@ -40,23 +40,17 @@ macro "HwyAssn_HOT" (Args, hwyassnarguments, timeperiod)
 
 	// can change to "BPR" to run straight BPR function
 	hwyassntype = "BPR"
-	/*
-	if timeperiod = "AMpeak" then do	
-		hwy_file = Args.[AM Peak Hwy Name]
-		{, , netview, } = SplitPath(hwy_file)
+	
+	user_threads = GetNumThreads()
+	
+	if user_threads <> 16 then do
+		SetNumThreads(16)
 	end
-	else if timeperiod = "PMpeak" then do	
-		hwy_file = Args.[PM Peak Hwy Name]
-		{, , netview, } = SplitPath(hwy_file)
-	end
-	else if timeperiod = "Offpeak" then do	
-		hwy_file = Args.[Offpeak Hwy Name]
-	{, , netview, } = SplitPath(hwy_file)
-	end
-	else do
-		Throw("HwyAssn_HOT: Bad time period")
-	end
-	*/
+	
+	run_threads = GetNumThreads()
+
+	AppendToLogFile(2, "Initial Threads = " + i2s(user_threads))
+	AppendToLogFile(2, "Set Threads = " + i2s(run_threads))
 
 	PERIOD = hwyassnarguments[1]
 	cap_field = hwyassnarguments[2]
@@ -1146,8 +1140,6 @@ new_mat = CopyMatrix(mc, {{"File Name", od_hot_matrix},
 	RunMacro("G30 File Close All")
 	datentime = GetDateandTime()
 	AppendToLogFile(1, "Exit HwyAssn_HOT: " + datentime)
-	//SetNumThreads(initial_threads)
-
 	return(HOTHwyAssnOK)
 
 EndMacro

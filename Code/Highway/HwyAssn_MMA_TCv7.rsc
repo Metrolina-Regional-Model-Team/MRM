@@ -35,13 +35,13 @@ Macro "HwyAssn_MMA" (Args, od_matrix, cap_field, output_bin, timeperiod)
 
 	user_threads = GetNumThreads()
 	
-	if user_threads <> 16
-		then SetNumThreads(16)
-		else do SetNumThreads(user_threads)
-		end
+	if user_threads <> 16 then do
+		SetNumThreads(16)
+	end
 	
 	run_threads = GetNumThreads()
 
+	AppendToLogFile(2, "Initial Threads = " + i2s(user_threads))
 	AppendToLogFile(2, "Set Threads = " + i2s(run_threads))
 	
 
@@ -149,7 +149,8 @@ Macro "HwyAssn_MMA" (Args, od_matrix, cap_field, output_bin, timeperiod)
 		HOVlanes = "HOV2and3"
 		AppendToLogFile(2, "HwyAssn network has HOV/HOT 2+ lanes AND 3+ lanes, 2+ count="+i2s(pool2count) +" 3+ count="+i2s(pool3count))
 	end
-*/	else do
+	*/	
+	else do
 		AppendToLogFile(2, "HwyAssn network has " + i2s(pool2count) + "HOV/HOT 2+ lanes, " + i2s(pool3count) + " HOV/HOT 3+ lanes, " + i2s(tollonlycount) + " toll only lanes")
 	end
 
@@ -290,7 +291,8 @@ Macro "HwyAssn_MMA" (Args, od_matrix, cap_field, output_bin, timeperiod)
 			 {Dir + "\\"+netview+".DBD|"+netview, netview, "sovexclude"}, 
 			 {Dir + "\\"+netview+".DBD|"+netview, netview, "sovexclude"}}
 	end	
-*/	else do
+*/	
+	else do
     	Opts.Input.[Exclusion Link Sets] = 
 		{{Dir + "\\"+netview+".DBD|"+netview, netview, "sovexclude", "Select * where funcl = 22 or funcl = 23 or funcl = 25 or funcl = 82 or funcl = 83"},
 	  	 {Dir + "\\"+netview+".DBD|"+netview, netview, "pool2exclude", "Select * where funcl = 23 or funcl = 25 or funcl = 83"}, 
@@ -341,4 +343,4 @@ quit:
 	SetNumThreads(initial_threads)
 	return(HwyAssnOK)
 
-endMacro
+EndMacro
