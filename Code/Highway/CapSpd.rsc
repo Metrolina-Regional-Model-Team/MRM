@@ -139,6 +139,8 @@ Macro "CapSpd" (Args)
 
 	LogFile = Args.[Log File]
 	ReportFile = Args.[Report File]
+	//ShowMessage("LogFile = " + LogFile) //added for testing
+	//ShowMessage("ReportFile = " + ReportFile) //added for testing
 	SetLogFileName(LogFile)
 	SetReportFileName(ReportFile)
 	datentime = GetDateandTime()

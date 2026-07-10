@@ -64,6 +64,12 @@ menu "MRM Utilities"
         mr = CreateObject("Model.Runtime")
         mr.RunCodeEx("Open Diff Tool")
     enditem
+       
+   MenuItem "fixed_od" text: "Fixed OD Assignment" do
+        mr = CreateObject("Model.Runtime")
+        Args = mr.GetValues()
+        mr.RunCode("Open Fixed OD Dbox", Args)
+    enditem
 
 endMenu
 

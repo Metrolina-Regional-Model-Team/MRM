@@ -9,8 +9,11 @@ Macro "Build_Networks" (Args)
 	ProjectFile = Args.ProjectFile
 	TollFile = Args.TollFile
 
-
+	//ShowMessage("Run Directory = " + Dir) //added for testing
+	//ShowMessage("MasterHwyFile = " + MasterHwyFile) //added for testing
 	MasterInfo = GetFileInfo(MasterHwyFile)
+	/*if !MasterInfo then
+    Throw("GetFileInfo returned null")*/
 	MasterTimeStamp = MasterInfo[7] + " " + MasterInfo[8]
 	ProjInfo = GetFileInfo(ProjectFile)
 	ProjTimeStamp = ProjInfo[7] + " " + ProjInfo[8]

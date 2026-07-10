@@ -6,13 +6,14 @@ Scenario "Base Year"
     Scenario = "Official_2022"
     [Output Folder] = "%Model Folder%\\Output\\2022"
 EndScenario
-
+    
     
 Scenario "2025"
     
     [Run Year] = "2025"
     Scenario = "Official_2025"
     [Output Folder] = "%Model Folder%\\Output\\2025"
+    [MET Directory] = "%Base Folder%\\Metrolina"
 EndScenario
     
     
