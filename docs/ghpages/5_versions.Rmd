@@ -59,7 +59,7 @@ The project tables below are grouped by county and sorted by the year the projec
 
 Model versions are named using the following standardized convention:
 
-`MRM(a)v(b).(c).(d)`
+`MRM(a)v(b).(c)`
 
 Where:  
 
@@ -68,8 +68,7 @@ Where:
   - Examples: study area expansion, socioeconomic forecast revisions, MTP project edits  
 - (c) = Moderate changes completed  
   - Examples: capacity-restrained assignment type changes or mode choice model parameter modifications  
-- (d) = Minor changes completed  
-  - Examples: network coding error corrections or zonal centroid connector modifications  
+
 
 **Example:**  
 `MRM25v1.3.1` indicates a model built under the **MRM25** framework with **one major update**, **three moderate updates**, and **one minor update** since the initial version.
