@@ -189,13 +189,21 @@ Macro "CapSpd" (Args)
 	exist = GetFileInfo(CapSpdErrFile)
 	if exist then DeleteFile(CapSpdErrFile)
 
-	a_fields = {
+	/*a_fields = {
         {FieldName: "ID", Type: "Integer", Width: 10, Decimals: 0},
         {FieldName: "ErrLayer", Type: "String", Width: 7, Decimals: 0},
         {FieldName: "ErrLevel", Type: "String", Width: 7, Decimals: 0},
         {FieldName: "ErrField", Type: "String", Width: 12, Decimals: 0},
         {FieldName: "ErrVal", Type: "String", Width: 20, Decimals: 0},
         {FieldName: "ErrMsg", Type: "String", Width: 120, Decimals: 0}
+    }*/
+	
+	a_fields = {
+        {FieldName: "fatalflaw", Type: "Short"},
+        {FieldName: "severe", Type: "Short"},
+        {FieldName: "warning", Type: "Short"},
+        {FieldName: "errorcode", Type: "Short"},
+        {FieldName: "errormessage", Type: "String", Width: 200}
     }
 
 	CapSpdErr = CreateObject("Table", {Fields:a_fields})
@@ -217,42 +225,88 @@ Macro "CapSpd" (Args)
 	netview = HwyName
 	altname = netview
 	HwyFile = Dir + "\\" + HwyName + ".dbd"
-	
+	vw_FileErr = CapSpdErr.GetView()
 	HwyFileChk = RunMacro("DBFieldCheck", HwyFile, HwyName, "OppFunclA", 0)
 
-	if HwyFileChk > 0 then do
+	/*if HwyFileChk > 0 then do
 		cnterrlvl3 = cnterrlvl3 + 1
 		// ErrFileRec: ID, layer, level field, val, message
 		ErrFileRec = ErrFileRec + {{, "No File", "FATAL", "HwyFile", ,"Highway file " + mrmfunctionmessages[HwyFileChk]}}
+	end*/
+
+	if HwyFileChk > 0 then do
+		cnterrlvl3 = cnterrlvl3 + 1
+		AddRecord(vw_FileErr, {
+			{"fatalflaw", 1},
+			{"severe", 0},
+			{"warning", 0},
+			{"errorcode", 1},
+			{"errormessage", "Highway file " + mrmfunctionmessages[HwyFileChk]}
+		})
 	end
-		
+
 	// Area type by TAZ - to be joined to HwyView by TAZ no.  
 	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.bin"
 	exist = GetFileInfo(AreaTypeFile)
-	if exist = null
+	/*if exist = null
 		then do
 			cnterrlvl3 = cnterrlvl3 + 1
 			ErrFileRec = ErrFileRec + {{, "No File", "FATAL", "ATFile", ,AreaTypeFile + " NOT FOUND"}}
-		end
+		end*/
 	
+	if exist = null then do
+		cnterrlvl3 = cnterrlvl3 + 1
+		AddRecord(vw_FileErr, {
+			{"fatalflaw", 1},
+			{"severe", 0},
+			{"warning", 0},
+			{"errorcode", 1},
+			{"errormessage", AreaTypeFile + " NOT FOUND"}
+		})
+	end
+
 	// CapSpd Factors file - lookup tables for capspd - See READ ME tab in spreadsheet
 	exist = GetFileInfo(CapSpdLookUpFile)
-	if exist = null
+	/*if exist = null
 		then do
 			cnterrlvl3 = cnterrlvl3 + 1
 			ErrFileRec = ErrFileRec + {{, "No File", "FATAL", "Lookup", ,CapSpdLookUpFile + " NOT FOUND"}}
-		end
+		end*/
+
+	if exist = null then do
+		cnterrlvl3 = cnterrlvl3 + 1
+		AddRecord(vw_FileErr, {
+			{"fatalflaw", 1},
+			{"severe", 0},
+			{"warning", 0},
+			{"errorcode", 1},
+			{"errormessage", CapSpdLookUpFile + " NOT FOUND"}
+		})
+	end
 
 	// CapSpd Guideway file - guideway travel time over-rides - See READ ME tab in spreadsheet
 	exist = GetFileInfo(GuidewayFile)
-	if exist = null
+	/*if exist = null
 		then do
 			cnterrlvl2 = cnterrlvl2 + 1
 			GuidewayOverride = "False"
 			ErrFileRec = ErrFileRec + {{, "No File", "Severe", "Guideway", ,HwyFile + " NOT FOUND, No Guideway overrides"}}
 		end
-		else GuidewayOverride = "True"
+		else GuidewayOverride = "True"*/
 
+	if exist = null then do
+		cnterrlvl2 = cnterrlvl2 + 1
+		GuidewayOverride = "False"
+
+		AddRecord(vw_FileErr, {
+			{"fatalflaw", 0},
+			{"severe", 1},
+			{"warning", 0},
+			{"errorcode", 1},
+			{"errormessage", HwyFile + " NOT FOUND, No Guideway overrides"}
+		})
+	end
+	else GuidewayOverride = "True"
 // Write error/warning messages
 	/*dim ID[ErrFileRec.length],
 	ErrLayer[ErrFileRec.length],
@@ -302,10 +356,22 @@ Macro "CapSpd" (Args)
 		// Read lookup table
 		
 		{LookupChk, lookupmsg} = RunMacro("CapSpd_ReadLookup", CapSpdLookUpFile)
-		if LookupChk > 0 then do
+		/*if LookupChk > 0 then do
 			cnterrlvl3 = cnterrlvl3 + 1
 			ErrFileRec = ErrFileRec + {{, "Bad Lookup", "FATAL", "LookupFile", ,CapSpdLookUpFile + " has issues"}}
 			goto badquit		
+		end*/
+
+		if LookupChk > 0 then do
+			cnterrlvl3 = cnterrlvl3 + 1
+
+			AddRecord(vw_FileErr, {
+				{"fatalflaw", 1},
+				{"severe", 0},
+				{"warning", 0},
+				{"errorcode", 1},
+				{"errormessage", CapSpdLookUpFile + " has issues"}
+			})
 		end
 	
 		//   22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
