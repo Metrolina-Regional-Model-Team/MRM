@@ -11,7 +11,7 @@ dBox "FixedOD" (Args) center, center, 50, 8 Title: "Fixed OD Assignment" Help: "
     //ShowMessage("Run Directory = " + Args.[Run Directory]) //added for testing
     //ShowMessage("MRM Directory = " + Args.[MRM Directory]) //added for testing
     //ShowMessage("MasterHwyFile = " + Args.MasterHwyFile) //added for testing
-    static ref_scen_dir, sl_query, curr_scen
+    static ref_scen_dir, curr_scen
     //Args.[MET Directory] = { "Type":"Folder" , "Value":"%Base Folder%\\Metrolina", "Description":"Directory that holds all scenario folders" }
     METDir = Args.[MET Directory]
     curr_scen = Args.[Run Year]
@@ -21,8 +21,9 @@ dBox "FixedOD" (Args) center, center, 50, 8 Title: "Fixed OD Assignment" Help: "
     return()
   enditem
 
-  Edit Text 15, 1, 15 Prompt: "Reference Scenario:" Variable: ref_scen_dir
-  Button after, same, 5, 1 Prompt: "..." do
+  Edit Text 16.5, 1, 20 Prompt: "Reference Scenario:" Variable: ref_scen_dir
+  Button after, same, 8, 1 Prompt: "Browse"
+  Help: "Browse and select the reference scenario folder." do
     on error, escape goto skip1
     ref_scen_dir = ChooseDirectory("Choose Full Scenario Folder", {"Initial Directory": METDir})
     skip1:
@@ -33,18 +34,18 @@ dBox "FixedOD" (Args) center, center, 50, 8 Title: "Fixed OD Assignment" Help: "
   //Text 15, after, 15 Prompt: "New Scenario:" Variable: "(current scenario)"
   
   //This line shows current scenario name that is selected in the TC
-  Text 15, 2.5, 15 Prompt: "Current Scenario:" Variable: curr_scen
+  Text 15, 3, 15 Prompt: "Analysis Scenario:" Variable: curr_scen
   
-  Edit Text same, after, 15 Prompt: "Select Link Query:" Variable: sl_query
+  /*Edit Text same, after, 15 Prompt: "Select Link Query:" Variable: sl_query
   Button after, same, 5, 1 Prompt: "..." do
     on error, escape goto skip2
     sl_query = ChooseFile({{"Query (*.qry)", "*.qry"}}, "Choose Select Link Query", {"Initial Directory": METDir})
     skip2:
     on error default
   enditem
-  Text after, same, 10 Variable: "(optional)"
+  Text after, same, 10 Variable: "(optional)"*/
 
-  Button 12, 6.5 Prompt: "Run" do
+  Button 12, 5 Prompt: "Run" do
     mr = CreateObject("Model.Runtime")
     Args = mr.GetValues()
     //ShowMessage("After GetValues:") //added for testing
@@ -55,7 +56,7 @@ dBox "FixedOD" (Args) center, center, 50, 8 Title: "Fixed OD Assignment" Help: "
         return()
     end*/
     opts.ref_scen_dir = ref_scen_dir
-    opts.sl_query = sl_query
+    /*opts.sl_query = sl_query*/
     RunMacro("Fixed OD Assignment", opts)
     ShowMessage("Fixed OD Assignment Complete")
   enditem
@@ -64,7 +65,7 @@ dBox "FixedOD" (Args) center, center, 50, 8 Title: "Fixed OD Assignment" Help: "
   enditem
   Button 28, same Prompt: "Help" do
     ShowMessage(
-      "This tool lets you evaluate a roadway project quickly by " +
+      "This tool lets you evaluate an alternative roadway network by " +
       "borrowing demand info from a fully-converged scenario."
     )
   enditem
@@ -77,7 +78,7 @@ enddbox
 Macro "Fixed OD Assignment" (MacroOpts)
 
     ref_scen_dir = MacroOpts.ref_scen_dir
-    sl_query = MacroOpts.sl_query
+    /*sl_query = MacroOpts.sl_query*/
 
     mr = CreateObject("Model.Runtime")
     Args = mr.GetValues()
@@ -107,7 +108,7 @@ Macro "Fixed OD Assignment" (MacroOpts)
         RunMacro("HwyAssn_MMA_TCv7", Args, {period: period})
     end*/
 
-    Args.sl_query = sl_query
+    /*Args.sl_query = sl_query*/
     //RunMacro("Peak Highway Assignment", Args)
     //RunMacro("Convergence", Args)
     //RunMacro("Post Feedback", Args)
