@@ -70,7 +70,7 @@ menu "MRM Utilities"
         Args = mr.GetValues()
         mr.RunCode("Open Fixed OD Dbox", Args)
     enditem
-   MenuItem "loaded_shape_file" text: "Loaded Shape File" do
+   MenuItem "loaded_shape_file" text: "Loaded Shapefile" do
         mr = CreateObject("Model.Runtime")
         Args = mr.GetValues()
         mr.RunCode("Open Loaded Shape File Dbox", Args)

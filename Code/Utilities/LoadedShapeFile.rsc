@@ -5,7 +5,7 @@ quickly without affecting the demand (OD matrix).
 Macro "Open Loaded Shape File Dbox" (Args)
 	RunDbox("LoadedShapeFile", Args)
 endmacro
-dBox "LoadedShapeFile" (Args) center, center, 50, 8 Title: "Loaded Shape File" Help: "test" toolbox
+dBox "LoadedShapeFile" (Args) center, center, 50, 8 Title: "Loaded Shapefile" Help: "test" toolbox
 
   init do
     static hwynet_dir, sl_query, assn_dir
