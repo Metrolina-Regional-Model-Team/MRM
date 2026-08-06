@@ -2458,10 +2458,12 @@ Macro "CapSpd" (Args)
 		// CapSpd - Lookup and Factor Table for each record - stored in report
 		FactorFileRec = null
 		
-		CapSpdFactorFile = Dir + "\\Report\\CapSpd_Factors_" + HwyView + ".asc"
+		//CapSpdFactorFile = Dir + "\\Report\\CapSpd_Factors_" + HwyView + ".asc"
+		CapSpdFactorFile = Dir + "\\Report\\CapSpd_Factors_" + HwyView + ".bin"
 		exist = GetFileInfo(CapSpdFactorFile)
 		if exist then DeleteFile(CapSpdFactorFile)
-		CapSpdFactor = CreateTable("CapSpdFactor", CapSpdFactorFile, "FFA",
+		//CapSpdFactor = CreateTable("CapSpdFactor", CapSpdFactorFile, "FFA",
+		CapSpdFactor = CreateTable("CapSpdFactor", CapSpdFactorFile, "FFB",
 				{{"ID", "Integer", 10, null, "Yes"},
 				 {"Cap1hrBase", "Real", 10, 2, "No"},
 				 {"Cap1hrMax", "Real", 10, 2, "No"},
@@ -2543,7 +2545,37 @@ Macro "CapSpd" (Args)
 			B_Prohibit = rec[20][2]
 			OppFunclA = rec[21][2]
 			OppFunclB = rec[22][2]
-	
+
+			/*hwyrec = GetRecordValues(HwyView,ptr, {"ID", "Length", "DIR", "funcl", "fedfuncl", 
+				"lanesAB", "lanesBA", "factype", "parking", "areatp",
+				"A_Control", "A_Prohibit", "A_LeftLns", "A_ThruLns", "A_RightLns",
+				"B_Control", "B_Prohibit", "B_LeftLns", "B_ThruLns", "B_RightLns",
+				"State", "County", "TAZ", "SpdLimit"})
+			n_ID = hwyrec[1][2]
+			n_LinkLen = hwyrec[2][2]
+			n_TrafficDir = hwyrec[3][2]
+			n_funcl = hwyrec[4][2]
+			n_fedfuncl = hwyrec[5][2]
+			n_lanesAB = hwyrec[6][2]
+			n_lanesBA = hwyrec[7][2]
+			n_factype = hwyrec[8][2]
+			n_parking = hwyrec[9][2]
+			n_areatype = hwyrec[10][2]
+			n_A_Control = hwyrec[11][2]
+			n_A_Prohibit = hwyrec[12][2]
+			n_A_LeftLns = hwyrec[13][2]
+			n_A_ThruLns = hwyrec[14][2]
+			n_A_RightLns = hwyrec[15][2]
+			n_B_Control = hwyrec[16][2]
+			n_B_Prohibit = hwyrec[17][2]
+			n_B_LeftLns = hwyrec[18][2]
+			n_B_ThruLns = hwyrec[19][2]
+			n_B_RightLns = hwyrec[20][2]
+			n_State = hwyrec[21][2]
+			n_County = hwyrec[22][2]
+			n_TAZ = hwyrec[23][2]
+			n_SpdLimit = hwyrec[24][2]*/
+
 			// Initialize capspd fields
 			Alpha = 0.
 			Beta = 0.
