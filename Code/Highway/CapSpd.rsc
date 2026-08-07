@@ -247,6 +247,7 @@ Macro "CapSpd" (Args)
 
 	// Area type by TAZ - to be joined to HwyView by TAZ no.  
 	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.bin"
+	//ShowMessage(AreaTypeFile)
 	exist = GetFileInfo(AreaTypeFile)
 	/*if exist = null
 		then do
@@ -373,7 +374,7 @@ Macro "CapSpd" (Args)
 				{"errormessage", CapSpdLookUpFile + " has issues"}
 			})
 		end
-	
+		if cnterrlvl3 > 0 then goto badquit	
 		//   22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
 		// 	2.	Merge with Area Type - from macro AreaType, linked using TAZ identified on link
 		//   22222222222222222222222222222222222222222222222222222222222222222222222222222222222222
@@ -389,14 +390,53 @@ Macro "CapSpd" (Args)
 		HwyView =GetView()
 		SetView(HwyView)
 		
-		/*stat = UpdateProgressBar("Add area type - based on link TAZ",10)
+		stat = UpdateProgressBar("Add area type - based on link TAZ",10)
 	
-		AT_TAZ = OpenTable("AT_TAZ",	"FFA", {AreaTypeFile},)
+		AT_TAZ = OpenTable("AT_TAZ",	"FFB", {AreaTypeFile},)
+		/*SetView(AT_TAZ)
+
+		ptr = GetFirstRecord("AT_TAZ|",)
+		while ptr <> null do
+			rec = GetRecordValues(AT_TAZ, ptr, {"TAZ","ATYPE"})
+			if rec[1][2] = 1 then do
+				ShowMessage("ATYPE=" + i2s(rec[2][2]))
+			end
+			ptr = GetNextRecord("AT_TAZ|", null,)
+		end*/
 		Join_AT = JoinViews("Join_AT", HwyView+".TAZ", "AT_TAZ.TAZ",)
 	
 		SetView(Join_AT)
+		/*ptr = GetFirstRecord("Join_AT|",)
+		while ptr <> null do
+			rec = GetRecordValues(Join_AT, ptr,
+				{HwyView+".TAZ", "AT_TAZ.TAZ", "AT_TAZ.ATYPE", HwyView+".areatp"})
+
+			if rec[1][2] = 1 then do
+				ShowMessage(
+					"Hwy TAZ=" + i2s(rec[1][2]) +
+					", Joined TAZ=" + i2s(rec[2][2]) +
+					", Joined ATYPE=" + i2s(rec[3][2]) +
+					", areatp=" + i2s(rec[4][2])
+				)
+			end
+
+			ptr = GetNextRecord("Join_AT|", null,)
+		end*/
 		vATypeIn = GetDataVector("Join_AT|", "AT_TAZ.ATYPE",)
 		SetDataVector("Join_AT|", "areatp", vATypeIn, )
+		/*SetView(HwyView)
+
+		ptr = GetFirstRecord(HwyView + "|",)
+		while ptr <> null do
+			rec = GetRecordValues(HwyView, ptr, {"TAZ","areatp"})
+
+			if rec[1][2] = 1 then do
+				ShowMessage("Hwy TAZ=" + i2s(rec[1][2]) +
+							", areatp=" + i2s(rec[2][2]))
+			end
+
+			ptr = GetNextRecord(HwyView + "|", null,)
+		end*/
 	
 		// areatp : Check if any taz are illegal - SETS DEFAULT AREA TYPE TO 3
 		TAZErrSelect = "Select * where AT_TAZ.TAZ = null"
@@ -431,27 +471,43 @@ Macro "CapSpd" (Args)
 	
 		CloseView(Join_AT)
 		CloseView(AT_TAZ)
-		vATypeIn = null*/
+		vATypeIn = null
 
 		tbl_hwy = CreateObject("Table", {FileName: HwyFile, LayerType: "line"})
 		tbl_node = CreateObject("Table", {FileName: HwyFile, LayerType: "node"})
 		tbl_at_taz = CreateObject("Table", {FileName: AreaTypeFile})
+		/*v = tbl_at_taz.GetDataVectors({
+			FieldNames: {"TAZ", "ATYPE"},
+			NamedArray: true
+		})
+		for i = 1 to 2 do
+			ShowMessage("TAZ=" + i2s(v.TAZ[i]) + ", ATYPE=" + i2s(v.ATYPE[i]))
+		end*/
+		//tbl_at_taz.AddField({FieldName: "TAZ_AT", Type: "integer", Width: 10, Decimals: 0})
+		//tbl_at_taz.TAZ_AT = tbl_at_taz.TAZ
 
-		tbl_at_taz.AddField({FieldName: "TAZ_AT", Type: "integer", Width: 10, Decimals: 0})
-		tbl_at_taz.TAZ_AT = tbl_at_taz.TAZ
-
-		join = tbl_hwy.Join({
+		/*join = tbl_hwy.Join({
 			Table: tbl_at_taz, 
 			LeftFields: "TAZ",
 			RightFields: "TAZ"
 		})
+		vATypeIn = join.GetDataVectors({
+			FieldNames: {"ATYPE"},
+			NamedArray: true
+		})
 
+		tbl_hwy.SetDataVectors({
+			FieldData: {
+				{"areatp", vATypeIn.ATYPE}
+			}
+		})
 		temp = join.Export()
-		join = null
+		join = null*/
 
 		/*Change following two lines to fatal error instead of defaulting to 3 if TAZ is null or AT is illegal*/
-		temp.ATYPE = if (temp.TAZ_AT = null) then 3 else temp.ATYPE
-		temp.ATYPE = if (temp.ATYPE = null or temp.ATYPE < 1 or temp.ATYPE > 6) then 3 else temp.ATYPE
+		//temp.ATYPE = if (temp.TAZ_AT = null) then 3 else temp.ATYPE
+		//temp.ATYPE = if (temp.TAZ = null) then 3 else temp.ATYPE
+		//temp.ATYPE = if (temp.ATYPE = null or temp.ATYPE < 1 or temp.ATYPE > 6) then 3 else temp.ATYPE
 	
 		//   33333333333333333333333333333333333333333333333333333333333333333333333333333333333333
 		//		3.  First pass through network - error checks on entry - set defaults
@@ -828,12 +884,12 @@ Macro "CapSpd" (Args)
                     else
                         tbl_CapSpdErr.errormessage
 
-            tbl_CapSpdErr.SpdLimRun = 
+            tbl_hwy.SpdLimRun = 
                 if (SpdLimit = null or SpdLimit < 10 or SpdLimit > 80) then 
                     if (funcl = 1 or funcl = 2 or funcl = 9 or funcl = 22 or funcl = 23 or funcl = 24 or funcl = 25 or funcl = 82 or funcl = 83) 
                         then 55 
                         else 35 
-                    else tbl_CapSpdErr.SpdLimit
+                    else tbl_hwy.SpdLimit
 
             //  v 2.4 - Adjust base year speed limit for rural 55 MPH roads that are now suburban
             //          only for funcl 4,5,6,7
@@ -857,10 +913,10 @@ Macro "CapSpd" (Args)
                         else tbl_CapSpdErr.errormessage + "; No longer rural surface street, Speed limit reduced to 45" 
                     else tbl_CapSpdErr.errormessage
 
-            tbl_CapSpdErr.SpdLimRun = 
+            tbl_hwy.SpdLimRun = 
                 if s2i(RunYear) > BaseYear and (funcl = 4 or funcl = 5 or funcl = 6 or funcl = 7) and areatype < 5 and SpdLimit > 49 
                     then 45
-                	else tbl_CapSpdErr.SpdLimit
+                	else tbl_hwy.SpdLimit
 
 			skipspdlimit:
 	
@@ -1030,9 +1086,9 @@ Macro "CapSpd" (Args)
 		end//while ptr <> null*/
 		
 		// Write Error / warning messages
-		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
+		//CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
 
-		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		//tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
 
 		vw_CapSpdErr = tbl_CapSpdErr.GetView()
 		fatal_v  = GetDataVector(vw_CapSpdErr + "|", "fatalflaw",)
@@ -2518,6 +2574,7 @@ Macro "CapSpd" (Args)
 		
 		SetView(HwyView)
 		ptr = GetFirstRecord(HwyView + "|",)
+		ptrErr = GetFirstRecord(tbl_CapSpdErr.GetView() + "|",)
 		while ptr <> null do 
 			rec = GetRecordValues(HwyView, ptr, {"ID", "length", "dir", "Anode", "Bnode", "funcl", "lanesAB",
 						"lanesBA", "factype", "SpdLimRun", "parking", 
@@ -2535,6 +2592,7 @@ Macro "CapSpd" (Args)
 			SpdLimRun = rec[10][2]
 			Parking = rec[11][2]
 			AreaType = rec[12][2]
+			//ShowMessage(TypeOf(AreaType))
 			A_LeftLns = rec[13][2]
 			A_RightLns = rec[14][2]
 			A_Control = rec[15][2]
@@ -2937,9 +2995,25 @@ Macro "CapSpd" (Args)
 					SPFreeAB = Length / (TTFreeAB / 60.)
 					if SPFreeAB < MinSpeed
 						then do
-							cnterrlvl1 = cnterrlvl1 + 1
+							/*cnterrlvl1 = cnterrlvl1 + 1
 							ErrFileRec = ErrFileRec + {{ID, "Link", "Warning", "SPFreeAB", SPFreeAB, 
-								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPFreeAB and TTFreeAB set to minimum"}}
+								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPFreeAB and TTFreeAB set to minimum"}}*/
+							errmsg = "Speed < minimum" + r2s(MinSpeed) + "MPH, SPFreeBA and TTFreeBA set to minimum"
+							//SetView(tbl_CapSpdErr.GetView())
+							//errptr = LocateRecord(tbl_CapSpdErr.GetView() + "|", "ID", {badlinkid},)
+
+							recErr = GetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {"errormessage"})
+							oldmsg = recErr[1][2]
+
+							SetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {
+								{"warning", 1},
+								{"errorcode", 1},
+								{"errormessage",
+									if oldmsg = null or oldmsg = " "
+									then errmsg
+									else oldmsg + "; " + errmsg
+								}
+							})
 							SPFreeAB = MinSpeed
 							TTFreeAB = Length / (SPFreeAB / 60.)
 						end
@@ -2951,9 +3025,23 @@ Macro "CapSpd" (Args)
 					SPPeakAB = Length / (TTPeakAB / 60.)
 					if SPPeakAB < MinSpeed
 						then do
-							cnterrlvl1 = cnterrlvl1 + 1
+							/*cnterrlvl1 = cnterrlvl1 + 1
 							ErrFileRec = ErrFileRec + {{ID, "Link", "Warning", "SPPeakAB", SPPeakAB, 
-								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPPeakAB and TTPeakAB set to minimum"}}
+								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPPeakAB and TTPeakAB set to minimum"}}*/
+							errmsg = "Speed < minimum " + r2s(MinSpeed) + " MPH, SPPeakAB and TTPeakAB set to minimum"
+
+							recErr = GetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {"errormessage"})
+							oldmsg = recErr[1][2]
+
+							SetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {
+								{"warning", 1},
+								{"errorcode", 1},
+								{"errormessage",
+									if oldmsg = null or oldmsg = " "
+									then errmsg
+									else oldmsg + "; " + errmsg
+								}
+							})								
 							SPPeakAB = MinSpeed
 							TTPeakAB = Length / (SPPeakAB / 60.)
 						end
@@ -3096,9 +3184,23 @@ Macro "CapSpd" (Args)
 	
 					if SPFreeBA < MinSpeed
 						then do
-							cnterrlvl1 = cnterrlvl1 + 1
+							/*cnterrlvl1 = cnterrlvl1 + 1
 							ErrFileRec = ErrFileRec + {{ID, "Link", "Warning", "SPFreeBA", SPFreeBA, 
-								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPFreeBA and TTFreeBA set to minimum"}}
+								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPFreeBA and TTFreeBA set to minimum"}}*/
+							errmsg = "Speed < minimum " + r2s(MinSpeed) + " MPH, SPFreeBA and TTFreeBA set to minimum"
+
+							recErr = GetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {"errormessage"})
+							oldmsg = recErr[1][2]
+
+							SetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {
+								{"warning", 1},
+								{"errorcode", 1},
+								{"errormessage",
+									if oldmsg = null or oldmsg = " "
+									then errmsg
+									else oldmsg + "; " + errmsg
+								}
+							})								
 							SPFreeBA = MinSpeed
 							TTFreeBA = Length / (SPFreeBA / 60.)
 						end
@@ -3112,9 +3214,23 @@ Macro "CapSpd" (Args)
 	
 					if SPPeakBA < MinSpeed
 						then do
-							cnterrlvl1 = cnterrlvl1 + 1
+							/*cnterrlvl1 = cnterrlvl1 + 1
 							ErrFileRec = ErrFileRec + {{ID, "Link", "Warning", "SPPeakBA", SPPeakBA, 
-								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPPeakBA and TTPeakBA set to minimum"}}
+								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPPeakBA and TTPeakBA set to minimum"}}*/
+							errmsg = "Speed < minimum " + r2s(MinSpeed) + " MPH, SPPeakBA and TTPeakBA set to minimum"
+
+							recErr = GetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {"errormessage"})
+							oldmsg = recErr[1][2]
+
+							SetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {
+								{"warning", 1},
+								{"errorcode", 1},
+								{"errormessage",
+									if oldmsg = null or oldmsg = " "
+									then errmsg
+									else oldmsg + "; " + errmsg
+								}
+							})									
 							SPPeakBA = MinSpeed
 							TTPeakBA = Length / (SPPeakBA / 60.)
 						end
@@ -3211,6 +3327,7 @@ Macro "CapSpd" (Args)
 			AddRecord (CapSpdFactor, factorvals)
 			setview(HwyView)
 			ptr = GetNextRecord(HwyView + "|", null,)
+			ptrErr = GetNextRecord(tbl_CapSpdErr.GetView() + "|", null,)
 			rec = null
 		end  // while ptr
 		//((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((
@@ -3313,7 +3430,7 @@ Macro "CapSpd" (Args)
 		CloseView(guidewayview)
 		noguideway:
 		// Write Error / warning messages
-		if ErrFileRec <> null 
+		/*if ErrFileRec <> null 
 			then do
 				SetView(CapSpdErr)
 				for i = 1 to ErrFileRec.length do
@@ -3324,7 +3441,20 @@ Macro "CapSpd" (Args)
 		 		end // for i	
 			end
 		ErrFileRec = null
-		if cnterrlvl3 > 0 then goto badquit	
+		if cnterrlvl3 > 0 then goto badquit	*/
+		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
+
+		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+
+		vw_CapSpdErr = tbl_CapSpdErr.GetView()
+		fatal_v  = GetDataVector(vw_CapSpdErr + "|", "fatalflaw",)
+		severe_v = GetDataVector(vw_CapSpdErr + "|", "severe",)
+		warn_v   = GetDataVector(vw_CapSpdErr + "|", "warning",)
+
+		cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum",))
+		cnterrlvl2 = cnterrlvl2 + r2i(VectorStatistic(severe_v, "Sum",))
+		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum",))
+		if cnterrlvl3 > 0 then goto badquit
 	
 		goto quit	
 		
@@ -3373,7 +3503,8 @@ Macro "CapSpd" (Args)
 	DestroyProgressBar()
 	//end // timeperiod loop (tp)
 	
-	CloseView(CapSpdErr)
+	//CloseView(CapSpdErr)
+	CloseView(CapSpdErr.GetView())
 	return({CapSpdOK, msg})
 
 
