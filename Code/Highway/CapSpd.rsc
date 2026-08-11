@@ -556,6 +556,7 @@ Macro "CapSpd" (Args)
 		stat = UpdateProgressBar("First pass through network looking for illegal codes",15)
 
 		ID 		   = tbl_hwy.ID
+		TAZ 	   = tbl_hwy.TAZ
 		LinkLen    = tbl_hwy.Length
 		TrafficDir = tbl_hwy.DIR
 		funcl      = tbl_hwy.funcl
@@ -713,12 +714,25 @@ Macro "CapSpd" (Args)
 			end*/
 
 
+			// TAZ check - is it null?  If so, Throw fatal error - TAZ is required for area type assignment
+			/*tbl_CapSpdErr.fatalflaw = if TAZ = null then 1 else 0
+            tbl_CapSpdErr.errorcode = if TAZ = null then 1 else 0
+            tbl_CapSpdErr.errormessage = if TAZ = null then "Invalid TAZ" else " "*/
+
+			//Area type check - is it legal?  legal = {1,2,3,4,5}
+			/*tbl_CapSpdErr.fatalflaw = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.fatalflaw
+			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
+			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then if tbl_CapSpdErr.errormessage = null then "Illegal area type" else tbl_CapSpdErr.errormessage + "; Illegal area type" else tbl_CapSpdErr.errormessage */
+
+			/*tbl_CapSpdErr.fatalflaw = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.fatalflaw
+			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
+			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then "Illegal area type" else " "*/
 
 			// Zero length link check (is FATAL!)
 
-            tbl_CapSpdErr.fatalflaw = if LinkLen > 0.001 then 0 else 1
-            tbl_CapSpdErr.errorcode = if LinkLen > 0.001 then 0 else 1
-            tbl_CapSpdErr.errormessage = if LinkLen < 0.001 then "Zero length link" else " "
+            tbl_CapSpdErr.fatalflaw = if LinkLen > 0.001 then 0 else tbl_CapSpdErr.fatalflaw
+            tbl_CapSpdErr.errorcode = if LinkLen > 0.001 then 0 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if LinkLen < 0.001 then if tbl_CapSpdErr.errormessage = null then "Zero length link" else tbl_CapSpdErr.errormessage + "; Zero length link" else tbl_CapSpdErr.errormessage
 
             // Link direction code,  legaldir = {-1, 0, 1}
             tbl_CapSpdErr.fatalflaw = if TrafficDir <> -1 and TrafficDir <> 0 and TrafficDir <> 1 then 1 else tbl_CapSpdErr.fatalflaw
@@ -2754,7 +2768,57 @@ Macro "CapSpd" (Args)
 			// Highway Assignment Delay Coefficients - Alpha and Beta
 			//**********************************************************************************************
 			//	HwyDelay1ln[21][11]   :  Alpha / Beta for each area type, single ln facilities]  
-			//  	HwyDelay3ln[21][11]      Alpha / Beta for each area type multi ln facilities 
+			//  	HwyDelay3ln[21][11]      Alpha / Beta for each area type multi ln facilities
+
+			// Convert and validate AreaType and row indices before array access
+			/*AreaTypeInt = r2i(AreaType)
+			col = AreaTypeInt * 2
+			colInt = r2i(col)
+
+			// default initializers
+			rownum = 0
+			rownumInt = 0
+
+			if 	(TrafficDir = 0 and LanesAB + LanesBA > 2) or
+					(TrafficDir = 1 and LanesAB > 1) or
+					(TrafficDir = -1 and LanesBA > 1) then do
+				rownum = RunMacro("FindRow",HwyDelay3ln, Funcl)
+				rownumInt = r2i(rownum)
+
+				if rownumInt < 1 or rownumInt > 21 then do
+					ShowMessage("FindRow returned invalid rownumInt=" + i2s(rownumInt) + " for Funcl=" + i2s(Funcl) + " (HwyDelay3ln)")
+				end
+
+				if colInt < 1 or colInt + 1 > 11 then do
+					ShowMessage("Bad AreaType-derived column=" + i2s(col) + " from AreaTypeInt=" + i2s(AreaTypeInt))
+				end
+
+				// Ensure integer types and show debug info if issue persists
+				rownumInt = r2i(rownumInt)
+				colInt = r2i(colInt)
+				ShowMessage("DEBUG HwyDelay3ln access: rownum=" + i2s(rownum) + " rownumInt=" + i2s(rownumInt) + " col=" + i2s(col) + " colInt=" + i2s(colInt))
+				Alpha = HwyDelay3ln[rownumInt][colInt]
+				Beta  = HwyDelay3ln[rownumInt][colInt + 1]
+			end
+			else do
+				rownum = RunMacro("FindRow",HwyDelay1ln, Funcl)
+				rownumInt  = r2i(rownum)
+
+				if rownumInt < 1 or rownumInt > 21 then do
+					ShowMessage("FindRow returned invalid rownumInt=" + i2s(rownumInt) + " for Funcl=" + i2s(Funcl) + " (HwyDelay1ln)")
+				end
+
+				if colInt < 1 or colInt + 1 > 11 then do
+					ShowMessage("Bad AreaType-derived column=" + i2s(col) + " from AreaTypeInt=" + i2s(AreaTypeInt))
+				end
+
+				// Ensure integer types and show debug info if issue persists
+				rownumInt = r2i(rownumInt)
+				colInt = r2i(colInt)
+				ShowMessage("DEBUG HwyDelay1ln access: rownum=" + i2s(rownum) + " rownumInt=" + i2s(rownumInt) + " col=" + i2s(col) + " colInt=" + i2s(colInt))
+				Alpha = HwyDelay1ln[rownumInt][colInt]
+				Beta  = HwyDelay1ln[rownumInt][colInt + 1]
+			end */
 			if 	(TrafficDir = 0 and LanesAB + LanesBA > 2) or
 					(TrafficDir = 1 and LanesAB > 1) or
 					(TrafficDir = -1 and LanesBA > 1) then do
@@ -2766,8 +2830,8 @@ Macro "CapSpd" (Args)
 				rownum = RunMacro("FindRow",HwyDelay1ln, Funcl)			
 				Alpha = HwyDelay1ln[rownum][AreaType*2]
 				Beta  = HwyDelay1ln[rownum][AreaType*2 + 1]
-			end 	
-	
+			end 
+
 			//**********************************************************************************************
 			// Centroid connectors and centroid to transit connectors (funcl 90 and 92)
 			//**********************************************************************************************
