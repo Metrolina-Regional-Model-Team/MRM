@@ -8,105 +8,255 @@ output:
     toc_float:
       collapsed: false
       smooth_scroll: true
-      number_sections: false
     toc_depth: 4
+    number_sections: false
     css: "styles.css"
-runtime: shiny
 ---
-
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 library(DT)
 library(dplyr)
 library(readxl)
 library(tidyr)
-library(shiny)
+library(crosstalk)
 
-# Styled datatable function
-render_datatable <- function(data, digits = 2) {
-  numeric_cols <- names(data)[sapply(data, is.numeric)]
-  
-  datatable(
-    data,
-    filter = "top",
-    extensions = "Buttons",
-    options = list(
-      pageLength = 12,
-      lengthMenu = c(5, 10, 20, 50, 100),
-      scrollX = TRUE,
-      fixedHeader = TRUE,
-      autoWidth = FALSE,
-      dom = "Bfrtip",
-      buttons = list(
-        list(
-          extend = "csv",
-          text = "Download CSV",
-          filename = "County_Data"
-        )
-      ),
-      columnDefs = list(
-        list(width = '120px', targets = 0),
-        list(width = '100px', targets = "_all")
-      )
-    ),
-    rownames = FALSE
-  ) %>%
-    formatRound(columns = numeric_cols, digits = digits) %>%
-    formatStyle(
-      columns = names(data),
-      `white-space` = 'normal',
-      `word-break` = 'break-word',
-      `font-size` = '13px'
-    )
-}
-
-# Load data
 file_path <- "C:/MRM/docs/other/xlsx/LandUseStat.xlsx"
+
 counties <- excel_sheets(file_path)
 
 data_all <- lapply(counties, function(cty) {
+
   df <- read_excel(file_path, sheet = cty)
-  
-  # SE data drop down
-  section_names <- c("Population and Households", "Employment", "Students")
-  df$Category <- ifelse(df[[1]] %in% section_names, df[[1]], NA)
+
+  section_names <- c(
+    "Population and Households",
+    "Employment",
+    "Students"
+  )
+
+  df$Category <- ifelse(
+    df[[1]] %in% section_names,
+    df[[1]],
+    NA
+  )
+
   df <- fill(df, Category)
-  
+
   df$County <- cty
+
   df
-}) %>% bind_rows()
 
-# UI elements
-selectInput("county", "Select County:", choices = unique(data_all$County))
+}) %>%
+  bind_rows()
+```
 
-selectInput("category", "Select SE Data:",
-            choices = unique(data_all$Category))
 
-DTOutput("table")   
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+data_all$.row_id <- seq_len(nrow(data_all))
+# Make a copy for displaying in the table
+data_display <- data_all
 
-# Reactive table
-output$table <- renderDT({
-  
-  df <- data_all[
-    data_all$County == input$county &
-    data_all$Category == input$category,
-  ]
-  
-  df$County <- NULL
-  df$Category <- NULL
-  
-  num_cols <- sapply(df, is.numeric)
-  
-  df[num_cols] <- lapply(df[num_cols], function(x) {
+# Identify numeric columns
+num_cols <- sapply(data_display, is.numeric)
+
+# Format numeric columns
+data_display[num_cols] <- lapply(
+  data_display[num_cols],
+  function(x) {
     ifelse(
       is.na(x),
       NA,
-      ifelse(x == floor(x),
-             formatC(x, format = "f", digits = 0),
-             formatC(x, format = "f", digits = 2))
+      ifelse(
+        x == floor(x),
+        formatC(x, format = "f", digits = 0),
+        formatC(x, format = "f", digits = 2)
+      )
     )
-  })
-  
-  render_datatable(df)
-})
+  }
+)
+
+# IMPORTANT: shared_data must use data_display
+shared_data <- SharedData$new(
+  data_display,
+  key = ~.row_id,
+  group = "landuse"
+)
+# shared_data <- SharedData$new(
+#   data_all,
+#   key = ~.row_id,
+#   group = "landuse"
+# )
+```
+
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# County filter - select ONE county
+filter_select(
+  id = "county",
+  label = "Select County:",
+  sharedData = shared_data,
+  group = ~County,
+  multiple = FALSE
+)
+
+# SE Data filter - select ONE category
+filter_select(
+  id = "category",
+  label = "Select SE Data:",
+  sharedData = shared_data,
+  group = ~Category,
+  multiple = FALSE
+)
+```
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Find the columns that should be hidden
+hide_cols <- which(
+  names(data_all) %in% c("Category", "County", ".row_id")
+) - 1
+
+htmltools::div(
+  id = "data_table_container",
+datatable(
+  shared_data,
+  filter = "top",
+  extensions = "Buttons",
+  options = list(
+    
+    pageLength = 12,
+    lengthMenu = c(5, 10, 20, 50, 100),
+    scrollX = TRUE,
+    fixedHeader = TRUE,
+    autoWidth = FALSE,
+    dom = "Bfrtip",
+
+    buttons = list(
+      list(
+        extend = "csv",
+        text = "Download CSV",
+        filename = "County_Data"
+      )
+    ),
+
+    columnDefs = list(
+      
+      # --------------------------------------------------
+      # Column widths
+      # --------------------------------------------------
+      
+      list(
+        width = "120px",
+        targets = 0
+      ),
+      
+      list(
+        width = "100px",
+        targets = "_all"
+      ),      
+      # Hide Category, County, and .row_id
+      list(
+        targets = hide_cols,
+        visible = FALSE
+      )
+
+      # Number formatting
+      # Whole number -> no decimals
+      # Decimal -> two decimal places
+      # list(
+      #   targets = "_all",
+      #   render = JS(
+      #     "function(data, type, row, meta) {
+      #        if (type === 'display' && data !== null && data !== '') {
+      #          
+      #          var num = Number(data);
+      # 
+      #          if (!isNaN(num)) {
+      #            
+      #            if (Number.isInteger(num)) {
+      #              return num.toString();
+      #            } else {
+      #              return num.toFixed(2);
+      #            }
+      #            
+      #          }
+      #        }
+      # 
+      #        return data;
+      #      }"
+      #   )
+      # )
+    )
+  ),
+
+  rownames = FALSE
+)
+)
+```
+
+
+
+```{r, echo=FALSE, results='asis'}
+
+htmltools::tags$script(
+  htmltools::HTML("
+    
+    function setupTableVisibility() {
+      
+      var countyDiv = document.getElementById('county');
+      var categoryDiv = document.getElementById('category');
+      
+      // Wait until Crosstalk/Selectize has created the controls
+      if (!countyDiv || !categoryDiv ||
+          !countyDiv.getElementsByClassName('selectized').length ||
+          !categoryDiv.getElementsByClassName('selectized').length) {
+        
+        setTimeout(setupTableVisibility, 100);
+        return;
+      }
+      
+      var countySelect =
+        countyDiv.getElementsByClassName('selectized')[0].selectize;
+      
+      var categorySelect =
+        categoryDiv.getElementsByClassName('selectized')[0].selectize;
+      
+      var table = document.getElementById('data_table_container');
+      
+      if (!table) {
+        return;
+      }
+      
+      function checkFilters() {
+        
+        var county = countySelect.getValue();
+        var category = categorySelect.getValue();
+        
+        // Show table ONLY when both filters have a selection
+        if (county && category) {
+          table.style.display = '';
+        } else {
+          table.style.display = 'none';
+        }
+      }
+      
+      // Run when County changes
+      countySelect.on('change', checkFilters);
+      
+      // Run when SE Data changes
+      categorySelect.on('change', checkFilters);
+      
+      // Hide table initially
+      checkFilters();
+    }
+    
+    $(document).ready(function() {
+      setupTableVisibility();
+    });
+    
+  ")
+)
 ```

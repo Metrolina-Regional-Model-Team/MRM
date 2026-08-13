@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>Land Use and Socioeconomic Data</title>
+
+<script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/cosmo.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/selectize-0.12.4/css/selectize.bootstrap3.css" rel="stylesheet" />
+<script src="site_libs/selectize-0.12.4/js/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.2/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.2/js/crosstalk.min.js"></script>
+<link href="site_libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet" />
+<script src="site_libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet" />
+<script src="site_libs/datatables-binding-0.34.0/datatables.js"></script>
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.min.css" rel="stylesheet" />
+<link href="site_libs/dt-core-1.13.6/css/jquery.dataTables.extra.css" rel="stylesheet" />
+<script src="site_libs/dt-core-1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/dt-ext-buttons-1.13.6/css/buttons.dataTables.min.css" rel="stylesheet" />
+<script src="site_libs/dt-ext-buttons-1.13.6/js/dataTables.buttons.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.html5.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.colVis.min.js"></script>
+<script src="site_libs/dt-ext-buttons-1.13.6/js/buttons.print.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet" />
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+
+
+
+
+<link rel="stylesheet" href="styles.css" type="text/css" />
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark the anchor link active (and if it's in a dropdown, also mark that active)
+  var dropdown = menuAnchor.closest('li.dropdown');
+  if (window.bootstrap) { // Bootstrap 4+
+    menuAnchor.addClass('active');
+    dropdown.find('> .dropdown-toggle').addClass('active');
+  } else { // Bootstrap 3
+    menuAnchor.parent().addClass('active');
+    dropdown.addClass('active');
+  }
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "\e259";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "\e258";
+  font-family: 'Glyphicons Halflings';
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+.tocify-subheader {
+  display: inline;
+}
+.tocify-subheader .tocify-item {
+  font-size: 0.95em;
+}
+
+</style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-inverse  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">MRM</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Databases
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="1_taz.html">TAZs</a>
+    </li>
+    <li>
+      <a href="1_land_use.html">Land Use</a>
+    </li>
+    <li>
+      <a href="1_networks.html">Networks</a>
+    </li>
+    <li>
+      <a href="1_routes.html">Transit</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Surveys &amp; Data
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="2_surveys.html">Surveys</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Resident Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="3_hhsynth.html">Household Synthesis</a>
+    </li>
+    <li>
+      <a href="3_purpose.html">Tour Purpose &amp; Frequency</a>
+    </li>
+    <li>
+      <a href="3_dc.html">Destination Choice</a>
+    </li>
+    <li>
+      <a href="3_stops.html">Intermediate Stops</a>
+    </li>
+    <li>
+      <a href="3_mode.html">Mode Choice</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Other Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="4_ext.html">Externals</a>
+    </li>
+    <li>
+      <a href="4_freight.html">Freight</a>
+    </li>
+    <li>
+      <a href="4_TOD.html">TOD</a>
+    </li>
+    <li>
+      <a href="4_assignment.html">Assignment</a>
+    </li>
+    <li>
+      <a href="4_feedback.html">Feedback</a>
+    </li>
+    <li>
+      <a href="4_validation.html">Validation</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+    Model Versions
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="5_versions.html">Versions</a>
+    </li>
+    <li>
+      <a href="5_output.html">Model Output</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/Metrolina-Regional-Model-Team/MRM">
+    <span class="fa fa-github"></span>
+     
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">Land Use and Socioeconomic Data</h1>
+
+</div>
+
+
+<div id="county" class="form-group crosstalk-input-select crosstalk-input">
+<label class="control-label" for="county">Select County:</label>
+<div>
+<select></select>
+<script type="application/json" data-for="county">{
+  "items": {
+    "value": ["Anson", "Cabarrus", "Catawba", "Cleveland", "Gaston", "Iredell", "Lancaster", "Lincoln", "Mecklenburg", "Rowan", "Stanly", "Union", "York"],
+    "label": ["Anson", "Cabarrus", "Catawba", "Cleveland", "Gaston", "Iredell", "Lancaster", "Lincoln", "Mecklenburg", "Rowan", "Stanly", "Union", "York"]
+  },
+  "map": {
+    "Anson": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27"],
+    "Cabarrus": ["28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "48", "49", "50", "51", "52", "53", "54"],
+    "Catawba": ["325", "326", "327", "328", "329", "330", "331", "332", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344", "345", "346", "347", "348", "349", "350", "351"],
+    "Cleveland": ["190", "191", "192", "193", "194", "195", "196", "197", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "210", "211", "212", "213", "214", "215", "216"],
+    "Gaston": ["217", "218", "219", "220", "221", "222", "223", "224", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "237", "238", "239", "240", "241", "242", "243"],
+    "Iredell": ["82", "83", "84", "85", "86", "87", "88", "89", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "102", "103", "104", "105", "106", "107", "108"],
+    "Lancaster": ["271", "272", "273", "274", "275", "276", "277", "278", "279", "280", "281", "282", "283", "284", "285", "286", "287", "288", "289", "290", "291", "292", "293", "294", "295", "296", "297"],
+    "Lincoln": ["244", "245", "246", "247", "248", "249", "250", "251", "252", "253", "254", "255", "256", "257", "258", "259", "260", "261", "262", "263", "264", "265", "266", "267", "268", "269", "270"],
+    "Mecklenburg": ["109", "110", "111", "112", "113", "114", "115", "116", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "129", "130", "131", "132", "133", "134", "135"],
+    "Rowan": ["55", "56", "57", "58", "59", "60", "61", "62", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "75", "76", "77", "78", "79", "80", "81"],
+    "Stanly": ["163", "164", "165", "166", "167", "168", "169", "170", "171", "172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "183", "184", "185", "186", "187", "188", "189"],
+    "Union": ["136", "137", "138", "139", "140", "141", "142", "143", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "156", "157", "158", "159", "160", "161", "162"],
+    "York": ["298", "299", "300", "301", "302", "303", "304", "305", "306", "307", "308", "309", "310", "311", "312", "313", "314", "315", "316", "317", "318", "319", "320", "321", "322", "323", "324"]
+  },
+  "group": ["landuse"]
+}</script>
+</div>
+</div>
+<div id="category" class="form-group crosstalk-input-select crosstalk-input">
+<label class="control-label" for="category">Select SE Data:</label>
+<div>
+<select></select>
+<script type="application/json" data-for="category">{
+  "items": {
+    "value": ["Employment", "Population and Households", "Students"],
+    "label": ["Employment", "Population and Households", "Students"]
+  },
+  "map": {
+    "Employment": ["9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "36", "37", "38", "39", "40", "41", "42", "43", "44", "45", "46", "47", "63", "64", "65", "66", "67", "68", "69", "70", "71", "72", "73", "74", "90", "91", "92", "93", "94", "95", "96", "97", "98", "99", "100", "101", "117", "118", "119", "120", "121", "122", "123", "124", "125", "126", "127", "128", "144", "145", "146", "147", "148", "149", "150", "151", "152", "153", "154", "155", "171", "172", "173", "174", "175", "176", "177", "178", "179", "180", "181", "182", "198", "199", "200", "201", "202", "203", "204", "205", "206", "207", "208", "209", "225", "226", "227", "228", "229", "230", "231", "232", "233", "234", "235", "236", "252", "253", "254", "255", "256", "257", "258", "259", "260", "261", "262", "263", "279", "280", "281", "282", "283", "284", "285", "286", "287", "288", "289", "290", "306", "307", "308", "309", "310", "311", "312", "313", "314", "315", "316", "317", "333", "334", "335", "336", "337", "338", "339", "340", "341", "342", "343", "344"],
+    "Population and Households": ["1", "2", "3", "4", "5", "6", "7", "8", "28", "29", "30", "31", "32", "33", "34", "35", "55", "56", "57", "58", "59", "60", "61", "62", "82", "83", "84", "85", "86", "87", "88", "89", "109", "110", "111", "112", "113", "114", "115", "116", "136", "137", "138", "139", "140", "141", "142", "143", "163", "164", "165", "166", "167", "168", "169", "170", "190", "191", "192", "193", "194", "195", "196", "197", "217", "218", "219", "220", "221", "222", "223", "224", "244", "245", "246", "247", "248", "249", "250", "251", "271", "272", "273", "274", "275", "276", "277", "278", "298", "299", "300", "301", "302", "303", "304", "305", "325", "326", "327", "328", "329", "330", "331", "332"],
+    "Students": ["21", "22", "23", "24", "25", "26", "27", "48", "49", "50", "51", "52", "53", "54", "75", "76", "77", "78", "79", "80", "81", "102", "103", "104", "105", "106", "107", "108", "129", "130", "131", "132", "133", "134", "135", "156", "157", "158", "159", "160", "161", "162", "183", "184", "185", "186", "187", "188", "189", "210", "211", "212", "213", "214", "215", "216", "237", "238", "239", "240", "241", "242", "243", "264", "265", "266", "267", "268", "269", "270", "291", "292", "293", "294", "295", "296", "297", "318", "319", "320", "321", "322", "323", "324", "345", "346", "347", "348", "349", "350", "351"]
+  },
+  "group": ["landuse"]
+}</script>
+</div>
+</div>
+<div id="data_table_container">
+<div class="datatables html-widget html-fill-item" id="htmlwidget-53c5811e1186d307a4ca" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-53c5811e1186d307a4ca">{"x":{"crosstalkOptions":{"key":["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261","262","263","264","265","266","267","268","269","270","271","272","273","274","275","276","277","278","279","280","281","282","283","284","285","286","287","288","289","290","291","292","293","294","295","296","297","298","299","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318","319","320","321","322","323","324","325","326","327","328","329","330","331","332","333","334","335","336","337","338","339","340","341","342","343","344","345","346","347","348","349","350","351"],"group":"landuse"},"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"character\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","extensions":["Buttons"],"data":[["Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students","Population and Households","Households","Pop in Households","Pop in Group Qtrs..","Total Population","Avg. Persons per Household","Change in population","Annual % change in pop","Employment","Low-Traffic Industrial","High-Traffic Industrial","Retail","High-Traffic Retail","Low-Traffic Service","High-Traffic Service","Office","Education","Total Employment","Change in employment","Annual % change in emp","Students","Students - K-8","Students – HS","Students – College","Total Students","Change in # students","Annual % change in students"],[null,"8571","20566","1641","22207","2.40",null,null,null,"3046","874","344","756","1069","1000","1757","841","9687",null,null,null,"2018","895","1644","4557",null,null,null,"92171","237188","1806","238994","2.57",null,null,null,"12027","7618","11829","11679","7934","12835","15639","6124","85685",null,null,null,"28699","13427","5887","48013",null,null,null,"64955","146870","4109","150979","2.26",null,null,null,"12595","6655","6352","5684","6501","6728","10232","3579","58326",null,null,null,"13841","6451","3615","23907",null,null,null,"75513","197083","1720","198803","2.61",null,null,null,"21592","8415","13539","11636","11981","13497","22912","5920","109492",null,null,null,"19619","9383","3373","32375",null,null,null,"524244","1199085","17423","1216508","2.29",null,null,null,"100429","102542","80316","86883","110198","131323","294343","49705","955739",null,null,null,"128435","54416","82697","265548",null,null,null,"92720","270731","4100","274831","2.92",null,null,null,"18015","4616","9286","11002","7125","7422","41536","11870","110872",null,null,null,"28442","14492","6235","49169",null,null,null,"25527","62451","2031","64482","2.45",null,null,null,"2939","1899","3760","2889","4372","2806","5666","2287","26618",null,null,null,"5996","2583","4005","12584",null,null,null,"43791","100720","2100","102820","2.30",null,null,null,"11370","3080","4511","5268","7759","5914","4408","5463","47773",null,null,null,"10157","4669","5769","20595",null,null,null,"101701","233913","3460","237373","2.30",null,null,null,"23044","7315","13582","12113","18915","13173","8903","7530","104575",null,null,null,"23011","12965","6991","42967",null,null,null,"38029","91442","800","92242","2.40",null,null,null,"8143","3137","4259","4299","4961","4647","4201","4221","37868",null,null,null,"9277","6538","1372","17187",null,null,null,"18251","43369","75","43444","2.38",null,null,null,"5020","543","2072","1842","882","788","7236","380","18763",null,null,null,"4948","1678","0","6626",null,null,null,"118341","289103","3924","293027","2.44",null,null,null,"20552","5510","13172","14651","10728","10597","27750","5557","108517",null,null,null,"36931","16546","9430","62907",null,null,null,"4734","11328","0","11328","2.39",null,null,null,"0","73","136","134","299","294","94","60","1090",null,null,null,"508","0","0","508",null,null],[null,"8644","20755","3517","24272","2.40","2065","0.03",null,"3326","1020","380","835","1169","1103","2002","963","10798","1111","0.04",null,"2018","895","1667","4580","23","0.00",null,"99801","256497","1956","258453","2.57","19459","0.03",null,"13665","8657","13440","13271","9015","14584","18907","6113","97652","11967","0.04",null,"30190","14947","6479","51616","3603","0.02",null,"69314","156897","4385","161282","2.26","10303","0.02",null,"14728","7627","7395","6629","7592","7845","12502","3591","67909","9583","0.05",null,"15206","6515","3897","25618","1711","0.02",null,"83130","217009","3598","220607","2.61","21804","0.03",null,"22018","8580","13805","11866","12217","13762","23362","6036","111646","2154","0.01",null,"21400","10144","3600","35144","2769","0.03",null,"551299","1256239","19308","1275547","2.28","59039","0.02",null,"112963","115329","90341","97727","123953","147717","331087","55909","1075026","119287","0.04",null,"131703","55346","84677","271726","6178","0.01",null,"97500","284700","5977","290677","2.92","15846","0.02",null,"19448","4995","10024","11877","7691","8012","44838","12814","119699","8827","0.03",null,"31301","15877","6778","53956","4787","0.03",null,"26699","65318","3912","69230","2.45","4748","0.02",null,"3324","2119","4100","3124","4805","3057","6303","2557","29389","2771","0.03",null,"5996","2583","4029","12608","24","0.00",null,"46857","107771","3978","111749","2.30","8929","0.03",null,"12046","3467","4977","5814","8736","6631","4881","5956","52508","4735","0.03",null,"10854","4990","5958","21802","1207","0.02",null,"109354","251192","5339","256531","2.30","19158","0.03",null,"24919","8047","14713","13455","19555","13868","10233","8435","113225","8650","0.03",null,"24731","13978","7241","45950","2983","0.02",null,"39759","95603","2677","98280","2.40","6038","0.02",null,"8782","3443","4625","4686","5395","5070","4658","4540","41199","3331","0.03",null,"9728","6857","1417","18002","815","0.02",null,"18506","44003","75","44078","2.38","634","0.00",null,"5127","630","2228","1904","974","919","7325","380","19487","724","0.01",null,"4761","1782","0","6543","-83","-0.00",null,"123834","302758","4124","306882","2.44","13855","0.02",null,"23142","6865","13711","15348","11534","11542","28875","5946","116963","8446","0.03",null,"38579","17925","9948","66452","3545","0.02",null,"5136","12307","0","12307","2.40","979","0.03",null,"0","78","150","141","308","300","100","60","1137","47","0.01",null,"511","0","0","511","3","0.00"],[null,"8913","21453","5636","27089","2.41","2817","0.01",null,"3505","1114","403","886","1233","1169","2159","1041","11510","712","0.01",null,"2095","929","1714","4738","158","0.00",null,"120836","311125","2367","313492","2.57","55039","0.02",null,"16940","10733","16665","16452","11176","18081","23170","7855","121072","23420","0.02",null,"34933","17912","7785","60630","9014","0.02",null,"81563","185081","5160","190241","2.27","28959","0.02",null,"15516","8323","7842","6992","8002","8302","13222","3868","72067","4158","0.01",null,"17062","7359","4462","28883","3265","0.01",null,"93800","244880","5714","250594","2.61","29987","0.01",null,"24522","9556","15375","13214","13607","15328","26020","6723","124345","12699","0.01",null,"23866","11196","4054","39116","3972","0.01",null,"675499","1516388","21426","1537814","2.24","262267","0.02",null,"123669","126259","98899","106989","135699","161712","362459","61207","1176893","101867","0.01",null,"154616","60265","88638","303519","31793","0.01",null,"112100","327348","8098","335446","2.92","44769","0.01",null,"22006","5651","11341","13438","8703","9066","50736","14499","135440","15741","0.01",null,"35351","17841","7863","61055","7099","0.01",null,"27669","67691","6030","73721","2.45","4491","0.01",null,"3632","2294","4372","3312","5149","3257","6811","2773","31600","2211","0.01",null,"6163","2657","4076","12896","288","0.00",null,"48269","111021","6097","117118","2.30","5369","0.00",null,"12893","3710","5327","6222","9349","7096","5223","6374","56194","3686","0.01",null,"11036","5073","6447","22556","754","0.00",null,"118838","272887","7461","280348","2.30","23817","0.01",null,"26966","8709","15921","14560","21106","15073","11074","9127","122536","9311","0.01",null,"26555","15054","7884","49493","3543","0.01",null,"43587","104808","4798","109606","2.40","11326","0.01",null,"10855","4256","5717","5793","6669","6266","5757","5612","50925","9726","0.02",null,"10495","7397","1534","19426","1424","0.01",null,"19365","46151","81","46232","2.38","2154","0.00",null,"5493","932","2755","2116","1283","1367","7610","380","21936","2449","0.01",null,"5059","1989","0","7048","505","0.01",null,"142183","348373","4778","353151","2.45","46269","0.01",null,"31788","11389","15582","17693","14279","14599","32668","7168","145166","28203","0.02",null,"41877","20683","11676","74236","7784","0.01",null,"6470","15581","0","15581","2.41","3274","0.02",null,"0","95","193","164","332","326","116","62","1288","151","0.01",null,"521","0","0","521","10","0.00"],[null,"9190","22173","7990","30163","2.41","3074","0.01",null,"3505","1114","403","886","1233","1169","2159","1041","11510","0","0",null,"2161","958","1761","4880","142","0.00",null,"145013","374217","2842","377059","2.58","63567","0.02",null,"20215","12808","19887","19635","13338","21579","27432","9598","144492","23420","0.02",null,"40070","21206","9090","70366","9736","0.02",null,"93813","213033","5934","218967","2.27","28726","0.01",null,"16428","8859","8327","7452","8482","8810","13999","4157","76514","4447","0.01",null,"19054","8177","5027","32258","3375","0.01",null,"104300","272324","8068","280392","2.61","29798","0.01",null,"26967","10509","16909","14534","14963","16856","28616","7393","136747","12402","0.01",null,"26108","12155","4508","42771","3655","0.01",null,"783199","1746499","23780","1770279","2.23","232465","0.01",null,"136272","139130","108978","117892","149529","178193","399401","67445","1296840","119947","0.01",null,"172529","70148","92600","335277","31758","0.01",null,"128700","375830","10454","386284","2.92","50838","0.01",null,"24758","6355","12759","15118","9790","10199","57076","16314","152369","16929","0.01",null,"39775","19985","8949","68709","7654","0.01",null,"28190","68961","8385","77346","2.45","3625","0.00",null,"3997","2501","4694","3534","5558","3494","7416","3029","34223","2623","0.01",null,"6187","2667","4123","12977","81","0.00",null,"48960","112613","8453","121066","2.30","3948","0.00",null,"13651","3929","5641","6587","9900","7514","5531","6748","59501","3307","0.01",null,"11099","5103","7504","23706","1150","0.00",null,"126611","290050","9818","299868","2.29","19520","0.01",null,"28721","9276","16958","15508","22436","16106","11794","9722","130521","7985","0.01",null,"27855","15820","9288","52963","3470","0.01",null,"47598","114454","7155","121609","2.40","12003","0.01",null,"12859","5040","6772","6862","7899","7423","6821","6648","60324","9399","0.02",null,"11281","7951","1787","21019","1593","0.01",null,"20224","48298","85","48383","2.39","2151","0.00",null,"5862","1228","3275","2316","1580","1806","7893","380","24340","2404","0.01",null,"5277","2196","0","7473","425","0.01",null,"160535","393989","5432","399421","2.45","46270","0.01",null,"40435","15921","17431","20047","16990","17635","36464","8397","173320","28154","0.02",null,"45175","23442","13404","82021","7785","0.01",null,"7805","18851","0","18851","2.42","3270","0.02",null,"0","111","235","186","354","347","129","63","1425","137","0.01",null,"531","0","0","531","10","0.00"],[null,"9340","22557","9283","31840","2.42","1677","0.01",null,"3512","1118","404","888","1235","1171","2165","1045","11538","28","0.00",null,"2219","983","1785","4987","107","0.00",null,"158354","409079","3109","412188","2.58","35129","0.02",null,"21873","13870","21537","21265","14459","23365","29598","10491","156458","11966","0.02",null,"42847","23059","9745","75651","5285","0.01",null,"99990","227116","6331","233447","2.27","14480","0.01",null,"16918","9239","8607","7728","8757","9083","14434","4315","79081","2567","0.01",null,"19992","8568","5310","33870","1612","0.01",null,"109381","285531","9373","294904","2.61","14512","0.01",null,"28409","11068","17814","15310","15772","17764","30137","7795","144069","7322","0.01",null,"27148","12597","4736","44481","1710","0.01",null,"835985","1860514","25108","1885622","2.23","115343","0.01",null,"141992","144963","113533","122797","155794","185638","415971","70299","1350987","54147","0.01",null,"177572","73145","94587","345304","10027","0.01",null,"137046","400129","11753","411882","2.92","25598","0.01",null,"26378","6769","13594","16098","10428","10875","60750","17374","162266","9897","0.01",null,"41915","21021","9492","72428","3719","0.01",null,"28481","69654","9684","79338","2.45","1992","0.01",null,"4180","2604","4853","3645","5762","3610","7712","3158","35524","1301","0.01",null,"6202","2674","4147","13023","46","0.00",null,"49496","113812","9748","123560","2.30","2494","0.00",null,"14101","4058","5828","6802","10226","7761","5713","6976","61465","1964","0.01",null,"11132","5118","8119","24369","663","0.01",null,"130641","299022","11116","310138","2.29","10270","0.01",null,"29666","9583","17519","16022","23151","16664","12184","10043","134832","4311","0.01",null,"28509","16203","10116","54828","1865","0.01",null,"49796","119727","8448","128175","2.40","6566","0.01",null,"13887","5443","7314","7409","8532","8019","7365","7186","65155","4831","0.02",null,"11705","8248","1935","21888","869","0.01",null,"20660","49378","87","49465","2.39","1082","0.00",null,"6050","1380","3542","2427","1741","2040","8042","380","25602","1262","0.01",null,"5402","2300","0","7702","229","0.01",null,"169806","416935","5787","422722","2.46","23301","0.01",null,"44787","18209","18409","21263","18444","19229","38382","9059","187782","14462","0.02",null,"46825","24822","14268","85915","3894","0.01",null,"8470","20484","0","20484","2.42","1633","0.02",null,"0","119","255","197","363","356","137","64","1491","66","0.01",null,"536","0","0","536","5","0.00"],[null,"9476","22918","10572","33490","2.42","1650","0.01",null,"3515","1120","404","889","1236","1173","2168","1045","11550","12","0.00",null,"2273","1007","1808","5088","101","0.00",null,"171591","443808","3362","447170","2.59","34982","0.02",null,"23488","14883","23111","22818","15502","25076","31693","11341","167912","11454","0.01",null,"45622","24907","10395","80924","5273","0.01",null,"106062","241088","6710","247798","2.27","14351","0.01",null,"17294","9508","8788","7870","8912","9281","14745","4444","80842","1761","0.00",null,"20927","8956","5592","35475","1605","0.01",null,"114400","298675","10660","309335","2.61","14431","0.01",null,"29807","11617","18690","16064","16539","18632","31629","8171","151149","7080","0.01",null,"28175","13037","4962","46174","1693","0.01",null,"888396","1974169","26356","2000525","2.22","114903","0.01",null,"147509","150634","117984","127640","161893","192918","432423","73016","1404017","53030","0.01",null,"182572","76127","96563","355262","9958","0.01",null,"145300","424314","13037","437351","2.92","25469","0.01",null,"27955","7167","14393","17053","11045","11514","64383","18406","171916","9650","0.01",null,"44037","22051","10034","76122","3694","0.01",null,"28755","70338","10966","81304","2.45","1966","0.00",null,"4348","2701","5004","3747","5951","3721","7995","3276","36743","1219","0.01",null,"6217","2681","4171","13069","46","0.00",null,"49988","114974","11032","126006","2.30","2446","0.00",null,"14530","4183","6004","7011","10537","7997","5887","7184","63333","1868","0.01",null,"11162","5132","8734","25028","659","0.01",null,"134597","307927","12398","320325","2.29","10187","0.01",null,"30583","9877","18058","16515","23846","17200","12559","10352","138990","4158","0.01",null,"29148","16582","10942","56672","1844","0.01",null,"51977","124986","9735","134721","2.40","6546","0.01",null,"14894","5839","7845","7949","9150","8597","7899","7700","69873","4718","0.01",null,"12122","8544","2082","22748","860","0.01",null,"21084","50445","89","50534","2.39","1069","0.00",null,"6229","1528","3799","2528","1891","2254","8182","380","26791","1189","0.01",null,"5527","2403","0","7930","228","0.01",null,"178919","439699","6122","445821","2.46","23099","0.01",null,"49083","20458","19300","22407","19749","20712","40259","9660","201628","13846","0.01",null,"48472","26200","15132","89804","3889","0.01",null,"9135","22117","0","22117","2.42","1633","0.02",null,"0","127","275","208","372","365","145","64","1556","65","0.01",null,"541","0","0","541","5","0.00"],["Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Population and Households","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Employment","Students","Students","Students","Students","Students","Students","Students"],["Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Anson","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Cabarrus","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Rowan","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Iredell","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Mecklenburg","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Union","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Stanly","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Cleveland","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Gaston","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lincoln","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","Lancaster","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","York","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba","Catawba"],["1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19","20","21","22","23","24","25","26","27","28","29","30","31","32","33","34","35","36","37","38","39","40","41","42","43","44","45","46","47","48","49","50","51","52","53","54","55","56","57","58","59","60","61","62","63","64","65","66","67","68","69","70","71","72","73","74","75","76","77","78","79","80","81","82","83","84","85","86","87","88","89","90","91","92","93","94","95","96","97","98","99","100","101","102","103","104","105","106","107","108","109","110","111","112","113","114","115","116","117","118","119","120","121","122","123","124","125","126","127","128","129","130","131","132","133","134","135","136","137","138","139","140","141","142","143","144","145","146","147","148","149","150","151","152","153","154","155","156","157","158","159","160","161","162","163","164","165","166","167","168","169","170","171","172","173","174","175","176","177","178","179","180","181","182","183","184","185","186","187","188","189","190","191","192","193","194","195","196","197","198","199","200","201","202","203","204","205","206","207","208","209","210","211","212","213","214","215","216","217","218","219","220","221","222","223","224","225","226","227","228","229","230","231","232","233","234","235","236","237","238","239","240","241","242","243","244","245","246","247","248","249","250","251","252","253","254","255","256","257","258","259","260","261","262","263","264","265","266","267","268","269","270","271","272","273","274","275","276","277","278","279","280","281","282","283","284","285","286","287","288","289","290","291","292","293","294","295","296","297","298","299","300","301","302","303","304","305","306","307","308","309","310","311","312","313","314","315","316","317","318","319","320","321","322","323","324","325","326","327","328","329","330","331","332","333","334","335","336","337","338","339","340","341","342","343","344","345","346","347","348","349","350","351"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Parameters<\/th>\n      <th>2022<\/th>\n      <th>2025<\/th>\n      <th>2035<\/th>\n      <th>2045<\/th>\n      <th>2050<\/th>\n      <th>2055<\/th>\n      <th>Category<\/th>\n      <th>County<\/th>\n      <th>.row_id<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":12,"lengthMenu":[5,10,20,50,100],"scrollX":true,"fixedHeader":true,"autoWidth":false,"dom":"Bfrtip","buttons":[{"extend":"csv","text":"Download CSV","filename":"County_Data"}],"columnDefs":[{"width":"120px","targets":0},{"width":"100px","targets":"_all"},{"targets":[7,8,9],"visible":false},{"name":"Parameters","targets":0},{"name":"2022","targets":1},{"name":"2025","targets":2},{"name":"2035","targets":3},{"name":"2045","targets":4},{"name":"2050","targets":5},{"name":"2055","targets":6},{"name":"Category","targets":7},{"name":"County","targets":8},{"name":".row_id","targets":9}],"order":[],"orderClasses":false,"orderCellsTop":true},"selection":{"mode":"multiple","selected":null,"target":"row","selectable":null}},"evals":[],"jsHooks":[]}</script>
+</div>
+<script>
+    
+    function setupTableVisibility() {
+      
+      var countyDiv = document.getElementById('county');
+      var categoryDiv = document.getElementById('category');
+      
+      // Wait until Crosstalk/Selectize has created the controls
+      if (!countyDiv || !categoryDiv ||
+          !countyDiv.getElementsByClassName('selectized').length ||
+          !categoryDiv.getElementsByClassName('selectized').length) {
+        
+        setTimeout(setupTableVisibility, 100);
+        return;
+      }
+      
+      var countySelect =
+        countyDiv.getElementsByClassName('selectized')[0].selectize;
+      
+      var categorySelect =
+        categoryDiv.getElementsByClassName('selectized')[0].selectize;
+      
+      var table = document.getElementById('data_table_container');
+      
+      if (!table) {
+        return;
+      }
+      
+      function checkFilters() {
+        
+        var county = countySelect.getValue();
+        var category = categorySelect.getValue();
+        
+        // Show table ONLY when both filters have a selection
+        if (county && category) {
+          table.style.display = '';
+        } else {
+          table.style.display = 'none';
+        }
+      }
+      
+      // Run when County changes
+      countySelect.on('change', checkFilters);
+      
+      // Run when SE Data changes
+      categorySelect.on('change', checkFilters);
+      
+      // Hide table initially
+      checkFilters();
+    }
+    
+    $(document).ready(function() {
+      setupTableVisibility();
+    });
+    
+  </script>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3,h4",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = false;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
