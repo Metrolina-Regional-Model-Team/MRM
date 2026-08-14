@@ -439,7 +439,7 @@ Macro "CapSpd" (Args)
 		end*/
 	
 		// areatp : Check if any taz are illegal - SETS DEFAULT AREA TYPE TO 3
-		TAZErrSelect = "Select * where AT_TAZ.TAZ = null"
+		/*TAZErrSelect = "Select * where AT_TAZ.TAZ = null"
 		nsel = SelectByQuery("BadTAZ", "Several", TAZErrSelect)
 		ptr = GetFirstRecord("Join_AT|BadTAZ",)
 		while ptr <> null do
@@ -467,7 +467,7 @@ Macro "CapSpd" (Args)
 			AT = 3
 			SetRecordValues(Join_AT, ptr,{{HwyView + ".areatp", AT}})
 			ptr = GetNextRecord("Join_AT|", null,)
-		end //while ptr <> null
+		end //while ptr <> null*/
 	
 		CloseView(Join_AT)
 		CloseView(AT_TAZ)
@@ -590,6 +590,229 @@ Macro "CapSpd" (Args)
 		}
 		})
 
+		/*vw_tbl_hwy = tbl_hwy.GetView()
+		SetView(Join_AT)
+		TAZErrSelect = "Select * where AT_TAZ.TAZ = null"
+
+		nsel = SelectByQuery(
+			"BadTAZ",
+			"Several",
+			TAZErrSelect
+		)*/
+		// TEMPORARY DEBUG
+		/*ShowMessage("Number of bad TAZ records = " + i2s(nsel))
+		ptr = GetFirstRecord("Join_AT|BadTAZ",)*/
+
+		/*while ptr <> null do
+
+			hwyrec = GetRecordValues(
+				Join_AT,
+				ptr,
+				{"ID", vw_tbl_hwy + ".TAZ"}
+			)
+
+			ID = hwyrec[1][2]
+			BadTAZ = hwyrec[2][2]*/
+			// TEMPORARY DEBUG
+			/*ShowMessage(
+				"Bad TAZ found. ID = " + i2s(ID) +
+				", TAZ = " + i2s(BadTAZ)
+			)*/
+			// Count severe error
+			/*cnterrlvl2 = cnterrlvl2 + 1*/
+
+			// Add to external error file
+			/*ErrFileRec = ErrFileRec + {{
+				ID,
+				"Link",
+				"Severe",
+				"TAZ",
+				i2s(BadTAZ),
+				"Illegal TAZ, Default Area Type = 3"
+			}}*/
+
+			// -----------------------------------------
+			// Record error in tbl_CapSpdErr
+			// -----------------------------------------
+
+			/*errmsg = "Illegal TAZ, Default Area Type = 3"
+			SetView(tbl_CapSpdErr.GetView())
+			// Find the corresponding tbl_CapSpdErr record
+			ErrSelect = "Select * where ID = " + i2s(ID)
+
+			nselErr = SelectByQuery(
+				"ThisErr",
+				"Several",
+				ErrSelect
+			)*/
+			// TEMPORARY DEBUG
+			/*ShowMessage(
+				"tbl_CapSpdErr matches for ID " +
+				i2s(ID) + " = " + i2s(nselErr)
+			)*/
+			/*ptrErr = GetFirstRecord(
+				tbl_CapSpdErr.GetView() + "|ThisErr",
+			)
+
+			if ptrErr <> null then do
+
+				recErr = GetRecordValues(
+					tbl_CapSpdErr.GetView(),
+					ptrErr,
+					{"errormessage"}
+				)
+
+				oldmsg = recErr[1][2]
+
+				SetRecordValues(
+					tbl_CapSpdErr.GetView(),
+					ptrErr,
+					{
+						{"severe", 1},
+						{"errorcode", 1},
+						{"errormessage",
+							if oldmsg = null or oldmsg = " "
+							then errmsg
+							else oldmsg + "; " + errmsg
+						}
+					}
+				)
+
+			end
+			else do*/
+
+				// TEMPORARY DEBUG
+				/*ShowMessage(
+					"WARNING: No tbl_CapSpdErr record found for ID = " +
+					i2s(ID)
+				)*/
+
+			/*end
+				// Default Area Type
+				SetView(Join_AT)
+				AT = 3
+
+				SetRecordValues(
+					Join_AT,
+					ptr,
+					{{vw_tbl_hwy + ".areatp", AT}}
+				)
+
+				ptr = GetNextRecord(
+					"Join_AT|",
+					null,
+				)
+
+		end
+			
+		// Area type
+		//	legalat = {1,2,3,4,5}
+		SetView(Join_AT)
+		ATErrSelect = "Select * where areatp = null or areatp < 1 or areatp > 6"
+
+		nsel = SelectByQuery(
+			"BadAT",
+			"Several",
+			ATErrSelect
+		)
+
+		ptr = GetFirstRecord(
+			"Join_AT|BadAT",
+		)
+
+		while ptr <> null do
+
+			hwyrec = GetRecordValues(
+				Join_AT,
+				ptr,
+				{"ID", "areatp"}
+			)
+
+			ID = hwyrec[1][2]
+			BadAT = hwyrec[2][2]
+
+			cnterrlvl2 = cnterrlvl2 + 1*/
+
+			// -----------------------------------------
+			// Add to external error file
+			// -----------------------------------------
+
+			/*ErrFileRec = ErrFileRec + {{
+				ID,
+				"Link",
+				"Severe",
+				"areatp",
+				i2s(BadAT),
+				"Illegal Area Type, Default Area Type = 3"
+			}}*/
+
+			// -----------------------------------------
+			// Record error in tbl_CapSpdErr
+			// -----------------------------------------
+
+			/*errmsg = "Illegal Area Type, Default Area Type = 3"
+			SetView(tbl_CapSpdErr.GetView())
+			// Find the corresponding error record using ID
+			ErrSelect = "Select * where ID = " + i2s(ID)
+
+			nselErr = SelectByQuery(
+				"ThisErr",
+				"Several",
+				ErrSelect
+			)
+
+			// Get pointer to the tbl_CapSpdErr record
+			ptrErr = GetFirstRecord(
+				tbl_CapSpdErr.GetView() + "|ThisErr",
+			)
+
+			if ptrErr <> null then do
+
+				recErr = GetRecordValues(
+					tbl_CapSpdErr.GetView(),
+					ptrErr,
+					{"errormessage"}
+				)
+
+				oldmsg = recErr[1][2]
+
+				SetRecordValues(
+					tbl_CapSpdErr.GetView(),
+					ptrErr,
+					{
+						{"severe", 1},
+						{"errorcode", 1},
+						{"errormessage",
+							if oldmsg = null or oldmsg = " "
+							then errmsg
+							else oldmsg + "; " + errmsg
+						}
+					}
+				)
+
+			end
+
+			// -----------------------------------------
+			// Default Area Type
+			// -----------------------------------------
+			SetView(Join_AT)
+			AT = 3
+
+			SetRecordValues(
+				Join_AT,
+				ptr,
+				{{HwyView + ".areatp", AT}}
+			)
+
+			ptr = GetNextRecord(
+				"Join_AT|",
+				null,
+			)
+		end //while ptr <> null
+		CloseView(Join_AT)
+		CloseView(AT_TAZ)
+		//CloseView(tbl_CapSpdErr.GetView())
+		vATypeIn = null*/
 		/*ID 			= tbl_hwy.GetDataVectors({FieldNames: {"ID"}})
 		LinkLen 	= tbl_hwy.GetDataVectors({FieldNames: {"Length"}})
 		TrafficDir 	= tbl_hwy.GetDataVectors({FieldNames: {"DIR"}})*/
@@ -715,7 +938,7 @@ Macro "CapSpd" (Args)
 
 
 			// TAZ check - is it null?  If so, Throw fatal error - TAZ is required for area type assignment
-			/*tbl_CapSpdErr.fatalflaw = if TAZ = null then 1 else 0
+			/*tbl_CapSpdErr.severe = if TAZ = null then 1 else 0
             tbl_CapSpdErr.errorcode = if TAZ = null then 1 else 0
             tbl_CapSpdErr.errormessage = if TAZ = null then "Invalid TAZ" else " "*/
 
@@ -724,15 +947,19 @@ Macro "CapSpd" (Args)
 			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
 			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then if tbl_CapSpdErr.errormessage = null then "Illegal area type" else tbl_CapSpdErr.errormessage + "; Illegal area type" else tbl_CapSpdErr.errormessage */
 
-			/*tbl_CapSpdErr.fatalflaw = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.fatalflaw
+			tbl_CapSpdErr.severe = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.severe
 			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
-			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then "Illegal area type" else " "*/
-
+			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then "Illegal area type" else " "
+			tbl_hwy.areatp = if areatype = null or areatype < 1 or areatype > 5 then 3 else areatype
 			// Zero length link check (is FATAL!)
+			/*tbl_CapSpdErr.fatalflaw = if LinkLen <= 0.001 then 1 else 0
+            tbl_CapSpdErr.errorcode = if LinkLen <= 0.001 then 1 else 0
+            tbl_CapSpdErr.errormessage = if LinkLen <= 0.001 then "Zero length link" else " "*/
 
-            tbl_CapSpdErr.fatalflaw = if LinkLen > 0.001 then 0 else tbl_CapSpdErr.fatalflaw
-            tbl_CapSpdErr.errorcode = if LinkLen > 0.001 then 0 else tbl_CapSpdErr.errorcode
-            tbl_CapSpdErr.errormessage = if LinkLen < 0.001 then if tbl_CapSpdErr.errormessage = null then "Zero length link" else tbl_CapSpdErr.errormessage + "; Zero length link" else tbl_CapSpdErr.errormessage
+
+            /*tbl_CapSpdErr.fatalflaw = if LinkLen <= 0.001 then 1 else tbl_CapSpdErr.fatalflaw
+            tbl_CapSpdErr.errorcode = if LinkLen <= 0.001 then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if LinkLen <= 0.001 then if tbl_CapSpdErr.errormessage = null then "Zero length link" else tbl_CapSpdErr.errormessage + "; Zero length link" else tbl_CapSpdErr.errormessage*/
 
             // Link direction code,  legaldir = {-1, 0, 1}
             tbl_CapSpdErr.fatalflaw = if TrafficDir <> -1 and TrafficDir <> 0 and TrafficDir <> 1 then 1 else tbl_CapSpdErr.fatalflaw
@@ -752,6 +979,15 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errormessage = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then if tbl_CapSpdErr.errormessage = null then "Illegal fedfuncl" else tbl_CapSpdErr.errormessage + "; Illegal fedfuncl" else tbl_CapSpdErr.errormessage
             tbl_hwy.fedfuncl = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then "LU" else fedfuncl
 
+			// factype : facility type,  DEFAULT = U
+			//	legalfac = {'F','E','R','D','M','B','T','C','U'}
+			chkfactype:
+            tbl_CapSpdErr.warning = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.errorcode = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then 1 else tbl_CapSpdErr.errorcode
+            tbl_CapSpdErr.errormessage = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then if tbl_CapSpdErr.errormessage = null then "Illegal facility type" else tbl_CapSpdErr.errormessage + "; Illegal facility type, default=U" else tbl_CapSpdErr.errormessage
+            tbl_hwy.factype = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then "U" else factype
+
+
             // lanesAB , lanesBA :  Lanes A to B and B to A
             // Fatal - dir indicates lanes, none there.  Warning - dir indicates no lanes, have lanes
 
@@ -761,7 +997,7 @@ Macro "CapSpd" (Args)
 
             tbl_CapSpdErr.fatalflaw = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then 1 else tbl_CapSpdErr.fatalflaw
             tbl_CapSpdErr.errorcode = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then 1 else tbl_CapSpdErr.errorcode
-            tbl_CapSpdErr.errormessage = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesAB) else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesAB) else tbl_CapSpdErr.errormessage
+            tbl_CapSpdErr.errormessage = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) else tbl_CapSpdErr.errormessage
 
             tbl_CapSpdErr.warning = if (TrafficDir = -1 and lanesAB > 0) then 1 else 0
             tbl_CapSpdErr.errorcode = if (TrafficDir = -1 and lanesAB > 0) then 1 else tbl_CapSpdErr.errorcode
@@ -1103,18 +1339,21 @@ Macro "CapSpd" (Args)
 		//CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
 
 		//tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
+
+		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
 
 		vw_CapSpdErr = tbl_CapSpdErr.GetView()
 		fatal_v  = GetDataVector(vw_CapSpdErr + "|", "fatalflaw",)
 		severe_v = GetDataVector(vw_CapSpdErr + "|", "severe",)
 		warn_v   = GetDataVector(vw_CapSpdErr + "|", "warning",)
 
-		cnterrlvl3 = 0
+		/*cnterrlvl3 = 0
 		cnterrlvl2 = 0
-		cnterrlvl1 = 0
-		cnterrlvl3 = r2i(VectorStatistic(fatal_v,  "Sum",))
-		cnterrlvl2 = r2i(VectorStatistic(severe_v, "Sum",))
-		cnterrlvl1 = r2i(VectorStatistic(warn_v,   "Sum",))
+		cnterrlvl1 = 0*/
+		cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum",))
+		cnterrlvl2 = cnterrlvl2 + r2i(VectorStatistic(severe_v, "Sum",))
+		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum",))
 		if cnterrlvl3 > 0 then goto badquit
 		// End of first read 
 
@@ -2589,6 +2828,47 @@ Macro "CapSpd" (Args)
 		SetView(HwyView)
 		ptr = GetFirstRecord(HwyView + "|",)
 		ptrErr = GetFirstRecord(tbl_CapSpdErr.GetView() + "|",)
+
+		// --------------------------------------------------
+		// TEMPORARY TEST
+		// Check whether bad TAZ ID 241815 was assigned
+		// Area Type = 3 in HwyView
+		// --------------------------------------------------
+
+		/*TestSelect = "Select * where ID = 241815"
+
+		nTest = SelectByQuery(
+			"TestID",
+			"Several",
+			TestSelect
+		)
+
+		testPtr = GetFirstRecord(
+			HwyView + "|TestID",
+		)
+
+		if testPtr <> null then do
+
+			testRec = GetRecordValues(
+				HwyView,
+				testPtr,
+				{"ID", "areatp"}
+			)
+
+			if testRec[2][2] = null then
+				ShowMessage(
+					"TEST: ID = " + i2s(testRec[1][2]) +
+					", areatp = NULL"
+				)
+			else
+				ShowMessage(
+					"TEST: ID = " + i2s(testRec[1][2]) +
+					", areatp = " + i2s(testRec[2][2])
+				)
+
+		end*/
+
+
 		while ptr <> null do 
 			rec = GetRecordValues(HwyView, ptr, {"ID", "length", "dir", "Anode", "Bnode", "funcl", "lanesAB",
 						"lanesBA", "factype", "SpdLimRun", "parking", 
@@ -2606,6 +2886,12 @@ Macro "CapSpd" (Args)
 			SpdLimRun = rec[10][2]
 			Parking = rec[11][2]
 			AreaType = rec[12][2]
+			/*if AreaType = null then do
+				AreaType = 3
+			end*/
+			/*if AreaType = null then do
+				ShowMessage("NULL AreaType. ID = " + i2s(ID))
+			end*/
 			//ShowMessage(TypeOf(AreaType))
 			A_LeftLns = rec[13][2]
 			A_RightLns = rec[14][2]
@@ -2827,10 +3113,10 @@ Macro "CapSpd" (Args)
 				Beta  = HwyDelay3ln[rownum][AreaType*2 + 1]
 			end
 			else do
-				rownum = RunMacro("FindRow",HwyDelay1ln, Funcl)			
+				rownum = RunMacro("FindRow",HwyDelay1ln, Funcl)	
 				Alpha = HwyDelay1ln[rownum][AreaType*2]
 				Beta  = HwyDelay1ln[rownum][AreaType*2 + 1]
-			end 
+			end  
 
 			//**********************************************************************************************
 			// Centroid connectors and centroid to transit connectors (funcl 90 and 92)
@@ -3024,11 +3310,18 @@ Macro "CapSpd" (Args)
 				
 					// Facility Type Capacity factor (differs by 1, 2, or 3+ lanes
 					rownum = RunMacro("FindRow",Cap_FacType, FacType)
+					if rownum = 0 then do
+						ShowMessage(
+							"FindRow failed. FacType = " + i2s(FacType) +
+							", rownum = " + i2s(rownum)
+						)
+					end
 					if LanesAB > 2 then colnum = 4
 					else if LanesAB = 2 then colnum = 3
 					else colnum = 2
 				
-					Cap_FacType_CapFacAB = Cap_FacType[rownum][colnum]			
+					Cap_FacType_CapFacAB = Cap_FacType[rownum][colnum]
+
 				
 					// Intersection Control Capacity Factor 
 					// !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -4041,4 +4334,4 @@ Macro "CapSpd_ReadLookup" (CapSpdLookUpFile)
 	CloseView(LookupView)
 	return({0, msg})
 
-endmacro
+EndMacro
