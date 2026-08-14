@@ -185,7 +185,7 @@ Macro "CapSpd" (Args)
 			 {"ErrVal", "String", 12, null, "No"},
 			 {"ErrMsg", "String", 120, null, "No"}}) */
 
-    CapSpdErrFile = Dir + "\\Report\\CapSpdErr.bin"
+    CapSpdErrFile = Dir + "\\Report\\CapSpdErr_File.bin"
 	exist = GetFileInfo(CapSpdErrFile)
 	if exist then DeleteFile(CapSpdErrFile)
 
@@ -246,7 +246,7 @@ Macro "CapSpd" (Args)
 	end
 
 	// Area type by TAZ - to be joined to HwyView by TAZ no.  
-	AreaTypeFile = Dir + "\\LandUse\\TAZ_AreaType.bin"
+	AreaTypeFile = Dir + "\\LandUse\\TAZ_AREATYPE.bin"
 	//ShowMessage(AreaTypeFile)
 	exist = GetFileInfo(AreaTypeFile)
 	/*if exist = null
@@ -344,6 +344,10 @@ Macro "CapSpd" (Args)
 				//AppendToLogFile
 			end // for i	
 		end*/
+	//CapSpdErrFile = Dir + "\\Report\\CapSpdErr_link_1.bin"
+
+	CapSpdErr.Export({FileName: CapSpdErrFile, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+
 	ErrFileRec = null
 
 	if cnterrlvl3 > 0 then goto badquit	
@@ -947,19 +951,19 @@ Macro "CapSpd" (Args)
 			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
 			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then if tbl_CapSpdErr.errormessage = null then "Illegal area type" else tbl_CapSpdErr.errormessage + "; Illegal area type" else tbl_CapSpdErr.errormessage */
 
-			tbl_CapSpdErr.severe = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.severe
+			tbl_CapSpdErr.fatalflaw= if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.fatalflaw
 			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
 			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then "Illegal area type" else " "
-			tbl_hwy.areatp = if areatype = null or areatype < 1 or areatype > 5 then 3 else areatype
+			//tbl_hwy.areatp = if areatype = null or areatype < 1 or areatype > 5 then 3 else areatype
 			// Zero length link check (is FATAL!)
 			/*tbl_CapSpdErr.fatalflaw = if LinkLen <= 0.001 then 1 else 0
             tbl_CapSpdErr.errorcode = if LinkLen <= 0.001 then 1 else 0
             tbl_CapSpdErr.errormessage = if LinkLen <= 0.001 then "Zero length link" else " "*/
 
 
-            /*tbl_CapSpdErr.fatalflaw = if LinkLen <= 0.001 then 1 else tbl_CapSpdErr.fatalflaw
+            tbl_CapSpdErr.fatalflaw = if LinkLen <= 0.001 then 1 else tbl_CapSpdErr.fatalflaw
             tbl_CapSpdErr.errorcode = if LinkLen <= 0.001 then 1 else tbl_CapSpdErr.errorcode
-            tbl_CapSpdErr.errormessage = if LinkLen <= 0.001 then if tbl_CapSpdErr.errormessage = null then "Zero length link" else tbl_CapSpdErr.errormessage + "; Zero length link" else tbl_CapSpdErr.errormessage*/
+            tbl_CapSpdErr.errormessage = if LinkLen <= 0.001 then if tbl_CapSpdErr.errormessage = null then "Zero length link" else tbl_CapSpdErr.errormessage + "; Zero length link" else tbl_CapSpdErr.errormessage
 
             // Link direction code,  legaldir = {-1, 0, 1}
             tbl_CapSpdErr.fatalflaw = if TrafficDir <> -1 and TrafficDir <> 0 and TrafficDir <> 1 then 1 else tbl_CapSpdErr.fatalflaw
@@ -1339,7 +1343,7 @@ Macro "CapSpd" (Args)
 		//CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
 
 		//tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
-		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
+		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link.bin"
 
 		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
 
@@ -2659,7 +2663,7 @@ Macro "CapSpd" (Args)
 		// Check node fatal flaws from table
 		nfatal_v = tbl_node_err.GetDataVectors({FieldNames: {"fatalflaw"}})
 		if nfatal_v <> null and VectorStatistic(nfatal_v, "Sum",) > 0 then goto badquit*/
-		CapSpdErrFile_node = Dir + "\\Report\\CapSpdErr_node_1.bin"
+		CapSpdErrFile_node = Dir + "\\Report\\CapSpdErr_node.bin"
 
 		tbl_node_err.Export({FileName: CapSpdErrFile_node, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
 
@@ -3799,7 +3803,7 @@ Macro "CapSpd" (Args)
 			end
 		ErrFileRec = null
 		if cnterrlvl3 > 0 then goto badquit	*/
-		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link_1.bin"
+		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link.bin"
 
 		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
 
