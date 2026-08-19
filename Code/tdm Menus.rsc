@@ -71,6 +71,12 @@ menu "MRM Utilities"
         mr.RunCode("Open Fixed OD Dbox", Args)
     enditem
 
+    MenuItem "SelectLink" text: "Select Link Analysis" do
+        mr = CreateObject("Model.Runtime")
+        Args = mr.GetValues()
+        mr.RunCode("Open Select Link Dbox", Args)
+    enditem
+
 endMenu
 
 
