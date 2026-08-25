@@ -13,249 +13,517 @@ output:
     css: "styles.css"
 ---
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
 library(DT)
 library(dplyr)
 library(readxl)
 library(tidyr)
 library(crosstalk)
+```
 
+```{r load_data, echo=FALSE, warning=FALSE, message=FALSE}
+# Excel file
 file_path <- "C:/MRM/docs/other/xlsx/LandUseStat.xlsx"
 
+# Get all county sheet names
 counties <- excel_sheets(file_path)
 
+# Read all county sheets
 data_all <- lapply(counties, function(cty) {
-
-  df <- read_excel(file_path, sheet = cty)
-
+  
+  df <- read_excel(
+    file_path,
+    sheet = cty
+  )
+  
+  # SE Data categories
   section_names <- c(
     "Population and Households",
     "Employment",
     "Students"
   )
-
+  
+  # Identify category rows
   df$Category <- ifelse(
     df[[1]] %in% section_names,
     df[[1]],
     NA
   )
-
+  
+  # Fill category downward
   df <- fill(df, Category)
-
+  
+  # Add county name
   df$County <- cty
-
+  
   df
-
+  
 }) %>%
   bind_rows()
+
+# Add unique row ID
+data_all$.row_id <- seq_len(nrow(data_all))
 ```
 
+```{r format_data, echo=FALSE, warning=FALSE, message=FALSE}
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-data_all$.row_id <- seq_len(nrow(data_all))
-# Make a copy for displaying in the table
+# Make a copy for displaying in the tables
 data_display <- data_all
 
 # Identify numeric columns
-num_cols <- sapply(data_display, is.numeric)
+num_cols <- sapply(
+  data_display,
+  is.numeric
+)
 
-# Format numeric columns
+# Format numeric columns:
+# Whole number -> no decimals
+# Decimal -> two decimals
 data_display[num_cols] <- lapply(
   data_display[num_cols],
   function(x) {
+    
     ifelse(
       is.na(x),
       NA,
       ifelse(
         x == floor(x),
-        formatC(x, format = "f", digits = 0),
-        formatC(x, format = "f", digits = 2)
+        formatC(
+          x,
+          format = "f",
+          digits = 0
+        ),
+        formatC(
+          x,
+          format = "f",
+          digits = 2
+        )
       )
     )
+    
   }
 )
 
-# IMPORTANT: shared_data must use data_display
+# Create SharedData for county filtering
 shared_data <- SharedData$new(
   data_display,
   key = ~.row_id,
   group = "landuse"
 )
-# shared_data <- SharedData$new(
-#   data_all,
-#   key = ~.row_id,
-#   group = "landuse"
-# )
 ```
 
+## Select County
 
-
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
-
-# County filter - select ONE county
+```{r county_filter, echo=FALSE, warning=FALSE, message=FALSE}
+# County dropdown
+# Only ONE county can be selected
 filter_select(
   id = "county",
-  label = "Select County:",
+  label = " ",
   sharedData = shared_data,
   group = ~County,
   multiple = FALSE
 )
 
-# SE Data filter - select ONE category
-filter_select(
-  id = "category",
-  label = "Select SE Data:",
-  sharedData = shared_data,
-  group = ~Category,
-  multiple = FALSE
-)
 ```
 
+# SE Data {.tabset}
 
-```{r, echo=FALSE, warning=FALSE, message=FALSE}
+## Population and Households
 
-# Find the columns that should be hidden
-hide_cols <- which(
-  names(data_all) %in% c("Category", "County", ".row_id")
+```{r population_table, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Keep only Population and Households
+population_data <- data_display %>%
+  filter(
+    Category == "Population and Households"
+  )
+
+# Create SharedData
+# Same group as county filter
+population_shared <- SharedData$new(
+  population_data,
+  key = ~.row_id,
+  group = "landuse"
+)
+
+# Find columns to hide
+hide_cols_population <- which(
+  names(population_data) %in%
+    c(
+      "Category",
+      "County",
+      ".row_id"
+    )
 ) - 1
 
+# Population and Households table
 htmltools::div(
-  id = "data_table_container",
-datatable(
-  shared_data,
-  filter = "top",
-  extensions = "Buttons",
-  options = list(
+  
+  id = "population_table_container",
+  
+  datatable(
+    population_shared,
     
-    pageLength = 12,
-    lengthMenu = c(5, 10, 20, 50, 100),
-    scrollX = TRUE,
-    fixedHeader = TRUE,
-    autoWidth = FALSE,
-    dom = "Bfrtip",
-
-    buttons = list(
-      list(
-        extend = "csv",
-        text = "Download CSV",
-        filename = "County_Data"
-      )
-    ),
-
-    columnDefs = list(
+    filter = "top",
+    
+    extensions = "Buttons",
+    
+    options = list(
       
-      # --------------------------------------------------
-      # Column widths
-      # --------------------------------------------------
+      pageLength = 12,
       
-      list(
-        width = "120px",
-        targets = 0
+      lengthMenu = c(
+        5,
+        10,
+        20,
+        50,
+        100
       ),
       
-      list(
-        width = "100px",
-        targets = "_all"
-      ),      
-      # Hide Category, County, and .row_id
-      list(
-        targets = hide_cols,
-        visible = FALSE
+      scrollX = TRUE,
+      
+      fixedHeader = TRUE,
+      
+      autoWidth = FALSE,
+      
+      dom = "Bfrtip",
+      
+      # CSV download button
+      buttons = list(
+        list(
+          extend = "csv",
+          text = "Download CSV",
+          filename = "Population_Households"
+        )
+      ),
+      
+      columnDefs = list(
+        
+        # First column width
+        list(
+          width = "120px",
+          targets = 0
+        ),
+        
+        # All columns width
+        list(
+          width = "100px",
+          targets = "_all"
+        ),
+        
+        # Hide Category, County, and .row_id
+        list(
+          targets = hide_cols_population,
+          visible = FALSE
+        )
       )
-
-      # Number formatting
-      # Whole number -> no decimals
-      # Decimal -> two decimal places
-      # list(
-      #   targets = "_all",
-      #   render = JS(
-      #     "function(data, type, row, meta) {
-      #        if (type === 'display' && data !== null && data !== '') {
-      #          
-      #          var num = Number(data);
-      # 
-      #          if (!isNaN(num)) {
-      #            
-      #            if (Number.isInteger(num)) {
-      #              return num.toString();
-      #            } else {
-      #              return num.toFixed(2);
-      #            }
-      #            
-      #          }
-      #        }
-      # 
-      #        return data;
-      #      }"
-      #   )
-      # )
-    )
-  ),
-
-  rownames = FALSE
-)
+    ),
+    
+    rownames = FALSE
+  )
+  
 )
 ```
 
+## Employment
 
+```{r employment_table, echo=FALSE, warning=FALSE, message=FALSE}
+# Keep only Employment
+employment_data <- data_display %>%
+  filter(
+    Category == "Employment"
+  )
 
-```{r, echo=FALSE, results='asis'}
+# Create SharedData
+employment_shared <- SharedData$new(
+  employment_data,
+  key = ~.row_id,
+  group = "landuse"
+)
 
+# Find columns to hide
+hide_cols_employment <- which(
+  names(employment_data) %in%
+    c(
+      "Category",
+      "County",
+      ".row_id"
+    )
+) - 1
+
+# Employment table
+htmltools::div(
+  
+  id = "employment_table_container",
+  
+  datatable(
+    employment_shared,
+    
+    filter = "top",
+    
+    extensions = "Buttons",
+    
+    options = list(
+      
+      pageLength = 12,
+      
+      lengthMenu = c(
+        5,
+        10,
+        20,
+        50,
+        100
+      ),
+      
+      scrollX = TRUE,
+      
+      fixedHeader = TRUE,
+      
+      autoWidth = FALSE,
+      
+      dom = "Bfrtip",
+      
+      # CSV download button
+      buttons = list(
+        list(
+          extend = "csv",
+          text = "Download CSV",
+          filename = "Employment"
+        )
+      ),
+      
+      columnDefs = list(
+        
+        # First column width
+        list(
+          width = "120px",
+          targets = 0
+        ),
+        
+        # All columns width
+        list(
+          width = "100px",
+          targets = "_all"
+        ),
+        
+        # Hide Category, County, and .row_id
+        list(
+          targets = hide_cols_employment,
+          visible = FALSE
+        )
+      )
+    ),
+    
+    rownames = FALSE
+  )
+  
+)
+```
+
+## Students
+
+```{r students_table, echo=FALSE, warning=FALSE, message=FALSE}
+
+# Keep only Students
+students_data <- data_display %>%
+  filter(
+    Category == "Students"
+  )
+
+# Create SharedData
+students_shared <- SharedData$new(
+  students_data,
+  key = ~.row_id,
+  group = "landuse"
+)
+
+# Find columns to hide
+hide_cols_students <- which(
+  names(students_data) %in%
+    c(
+      "Category",
+      "County",
+      ".row_id"
+    )
+) - 1
+
+# Students table
+htmltools::div(
+  
+  id = "students_table_container",
+  
+  datatable(
+    students_shared,
+    
+    filter = "top",
+    
+    extensions = "Buttons",
+    
+    options = list(
+      
+      pageLength = 12,
+      
+      lengthMenu = c(
+        5,
+        10,
+        20,
+        50,
+        100
+      ),
+      
+      scrollX = TRUE,
+      
+      fixedHeader = TRUE,
+      
+      autoWidth = FALSE,
+      
+      dom = "Bfrtip",
+      
+      # CSV download button
+      buttons = list(
+        list(
+          extend = "csv",
+          text = "Download CSV",
+          filename = "Students"
+        )
+      ),
+      
+      columnDefs = list(
+        
+        # First column width
+        list(
+          width = "120px",
+          targets = 0
+        ),
+        
+        # All columns width
+        list(
+          width = "100px",
+          targets = "_all"
+        ),
+        
+        # Hide Category, County, and .row_id
+        list(
+          targets = hide_cols_students,
+          visible = FALSE
+        )
+      )
+    ),
+    
+    rownames = FALSE
+  )
+  
+)
+```
+
+##Hide Tables Until County Is Selected
+
+```{r hide_table, echo=FALSE, warning=FALSE, message=FALSE}
 htmltools::tags$script(
   htmltools::HTML("
     
-    function setupTableVisibility() {
+    function setupCountyTableVisibility() {
       
+      // Find the county filter
       var countyDiv = document.getElementById('county');
-      var categoryDiv = document.getElementById('category');
       
-      // Wait until Crosstalk/Selectize has created the controls
-      if (!countyDiv || !categoryDiv ||
-          !countyDiv.getElementsByClassName('selectized').length ||
-          !categoryDiv.getElementsByClassName('selectized').length) {
+      // Wait until Crosstalk/Selectize has created the control
+      if (
+        !countyDiv ||
+        !countyDiv.getElementsByClassName('selectized').length
+      ) {
         
-        setTimeout(setupTableVisibility, 100);
+        setTimeout(setupCountyTableVisibility, 100);
         return;
       }
       
       var countySelect =
         countyDiv.getElementsByClassName('selectized')[0].selectize;
+
+      // Remove All option
+      countySelect.removeOption('');
+      // Get the Selectize object
+     // var countySelect =
+        //countyDiv.getElementsByClassName('selectized')[0].selectize;
       
-      var categorySelect =
-        categoryDiv.getElementsByClassName('selectized')[0].selectize;
+      // Find the three table containers
+      var populationTable =
+        document.getElementById('population_table_container');
       
-      var table = document.getElementById('data_table_container');
+      var employmentTable =
+        document.getElementById('employment_table_container');
       
-      if (!table) {
-        return;
-      }
+      var studentsTable =
+        document.getElementById('students_table_container');
       
-      function checkFilters() {
+      
+      // Function to check county selection
+      function checkCountySelection() {
         
         var county = countySelect.getValue();
-        var category = categorySelect.getValue();
         
-        // Show table ONLY when both filters have a selection
-        if (county && category) {
-          table.style.display = '';
-        } else {
-          table.style.display = 'none';
+        // ---------------------------------------------
+        // County selected
+        // ---------------------------------------------
+        
+        if (county) {
+          
+          if (populationTable) {
+            populationTable.style.display = '';
+          }
+          
+          if (employmentTable) {
+            employmentTable.style.display = '';
+          }
+          
+          if (studentsTable) {
+            studentsTable.style.display = '';
+          }
+          
+        }
+        
+        // ---------------------------------------------
+        // No county selected
+        // ---------------------------------------------
+        
+        else {
+          
+          if (populationTable) {
+            populationTable.style.display = 'none';
+          }
+          
+          if (employmentTable) {
+            employmentTable.style.display = 'none';
+          }
+          
+          if (studentsTable) {
+            studentsTable.style.display = 'none';
+          }
+          
         }
       }
       
-      // Run when County changes
-      countySelect.on('change', checkFilters);
       
-      // Run when SE Data changes
-      categorySelect.on('change', checkFilters);
+      // Check whenever county changes
+      countySelect.on(
+        'change',
+        checkCountySelection
+      );
       
-      // Hide table initially
-      checkFilters();
+      
+      // Hide tables when page first loads
+      checkCountySelection();
+      
     }
     
-    $(document).ready(function() {
-      setupTableVisibility();
-    });
+    
+    // Start after the page has loaded
+    $(document).ready(
+      function() {
+        setupCountyTableVisibility();
+      }
+    );
     
   ")
 )
