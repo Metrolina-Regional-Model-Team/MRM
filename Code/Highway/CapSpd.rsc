@@ -296,8 +296,8 @@ Macro "CapSpd" (Args)
 			hwyrec = GetRecordValues(Join_AT, ptr, {"ID", HwyView +".TAZ"})
 			ID = hwyrec[1][2]
 			BadTAZ = hwyrec[2][2]
-			cnterrlvl2 = cnterrlvl2 + 1
-			ErrFileRec = ErrFileRec + {{ID, "Link", "Severe", "TAZ", i2s(BadTAZ), "Illegal TAZ, Default Area Type = 3"}}
+			cnterrlvl3 = cnterrlvl3 + 1
+			ErrFileRec = ErrFileRec + {{ID, "Link", "FATAL", "TAZ", i2s(BadTAZ), "Illegal TAZ, Default Area Type = 3"}}
 			AT = 3
 			SetRecordValues(Join_AT, ptr,{{HwyView + ".areatp", AT}})
 			ptr = GetNextRecord("Join_AT|", null,)
@@ -312,8 +312,8 @@ Macro "CapSpd" (Args)
 			hwyrec = GetRecordValues(Join_AT, ptr, {"ID", "areatp"})
 			ID = hwyrec[1][2]
 			BadAT = hwyrec[2][2]
-			cnterrlvl2 = cnterrlvl2 + 1
-			ErrFileRec = ErrFileRec + {{ID, "Link", "Severe", "areatp", i2s(BadAT), "Illegal Area Type, Default Area Type = 3"}}
+			cnterrlvl3 = cnterrlvl3 + 1
+			ErrFileRec = ErrFileRec + {{ID, "Link", "FATAL", "areatp", i2s(BadAT), "Illegal Area Type, Default Area Type = 3"}}
 			AT = 3
 			SetRecordValues(Join_AT, ptr,{{HwyView + ".areatp", AT}})
 			ptr = GetNextRecord("Join_AT|", null,)
