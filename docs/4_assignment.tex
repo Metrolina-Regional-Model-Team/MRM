@@ -1,0 +1,421 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\documentclass[
+]{article}
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{wrapfig}
+\usepackage{float}
+\usepackage{colortbl}
+\usepackage{pdflscape}
+\usepackage{tabu}
+\usepackage{threeparttable}
+\usepackage{threeparttablex}
+\usepackage[normalem]{ulem}
+\usepackage{makecell}
+\usepackage{xcolor}
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={Assignment},
+  hidelinks,
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Assignment}
+\author{}
+\date{\vspace{-2.5em}}
+
+\begin{document}
+\maketitle
+
+{
+\setcounter{tocdepth}{4}
+\tableofcontents
+}
+\subsection{Highway}\label{highway}
+
+The traffic assignment process for the MRM is a multi-class ``user
+equilibrium'' assignment, which is a multipath procedure where vehicle
+trips are loaded from origin to destination through an iterative
+process. During each iteration, the trips for each origin-destination
+TAZ pair are assigned to a single shortest path along the network. The
+loadings from the iterations are weighted in a manner that results, at
+convergence, in the travel times along all paths being equal. This
+ensures that no driver could improve the travel time by changing the
+path. The MRM allows up to 250 iterations to ensure each assignment
+reaches the set convergence of 0.0001. As part of the assignment, the
+trip tables are assigned to the network.
+
+\subsubsection{Highway Assignment Trip
+Tables}\label{highway-assignment-trip-tables}
+
+The assignment process is applied separately to each of the four time
+periods (AM, PM, MI, NT). Then, those results are added together to
+generate the total daily volume on each link.
+
+For each of the time periods, six trip assignment tables are assigned:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Single-occupancy vehicles (SOV):} These trips do not have
+  access to HOT lanes.
+\item
+  \textbf{Two-person carpool vehicle trips (HOV-2):} Vehicles with two
+  persons have free access to HOT-2 express lanes (functional class 22
+  and 82 for access). However, no HOT-2 lanes exist in the official
+  model, as all existing and planned express lanes are HOT-3+.
+\item
+  \textbf{Three or more-person carpool vehicle trips (HOV-3):} Vehicles
+  with three or more persons have free access to HOT-2 and HOT-3+ lanes
+  (functional class 25 and 83 for access). HOT-3+ facilities in the
+  model include the existing I-77 North Express Lanes, as well as the
+  planned express lanes on I-77 South, US-74, and I-485 in build in
+  future horizon years.
+\item
+  \textbf{Commercial vehicles:} These trips do not have access to HOT
+  lanes during assignment.
+\item
+  \textbf{Medium trucks:} These trucks are assumed to have a
+  passenger-car-equivalent (PCE) of 1.5 passenger cars when calculating
+  congestion. These trips do not have access to HOT lanes or Peak Period
+  Shoulder Lanes (PPSL's, functional class 24).
+\item
+  \textbf{Heavy trucks:} These trucks are assumed to have a PCE of 2.5
+  when calculating congestion. These trips do not have access to HOT
+  lanes or PPSL's.
+\end{enumerate}
+
+Trip tables from three sources are brought together for the assignment.
+The mode choice program designates single-occupancy vehicle (SOV) and
+carpool (HOV-2, HOV-3+) person trips for home-based trips (HBW, HBS,
+HBO, SCH, HBU, JTW, ATW, NWK). Commercial vehicle, medium and heavy
+trucks, and external trips (EI, IE) are brought in from trip
+distribution. Through (EE) trips are brought in from the trip generation
+step.
+
+\subsubsection{Internal Trips}\label{internal-trips}
+
+Carpool trips are divided into 2 person carpools and 3 or more person
+carpools during mode choice. The number of 3+ carpools must be
+``assigned'' an average number of persons per car. An average 3+ carpool
+size is calculated for each trip purpose based on the 2023 household
+travel survey .
+
+\begingroup\fontsize{14}{16}\selectfont
+
+\begin{longtabu} to \linewidth {>{\raggedright}X>{\raggedright}X}
+\toprule
+Purpose & Number of Persons\\
+\midrule
+HBW & 3.560 persons\\
+HBO & 3.560 persons\\
+HBU & 3.360 persons\\
+HBSch & 3.560 persons\\
+HBS & 3.560 persons\\
+\addlinespace
+ATW & 3.660 persons\\
+\bottomrule
+\end{longtabu}
+\endgroup{}
+
+\subsubsection{HOT Assignment}\label{hot-assignment}
+
+The HOT assignment module is run after the normal feedback assignment
+process is completed. The HOT lanes modeling process is applied by
+time-of-day using the origin-destination matrices from the normal
+feedback assignment process as the base set of trips. It runs the
+assignment process five times for each time period (AM, PM, Midday, and
+Night). Travel time from each round feeds back to a skimming process
+that minimizes impedance for paths with or without using the HOT lanes.
+The new travel time is averaged with the travel time from the previous
+round to dampen oscillations between rounds.
+
+After the skims are prepared, the origin-destination matrices are
+updated with a ``Travel Time Savings'' core that is used to identify the
+savings in travel time that are realized from using the HOT lanes. These
+savings are used to identify diversion based on the amount of the HOT
+toll and people's willingness to pay. Following the HOT assignment, a
+new total assignment file (TOTASSN\_HOT.bin) is created that contains
+the estimated link volumes. These volumes should be used in place of
+TOTASSN.bin for analysis and model results reporting.
+
+\subsubsection{Transit Assignment}\label{transit-assignment}
+
+Transit Assignment in the MRM takes the transit production-attraction
+output from the mode choice model and assigns trips to particular
+transit route lines (bus, rail, etc.). Transit assignment differs from
+the highway assignment in that it must consider the access and egress
+modes in addition to the path.
+
+The MRM uses a transit assignment method created by Caliper called
+``Pathfinder''. The Pathfinder method can compute specific walk paths
+for access and egress from any origin address to any destination address
+and can assess the drive component for park and ride access on the
+highway network and will yield the single best combination of park and
+ride lot and transit service to the destination. To determine the best
+path, transit assignment travel time is monetized so that it can be
+combined with transit fares to yield a generalized cost. Considerations
+other than transit fare and walk time include drive access time (park
+and ride), transit route transfers, transit wait times, and timed
+transfers. This allows transit assignment to have sensitivity to transit
+fare increases, route schedule changes, and changes to the highway
+network that impact transit route performance.
+
+The transit assignment model assigns eighteen production-attraction
+matrices, which include:
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\item
+  \textbf{Peak Premium Walk Trips:} This trip table is created by adding
+  walk-to-premium from peak HBW (all income groups), HBO (all income
+  groups), HBU, and NHB models.
+\item
+  \textbf{Peak Premium Drive Trips:} This trip table is created by
+  adding drive-to-premium trips from peak HBW (all income groups), HBO
+  (all income groups), HBU, and NHB models.
+\item
+  \textbf{Peak Premium Drop-Off Trips:} This trip table is created by
+  adding drop-to-premium trips from peak HBW (all income groups), HBO,
+  HBU, and NHB modelsPeak Bus Walk Trips: This trip table is created by
+  adding walk-to-bus trips from peak HBW (all income groups), HBO (all
+  income groups), HBU, and NHB models.
+\item
+  \textbf{Peak Bus Drive Trips:} This trip table is created by adding
+  drive-to-bus trips from peak HBW (all income groups), HBO (all income
+  groups), HBU, and NHB models.
+\item
+  \textbf{Peak Bus Drop-Off Trips:} This trip table is created by adding
+  drop-to-bus trips from peak HBW (all income groups), HBO (all income
+  groups), HBU, and NHB models.
+\item
+  \textbf{Off-Peak Premium Walk Trips:} This trip table is created by
+  adding walk-to-premium trips from off-peak HBW (all income groups),
+  HBO (all income groups), HBU, and NHB models.
+\item
+  \textbf{Off-Peak Premium Drive Trips:} This trip table is created by
+  adding drive-to-premium trips from off-peak HBW (all income groups),
+  HBO (all income groups), HBU, and NHB models.
+\item
+  \textbf{Off-Peak Premium Drop-Off Trips:} This trip table is created
+  by adding drop-to-premium trips from off-peak HBW (all income groups),
+  HBO (all income groups), HBU, and NHB models.
+\item
+  \textbf{Off-Peak Bus Walk Trips:} This trip table is created by adding
+  walk-to-bus trips from off-peak HBW (all income groups), HBO (all
+  income groups), HBU, and NHB models.
+\item
+  \textbf{Off-Peak Bus Drive Trips:} This trip table is created by
+  adding drive-to-bus trips from off-peak HBW (all income groups), HBO
+  (all income groups), HBU, and NHB models.
+\item
+  \textbf{Off-Peak Bus Drop-Off Trips:} This trip table is created by
+  adding drop-to-bus trips from off-peak HBW (all income groups), HBO
+  (all income groups), HBU, and NHB models.
+\end{enumerate}
+
+\subsubsection{External Trips}\label{external-trips}
+
+External trips consist of external-internal (EI) trips,
+internal-external (IE,) trips, and external-external (EE) trips. These
+three trip types comprise the external station counts of each facility
+crossing the modeling area boundary. EI trips begin outside of the
+modeling area and end inside of the modeling area at a TAZ. IE trips
+begin inside the modeling area at TAZ and end outside the modeling area.
+Both are captured at the external station as they exit or enter the
+area. Finally, EE trips, commonly referred to as through trips, both
+begin and end outside of the modeling area. These trips pass through the
+modeling area entering at one external station and exiting at another.
+
+Using vehicle classification counts we divided the vehicles crossing the
+modeling area boundary at the external stations between autos,
+commercial vehicles, medium trucks and heavy trucks. The home survey and
+external roadside survey provided enough information to further divide
+IE and EI auto trips, respectively, into work and non-work trips from
+productions to attractions. However, we were not able to obtain enough
+information from the external roadside survey to do the same for EI
+trips from attractions to productions. As such, we applied the IE
+attraction to production proportion obtained from the home survey to the
+EI attraction to productions trips.
+
+In trip distribution, IE and EI work and non-work trips are modeled as
+person trips rather than vehicle trips to allow for the possible
+inclusion in mode choice at some future date.
+
+\subsubsection{Volume Delay Functions}\label{volume-delay-functions}
+
+The MRM uses the commonly used Bureau of Public Roads (BPR) formula as
+the volume-delay function to relate link travel time to the
+volume/capacity ratio. The BPR formula is shown below.
+
+The basic BPR function is expressed as:
+
+\[
+t = t_0 \times \left( 1 + \alpha \times \left( \frac{v}{c} \right)^\beta \right)
+\]
+
+Where:
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{t}: Travel time on the link\\
+\item
+  \textbf{t₀}: Free flow travel time\\
+\item
+  \textbf{v}: Traffic volume on the link\\
+\item
+  \textbf{c}: Capacity of the link\\
+\item
+  \textbf{α} and \textbf{β}: Calibration parameters, usually determined
+  based on specific road characteristics
+\end{itemize}
+
+Different functionally classified roads are known to have different
+alpha and beta coefficients which describe the interaction between
+travel behavior, congestion, and speed on a particular corridor. \#\#\#
+Function Calibration Parameters
+
+\begingroup\fontsize{14}{16}\selectfont
+
+\begin{longtabu} to \linewidth {>{\raggedright\arraybackslash}p{10em}>{\raggedright}X>{\raggedright}X>{\raggedright}X>{\raggedright}X}
+\toprule
+Functional Classification & Area Type & Lanes & Alpha & Beta\\
+\midrule
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Freeway}}\\
+\hspace{1em}1 & 2-3 &  & 0.83 & 10.00\\
+\hspace{1em}1 & 1 &  & 0.7470 & 9.00\\
+\hspace{1em}1 & 4 &  & 0.85 & 10.00\\
+\hspace{1em}1 & 5 &  & 0.88 & 10.30\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Expressway}}\\
+\hspace{1em}\hspace{1em}2 & 1-3 &  & 0.83 & 8.00\\
+\hspace{1em}2 & 4 &  & 0.83 & 8.00\\
+\hspace{1em}2 & 5 &  & 0.8549 & 8.24\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Class II}}\\
+\hspace{1em}\hspace{1em}3 & 1-4 &  & 0.62 & 7.13\\
+\hspace{1em}3 & 5 &  & 0.6386 & 7.3439\\
+\hspace{1em}3 & 1-3 & 3 & 0.70 & 7.50\\
+\hspace{1em}3 & 4 & 3 & 0.65 & 7.50\\
+\hspace{1em}3 & 5 & 3 & 0.67 & 7.73\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Major Arterial}}\\
+\hspace{1em}4 & 1-2 &  & 1.00 & 5.00\\
+\hspace{1em}4 & 3-4 &  & 0.60 & 5.00\\
+\hspace{1em}4 & 5 &  & 0.68 & 6.85\\
+\hspace{1em}4 & 3-4 & 3 & 0.65 & 5.50\\
+\hspace{1em}4 & 5 & 3 & 0.72 & 7.21\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Minor Arterial}}\\
+\hspace{1em}\hspace{1em}5 & 1-2 &  & 0.75 & 3.00\\
+\hspace{1em}5 & 3-4 &  & 0.65 & 4.00\\
+\hspace{1em}5 & 5 &  & 0.73 & 4.89\\
+\hspace{1em}5 & 1-2 & 3 & 0.75 & 2.10\\
+\hspace{1em}5 & 3-4 & 3 & 0.65 & 4.00\\
+\hspace{1em}5 & 5 & 3 & 0.77 & 4.85\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Collector}}\\
+\hspace{1em}6 & 1-4 &  & 0.76 & 3.80\\
+\hspace{1em}6 & 5 &  & 0.73 & 3.91\\
+\hspace{1em}6 & 1-4 & 3 & 0.80 & 4.00\\
+\hspace{1em}6 & 5 & 3 & 0.82 & 4.12\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Local}}\\
+\hspace{1em}7 & 1-4 &  & 0.95 & 3.80\\
+\hspace{1em}7 & 5 &  & 0.98 & 3.91\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Ramp}}\\
+\hspace{1em}8 & 1-4 &  & 0.79 & 6.65\\
+\hspace{1em}8 & 5 &  & 0.8137 & 6.8495\\
+8 & 5 & 3 & 0.81 & 6.85\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Freeway Ramp}}\\
+\hspace{1em}9 & 1-4 &  & 0.79 & 9.50\\
+\hspace{1em}9 & 5 &  & 0.81 & 9.79\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{HOT2- Freeway / Toll Only Lanes}}\\
+\hspace{1em}22/23 & 1-3 &  & 0.83 & 10.00\\
+\hspace{1em}22/23 & 4 &  & 0.85 & 10.00\\
+\hspace{1em}22/23 & 5 &  & 0.88 & 10.30\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{Peak Period Shoulder Lanes}}\\
+\hspace{1em}\hspace{1em}24 & 1 &  & 0.83 & 10.00\\
+\hspace{1em}24 & 2-3 &  & 0.62 & 7.13\\
+\hspace{1em}24 & 4 &  & 0.85 & 10.00\\
+\hspace{1em}24 & 5 &  & 0.88 & 10.30\\
+\hspace{1em}24 & 2-3 & 3 & 0.70 & 7.50\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{HOT3- Freeway}}\\
+\hspace{1em}25 & 1 &  & 0.83 & 10.00\\
+\hspace{1em}25 & 2-3 &  & 0.60 & 5.00\\
+\hspace{1em}25 & 4 &  & 0.85 & 10.00\\
+\hspace{1em}25 & 5 &  & 0.88 & 10.30\\
+\hspace{1em}25 & 2-3 & 3 & 0.65 & 5.50\\
+\addlinespace[0.3em]
+\multicolumn{5}{l}{\textbf{HOT2 \& HOT3 Access}}\\
+\hspace{1em}\hspace{1em}82 &  &  & 0.79 & 9.50\\
+83 &  &  & 0.79 & 9.50\\
+\bottomrule
+\end{longtabu}
+\endgroup{}
+
+\end{document}

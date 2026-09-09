@@ -11,9 +11,6 @@ output:
       number_sections: false
     toc_depth: 4
     css: styles.css
-  pdf_document:
-    toc: true
-    toc_depth: '4'
 ---
 
 ## Highway
