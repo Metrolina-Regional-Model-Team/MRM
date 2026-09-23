@@ -12,6 +12,7 @@ output:
     number_sections: false
     css: "styles.css"
 ---
+The following land use and socioeconomic (SE) datasets were used in the development and application of the MRM25v3.0 model.
 
 ```{r setup, echo=FALSE, warning=FALSE, message=FALSE}
 library(DT)
