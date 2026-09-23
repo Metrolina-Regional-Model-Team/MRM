@@ -505,6 +505,11 @@ htmltools::tags$script(
       }
       
       
+      // Set Anson County as the default selection
+      if (countySelect.options['Anson']) {
+        countySelect.setValue('Anson', false);
+      }
+      
       // Check whenever county changes
       countySelect.on(
         'change',
@@ -512,7 +517,7 @@ htmltools::tags$script(
       );
       
       
-      // Hide tables when page first loads
+      // Apply the initial visibility
       checkCountySelection();
       
     }
