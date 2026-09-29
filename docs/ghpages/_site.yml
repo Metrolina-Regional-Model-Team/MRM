@@ -50,10 +50,6 @@ navbar:
          href: 3_mode.html
     - text: "Other Models"
       menu:
-       - text: "Externals"
-         href: 4_ext.html
-       - text: "Freight"
-         href: 4_freight.html
        - text: "TOD"
          href: 4_TOD.html
        - text: "Assignment"
