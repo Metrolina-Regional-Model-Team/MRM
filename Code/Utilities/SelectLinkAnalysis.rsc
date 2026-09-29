@@ -214,6 +214,13 @@ Macro "HwyAssn_sel" (arguments)
 	SetLineColor(link_lyr+"|", ColorRGB(0, 0, 32000))
 	SetLineWidth(link_lyr+"|", 0)
 	setview(netview)
+	critq = RunMacro("SL_BuildCritQuery", netview, slinkid)
+	if critq = null then do
+		ShowMessage("Link ID " + slinkid + " was not found in " + netview + ". Check the Link ID and the network file.")
+		closemap()
+		goto quit
+	end
+	arguments[14] = critq
 	selpool2 = "Select * where funcl = 22 or funcl = 23 or funcl = 24 or funcl = 25 or funcl = 82 or funcl = 83"
 	selpool3 = "Select * where funcl = 23 or funcl = 25 or funcl = 83"
 	Selectbyquery("check_pool2", "Several", selpool2,)
@@ -620,6 +627,14 @@ Macro "HwyAssn_selHOT" (arguments)
 	SetLineColor(link_lyr+"|", ColorRGB(0, 0, 32000))
 	SetLineWidth(link_lyr+"|", 0)
 	setview(netview)
+	critq = RunMacro("SL_BuildCritQuery", netview, slinkid)
+	if critq = null then do
+		ShowMessage("HOT Select Link - Link ID " + slinkid + " was not found in " + netview + ". Check the Link ID and the network file.")
+		HOTHwyAssnOK = 0
+		goto quit
+	end
+	arguments[14] = critq
+	critquery = critq
 
 //***************************************************************
 //   HOTAB / HOTBA must exist for the managed lane skim			*
@@ -1337,6 +1352,22 @@ Macro "HwyAssn_selHOT" (arguments)
 	RunMacro("G30 File Close All")
 	if initial_threads <> null then SetNumThreads(initial_threads)
 	return(HOTHwyAssnOK)
+endMacro
+
+Macro "SL_BuildCritQuery" (netview, linkid)
+//  Builds the select link (critical) query using only the directions that exist on the link.
+//  One-way links (DIR = 1 or -1) exist in only one direction in the built network; asking MMA
+//  for the missing direction gives "Error initializing critical links query".
+	linkid = Trim(linkid)
+	SetView(netview)
+	n = SelectByQuery("SL_Link", "Several", "Select * where ID = " + linkid,)
+	if n = 0 then Return(null)
+	dirvec = GetDataVector(netview + "|SL_Link", "DIR",)
+	linkdir = dirvec[1]
+	if linkdir = 1 then q = "LinkAB(" + linkid + ")"
+	else if linkdir = -1 then q = "LinkBA(" + linkid + ")"
+	else q = "LinkAB(" + linkid + ") or LinkBA(" + linkid + ")"
+	Return(q)
 endMacro
 
 macro "tot_assn_sellink" (pkhrfac, minspfac, Dir, netview, AssnSubDir, assntype)
