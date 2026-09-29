@@ -219,7 +219,7 @@ This calculation can underestimate congestion. For this reason, a capacity facto
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 df <- data.frame(
   Time_Period = c("AM Peak", "Midday", "PM Peak", "Night"),
-  Hours_of_Model_Capacity = c(3, 5, 3, 5)
+  Hours_of_Model_Capacity = c(3, 6, 3, 12)
 )
 
 table<- kable(df, col.names = c("Time Period", "Hours of Model Capacity")) %>%
