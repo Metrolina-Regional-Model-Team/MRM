@@ -62,8 +62,8 @@ navbar:
       menu:
        - text: "Versions"
          href: 5_versions.html
-       - text: "Model Output"
-         href: 5_output.html
+       #- text: "Model Output"
+         #href: 5_output.html
       
   right:
     - icon: fa-github

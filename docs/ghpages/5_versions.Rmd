@@ -133,7 +133,7 @@ datatable(
       list(
         extend = "csv",
         text = "Download CSV",
-        filename = "MRM25v1_Project_List"
+        filename = "MRM25v3_Project_List"
       )
     ),
     columnDefs = list(
@@ -207,7 +207,7 @@ datatable(
       list(
         extend = "csv",
         text = "Download CSV",
-        filename = "MRM25v1_Project_List"
+        filename = "MRM25v2_Project_List"
       )
     ),
     columnDefs = list(
