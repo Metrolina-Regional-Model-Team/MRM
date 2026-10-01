@@ -418,7 +418,6 @@ htmltools::div(
 )
 ```
 
-##Hide Tables Until County Is Selected
 
 ```{r hide_table, echo=FALSE, warning=FALSE, message=FALSE}
 htmltools::tags$script(
