@@ -142,11 +142,11 @@ Area type is one of the inputs to the speed and capacity calculations of the net
 
 Each TAZ is assigned one of five area types: 
 
-* Central Business District (CBD)
-* Central Business District Fringe/Other Business District (OBD)
-* Urban
-* Suburban
-* Rural  
+* Area Type 1 - Central Business District (CBD)
+* Area Type 2 - Central Business District Fringe/Other Business District (OBD)
+* Area Type 3 - Urban
+* Area Type 4 - Suburban
+* Area Type 5 - Rural  
 
 The table below shows the criteria used for each area type.  
 
