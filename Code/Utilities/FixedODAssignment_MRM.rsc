@@ -14,7 +14,7 @@ dBox "FixedOD" (Args) center, center, 50, 8 Title: "Fixed OD Assignment" Help: "
     static ref_scen_dir, curr_scen
     //Args.[MET Directory] = { "Type":"Folder" , "Value":"%Base Folder%\\Metrolina", "Description":"Directory that holds all scenario folders" }
     METDir = Args.[MET Directory]
-    curr_scen = Args.[Run Year]
+    curr_scen = Args.[Scenario]
   enditem
 
   close do
