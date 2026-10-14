@@ -65,6 +65,11 @@ menu "MRM Utilities"
         mr.RunCodeEx("Open Diff Tool")
     enditem
 
+    MenuItem "delete_files" text: "Delete Files" do
+        mr = CreateObject("Model.Runtime")
+        mr.RunCodeEx("Open Delete Files Tool Dbox")
+    enditem
+
 endMenu
 
 
