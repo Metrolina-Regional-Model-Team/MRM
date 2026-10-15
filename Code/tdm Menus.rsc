@@ -70,7 +70,13 @@ menu "MRM Utilities"
         Args = mr.GetValues()
         mr.RunCode("Open Fixed OD Dbox", Args)
     enditem
-
+   
+   MenuItem "select_link_analysis" text: "Select Link Analysis" do
+        mr = CreateObject("Model.Runtime")
+        Args = mr.GetValues()
+        mr.RunCode("Open Select Link Dbox", Args)
+    enditem
+   
    MenuItem "delete_files" text: "Delete Files" do
         mr = CreateObject("Model.Runtime")
         Args = mr.GetValues()
