@@ -2,7 +2,7 @@ Macro "Open Delete Files Tool Dbox" (Args)
 	RunDbox("Delete Files Tool", Args)
 endmacro
 
-dBox "Delete Files Tool" (Args) center, center, 90, 17 Title: "Delete Files Tool" Help: "test" toolbox
+dBox "Delete Files Tool" (Args) center, center, 92, 17 Title: "Delete Files Tool" Help: "test" toolbox
 
     close do
         return()
@@ -14,23 +14,33 @@ dBox "Delete Files Tool" (Args) center, center, 90, 17 Title: "Delete Files Tool
         action_list = {"Lite", "Medium"}
 
         EnableItem("Model Output Profile")
+        METDir = Args.[MET Directory]
+    enditem
+
+    Edit Text 1, 1, 15 Prompt: "Choose Scenario Folder" Variable: scen_dir
+    Button after, same, 8, 1 Prompt: "Browse"
+    Help: "Browse and select the reference scenario folder." do
+        on error, escape goto skip1
+        scen_dir = ChooseDirectory("Choose Full Scenario Folder", {"Initial Directory": METDir})
+        skip1:
+        on error default
     enditem
 
     // Select files to be deleted
-    Popdown Menu "Model Output Profile" 2, 2, 24, 8 Prompt: "Model Output Profile" 
+    Popdown Menu "Model Output Profile" 1, 3, 15 Prompt: "Model Output Profile" 
         List: action_list Variable: action_index do
         if action_index = 1 then typehelp = "Only Network, SE data, TAZ, and summaries will be retained."
-		else typehelp = "In addition to Network, SE data, TAZ, and summaries, other files necessary for running tools will also be retained."
+		else typehelp = "In addition to Network, SE data, TAZ, trip generation, summaries and other files necessary for running tools will also be retained."
     enditem 
 
 
-    Button 6, 4 Prompt: "Delete Files" do
-        RunMacro("Delete Folder and Files", Args, action_index)
-        ShowMessage("A slim verison of output folder has been created.")
+    Button After, Same, 12, 1 Prompt: "Delete Files" do
+        RunMacro("Delete Folder and Files", scen_dir, action_index)
+        ShowMessage("A slim verison of Model output has been created.")
 	return(1)
     enditem
 
-    Radio List "Help" 28,.75,43,12 Prompt: "Help"
+    Radio List "Help" 30,.75,43,12 Prompt: "Help"
 
 	// Help text boxes
 	Text" " 30.5,2,40,10 Variable:typehelp
@@ -41,61 +51,88 @@ dBox "Delete Files Tool" (Args) center, center, 90, 17 Title: "Delete Files Tool
 
     Button 9,15.5,12 Prompt: "Help" do
         ShowMessage(
-        "This tool is used to create a slim version of output folder by deleting unnecessary files. You can choose to" +
-         "either deleting probability and logsum matrices only or everything except network, SE, TAZ, and summary folder" +
-         "Doing such helps reduce scenario folder size by 40-80 GB. Note that after running this tool, other utility" +
-         "tools may no longer work. Please run desired utility tools first and then delete unnecessary files.\n\n"
+        "This tool creates two slimmed-down versions of the model output folder by removing unnecessary files." +
+         "Doing such helps reduce scenario folder size by approximately 60-65 GB.\n\n"
      )
     enditem
 enddbox
 
-Macro "Delete Folder and Files" (Args, action_index)
-    scen_dir = Args.[Scenario Folder]
-    dir_deletelist = null
+Macro "Delete Folder and Files" (scen_dir, action_index)
+    //scen_dir = Args.scen_dir
+    dir_list = null
     
     if action_index = 1 then do
         //set path
-        resident_mode_dir = scen_dir + "\\output\\resident\\mode"
-        resident_mode_logsum_dir = resident_mode_dir + "\\logsums"
-        resident_mode_prob_dir = resident_mode_dir + "\\probabilities"
+        AutoSkims_dir = scen_dir + "\\AutoSkims"
+        HwyAssnHOT_dir = scen_dir + "\\HwyAssn\\HOT"
+        Report_dir = scen_dir + "\\Report"
 
-        resident_dc_dir = scen_dir + "\\output\\resident\\dc"
-        resident_dc_logsum_dir = resident_dc_dir + "\\logsums"
-        resident_dc_prob_dir = resident_dc_dir + "\\probabilities"
+        //Output_dir = scen_dir + "\\Report\\Output"
+        Skims_dir = scen_dir + "\\Skims"
+        TD_dir = scen_dir + "\\TD"
 
-        univ_mode_dir = scen_dir + "\\output\\university\\mode"
-        univ_mode_logsum_dir = univ_mode_dir + "\\logsums"
-        univ_mode_prob_dir = univ_mode_dir + "\\probabilities"
+        TG_dir = scen_dir + "\\TG" //TG folder will be deleted for Lite version, but retained for Medium version
+        TOD2_dir = scen_dir + "\\TOD2"
+        TourModeSplit_dir = scen_dir + "\\TourModeSplit"
 
-        nhb_dc_prob_dir = scen_dir + "\\output\\resident\\nhb\\dc\\probabilities"
+        TranAssn_dir = scen_dir + "\\TranAssn"
+        TripTables_dir = scen_dir + "\\TripTables"
+
         
-        // {folder, {files to keep in that folder}}
-        dir_deletelist = {
-            {resident_mode_logsum_dir, {"file1.mtx", "file2.mtx"}},
-            {resident_mode_prob_dir,   {"file3.mtx"}},
-            {resident_dc_logsum_dir,   {}},
-            {resident_dc_prob_dir,     {}},
-            {univ_mode_logsum_dir,     {}},
-            {univ_mode_prob_dir,       {}},
-            {nhb_dc_prob_dir,          {"file4.bin", "file4.dcb"}}
+        // {folder, {sub-folders and files to keep in that folder}}
+        dir_list = {
+            { AutoSkims_dir, {"SPMAT_auto.mtx", "SPMAT_free.mtx"}},
+            {HwyAssnHOT_dir,   {"Assn_AMPEAKhot.bin", "Assn_AMPEAKhot.dcb", "Assn_Middayhot.bin", "Assn_Middayhot.dcb", "Assn_PMPEAKhot.bin", "Assn_PMPEAKhot.dcb", "Assn_Nighthot.bin", "Assn_Nighthot.dcb", "Tot_Assn_HOT.bin", "Tot_Assn_HOT.dcb"}},
+            {Report_dir,   {"maps", "Output", "validation", "AttractionsByCo.csv", "AvgTripLength.csv", "DC_output.csv", "MS_Statistics.csv", "OD_Statistics.csv", "ODtime_distr.csv", "ProductionsByCo.csv", "runstats_dwnldCOATFUN.csv", 
+                            "runstats_dwnldVOL.csv", "RunStats_HwyAssn.csv", "runstats_VMTAQ.csv", "runstats_VMTCnty.csv", "ScreenLineSummary.csv", "StopsByCo_AP.csv", "StopsByCo_PA.csv", "StopsDistr.csv", "TF_NUM.csv", "TF_NumByCounty.csv", 
+                            "TOD1_output.csv", "Transit_RunStats.csv", "VolGroupStats.csv"}},
+            //{Output_dir,     {}},
+            {Skims_dir,     {"TThwy_Free.mtx", "TThwy_Peak.mtx", "TTTran_Free.mtx", "TTTran_Peak.mtx"}},
+            {TD_dir,       {}},
+            {TG_dir,       {}},
+            {TOD2_dir,          {"ODHwyVeh_AMPeak.mtx", "ODHwyVeh_AMPeakhot.mtx", "ODHwyVeh_Midday.mtx", "ODHwyVeh_Middayhot.mtx", "ODHwyVeh_PMPeak.mtx", "ODHwyVeh_PMPeakhot.mtx", "ODHwyVeh_Night.mtx", "ODHwyVeh_Nighthot.mtx"}},
+            {TourModeSplit_dir, {}},
+            {TranAssn_dir,      {"Transit Assign Drive.MTX", "Transit Assign DropOff.MTX", "Transit Assign Walk.MTX"}},
+            {TripTables_dir,    {}}
         }
     end
     else do
         //set path
-        folder_a = scen_dir + "\\output\\folderA"
-        folder_b = scen_dir + "\\output\\folderB"
-        folder_c = scen_dir + "\\output\\folderC"
+        AutoSkims_dir = scen_dir + "\\AutoSkims"
+        HwyAssnHOT_dir = scen_dir + "\\HwyAssn\\HOT"
+        Report_dir = scen_dir + "\\Report"
 
-        // {folder, {files to keep in that folder}}
-        dir_deletelist = {
-            {folder_a, {"file5.mtx"}},
-            {folder_b, {"file6.csv", "file7.csv"}},
-            {folder_c, {}}
+        //Output_dir = scen_dir + "\\Report\\Output"
+        Skims_dir = scen_dir + "\\Skims"
+        TD_dir = scen_dir + "\\TD"
+
+        //TG_dir = scen_dir + "\\TG" //TG folder will be deleted for Lite version, but retained for Medium version
+        TOD2_dir = scen_dir + "\\TOD2"
+        TourModeSplit_dir = scen_dir + "\\TourModeSplit"
+
+        TranAssn_dir = scen_dir + "\\TranAssn"
+        TripTables_dir = scen_dir + "\\TripTables"
+
+        // {folder, {sub-folders and files to keep in that folder}}
+        dir_list = {
+            {AutoSkims_dir, {"SPMAT_auto.mtx", "SPMAT_free.mtx"}},
+            {HwyAssnHOT_dir,   {"Assn_AMPEAKhot.bin", "Assn_AMPEAKhot.dcb", "Assn_Middayhot.bin", "Assn_Middayhot.dcb", "Assn_PMPEAKhot.bin", "Assn_PMPEAKhot.dcb", "Assn_Nighthot.bin", "Assn_Nighthot.dcb", "Tot_Assn_HOT.bin", "Tot_Assn_HOT.dcb"}},
+            {Report_dir,   {"maps", "Output", "validation", "AttractionsByCo.csv", "AvgTripLength.csv", "DC_output.csv", "MS_Statistics.csv", "OD_Statistics.csv", "ODtime_distr.csv", "ProductionsByCo.csv", "runstats_dwnldCOATFUN.csv", 
+                            "runstats_dwnldVOL.csv", "RunStats_HwyAssn.csv", "runstats_VMTAQ.csv", "runstats_VMTCnty.csv", "ScreenLineSummary.csv", "StopsByCo_AP.csv", "StopsByCo_PA.csv", "StopsDistr.csv", "TF_NUM.csv", "TF_NumByCounty.csv", 
+                            "TOD1_output.csv", "Transit_RunStats.csv", "VolGroupStats.csv"}},
+            //{Output_dir,     {}},
+            {Skims_dir,     {"TThwy_Free.mtx", "TThwy_Peak.mtx", "TTTran_Free.mtx", "TTTran_Peak.mtx"}},
+            {TD_dir,       {}},
+            //{TG_dir,       {}},
+            {TOD2_dir,          {"ODHwyVeh_AMPeak.mtx", "ODHwyVeh_AMPeakhot.mtx", "ODHwyVeh_Midday.mtx", "ODHwyVeh_Middayhot.mtx", "ODHwyVeh_PMPeak.mtx", "ODHwyVeh_PMPeakhot.mtx", "ODHwyVeh_Night.mtx", "ODHwyVeh_Nighthot.mtx"}},
+            {TourModeSplit_dir, {}},
+            {TranAssn_dir,      {"Transit Assign Drive.MTX", "Transit Assign DropOff.MTX", "Transit Assign Walk.MTX"}},
+            {TripTables_dir,    {}}
         }
     end
 
     // Delete files
-    for item in dir_deletelist do
+    for item in dir_list do
         dir_delete = item[1]
         keep_list = item[2]
 
@@ -113,13 +150,20 @@ Macro "Delete Folder and Files" (Args, action_index)
                 if keep = 0 then DeleteFile(dir_delete + "\\" + fname)
             end
 
-            // delete all subfolders
+            // delete all subfolders except those in keep_list
             sub_folders = GetDirectoryInfo(dir_delete + "\\*.*", "Folder")
             if sub_folders <> null then do
                 for sub_folder in sub_folders do
-                    sub_folder_path = dir_delete + "\\" + sub_folder[1] + "\\"
-                    dir = CreateObject("CC.Directory", sub_folder_path)
-                    dir.Delete()
+                    sname = sub_folder[1]
+                    keep = 0
+                    for k in keep_list do
+                        if Lower(k) = Lower(sname) then keep = 1
+                    end
+                    if keep = 0 then do
+                        sub_folder_path = dir_delete + "\\" + sname + "\\"
+                        dir = CreateObject("CC.Directory", sub_folder_path)
+                        dir.Delete()
+                    end
                 end
             end
 
@@ -128,16 +172,4 @@ Macro "Delete Folder and Files" (Args, action_index)
         end
     end
 
-endmacro
-
-
-Macro "Delete Files" (dir)
-    files = GetDirectoryInfo(dir + "/*", "File")
-        
-    for i = 1 to files.length do
-        file = files[i][1]
-        filepath = dir + "/" + file
-        DeleteFile(filepath)
-    end
-    if GetDirectoryInfo(dir + "\\*.*", "Folder") = null then RemoveDirectory(dir)
 endmacro

@@ -65,9 +65,16 @@ menu "MRM Utilities"
         mr.RunCodeEx("Open Diff Tool")
     enditem
 
-    MenuItem "delete_files" text: "Delete Files" do
+   MenuItem "fixed_od" text: "Fixed OD Assignment" do
         mr = CreateObject("Model.Runtime")
-        mr.RunCodeEx("Open Delete Files Tool Dbox")
+        Args = mr.GetValues()
+        mr.RunCode("Open Fixed OD Dbox", Args)
+    enditem
+
+   MenuItem "delete_files" text: "Delete Files" do
+        mr = CreateObject("Model.Runtime")
+        Args = mr.GetValues()
+        mr.RunCodeEx("Open Delete Files Tool Dbox", Args)
     enditem
 
 endMenu
