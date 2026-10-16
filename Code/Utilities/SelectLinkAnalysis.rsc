@@ -41,7 +41,7 @@ Macro "Open Select Link Dbox" (Args)
 	RunDbox("HwyAssn_SelectLink_dbox", Args)
 endmacro
 
-DBox "HwyAssn_SelectLink_dbox" Title: "SelectLink: Have to enter link ID"
+DBox "HwyAssn_SelectLink_dbox" center, center, 60, 17 Title: "Select Link Analysis"
 // Test to determine if only HOV are paying tolls (they shouldn't be)_July 11, 2007
 toolbox
 		init do
@@ -90,7 +90,7 @@ toolbox
 			enditem
 		Checkbox "NIGHT" 23, 9 Help: "Add the Area Type macro to the list of macros to be run at one time" variable: night do
 			enditem
-		Checkbox "HOT Assignment?" 23, 11 Help: "Check to run the iterative HOT (managed lane) assignment for the select link" variable: hotassn do
+		Checkbox "HOT Assignment" 23, 11 Help: "Check to run the iterative HOT (managed lane) assignment for the select link" variable: hotassn do
 			enditem
 		Edit Int "NumThreads" 52, 7, 4 Prompt: "Threads:" Help: "Number of threads used for the assignment (model uses 16). Set once when the run starts; TransCAD's default is restored after the last period." variable: numthreads do
 				if numthreads < 1 then numthreads = 1
