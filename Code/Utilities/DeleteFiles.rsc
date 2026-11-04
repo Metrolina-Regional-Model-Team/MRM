@@ -79,6 +79,11 @@ Macro "Delete Folder and Files" (scen_dir, action_index)
         TripTables_dir = scen_dir + "\\TripTables"
 
         
+        //To be noted:
+        //    -The folder name listed here will be deleted if no files are iisted after. 
+        //    -The files that are listed here will be kept in that folder.
+        //    -If the folder name is not listed here, it will not be deleted.
+
         // {folder, {sub-folders and files to keep in that folder}}
         dir_list = {
             { AutoSkims_dir, {"SPMAT_auto.mtx", "SPMAT_free.mtx"}},
