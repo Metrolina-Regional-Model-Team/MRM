@@ -152,15 +152,15 @@ Macro "Loaded Shape File" (MacroOpts)
 
 
     //Creating a report directory to store the loaded shape file and metadata
-    report_dir = hwynet_dir + "\\Report\\LoadedShapeFile"
+    report_dir = hwynet_dir + "\\Report\\LoadedShapeFile\\"
   
     if GetDirectoryInfo(report_dir, "All") = null then
       CreateDirectory(report_dir)
 
     /*Writing Metadata to CSV file for Loaded Shape File*/
-
+    year = right(Args.[Run Year], 4)
     str = GetTableStructure("RegNet")
-    f = OpenFile(report_dir + "\\2045_Loaded_HwyNet_Metadata.csv", "w")
+    f = OpenFile(report_dir + year +"_Loaded_HwyNet_Metadata.csv", "w")
     WriteLine(f, "Field,Description")
     //WriteLine(f, "Field,Type,Width,Precision,Description")
 
@@ -179,7 +179,7 @@ Macro "Loaded Shape File" (MacroOpts)
     /*Exporting Loaded Shape File to Shapefile for ArcGIS*/
 
     field_list = GetFields("RegNet", "All")
-    ExportArcViewShape("RegNet", report_dir + "\\2045_Loaded_HwyNet.shp", {{"Fields", field_list[1]}})
+    ExportArcViewShape("RegNet", report_dir + year + "_Loaded_HwyNet.shp", {{"Fields", field_list[1]}})
     hwy_tbl = null
     DeleteDatabase(hwy_dbd)
 endmacro
