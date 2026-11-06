@@ -422,6 +422,9 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errormessage = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then if tbl_CapSpdErr.errormessage = null then "Illegal fedfuncl" else tbl_CapSpdErr.errormessage + "; Illegal fedfuncl" else tbl_CapSpdErr.errormessage
             tbl_hwy.fedfuncl = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then "LU" else fedfuncl
 
+			//updating with new values
+			fedfuncl = tbl_hwy.fedfuncl
+
 			// factype : facility type,  DEFAULT = U
 			//	legalfac = {'F','E','R','D','M','B','T','C','U'}
 			chkfactype:
@@ -430,6 +433,8 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errormessage = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then if tbl_CapSpdErr.errormessage = null then "Illegal facility type" else tbl_CapSpdErr.errormessage + "; Illegal facility type, default=U" else tbl_CapSpdErr.errormessage
             tbl_hwy.factype = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then "U" else factype
 
+			//updating with new values
+			factype = tbl_hwy.factype
 
             // lanesAB , lanesBA :  Lanes A to B and B to A
             // Fatal - dir indicates lanes, none there.  Warning - dir indicates no lanes, have lanes
@@ -447,10 +452,16 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errormessage = if (TrafficDir = -1 and lanesAB > 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) + ", set to 0" else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) + ", set to 0" else tbl_CapSpdErr.errormessage
             tbl_hwy.lanesAB = if (TrafficDir = -1 and lanesAB > 0) then 0 else tbl_hwy.lanesAB
 
+			//updating with new values
+			lanesAB = tbl_hwy.lanesAB
+
             tbl_CapSpdErr.warning = if (TrafficDir = 1 and lanesBA > 0) then 1 else tbl_CapSpdErr.warning
             tbl_CapSpdErr.errorcode = if (TrafficDir = 1 and lanesBA > 0) then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if (TrafficDir = 1 and lanesBA > 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) + ", set to 0" else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) + ", set to 0" else tbl_CapSpdErr.errormessage
             tbl_hwy.lanesBA = if (TrafficDir = 1 and lanesBA > 0) then 0 else tbl_hwy.lanesBA
+
+			//updating with new values
+			lanesBA = tbl_hwy.lanesBA
 
             tbl_hwy.Lanes = nz(tbl_hwy.lanesAB)+nz(tbl_hwy.lanesBA) //May be put it after all errors are checked
 
@@ -461,6 +472,9 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errormessage = if parking <> "Y" and parking <> "N" and parking <> "A" and parking <> "P" and parking <> "B" then if tbl_CapSpdErr.errormessage = null then "Illegal parking code, default = N" else tbl_CapSpdErr.errormessage + "; Illegal parking code, default = N" else tbl_CapSpdErr.errormessage
             tbl_hwy.parking = if parking <> "Y" and parking <> "N" and parking <> "A" and parking <> "P" and parking <> "B" then "N" else tbl_hwy.parking
 
+			//updating with new values
+			parking = tbl_hwy.parking
+
             //Checking B Control
             tbl_CapSpdErr.warning = if (TrafficDir = -1 and B_Control <> "X") then 1 else tbl_CapSpdErr.warning
             tbl_CapSpdErr.errorcode = if (TrafficDir = -1 and B_Control <> "X") then 1 else tbl_CapSpdErr.errorcode
@@ -470,6 +484,9 @@ Macro "CapSpd" (Args)
 
             tbl_CapSpdErr.severe = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then 1 else tbl_CapSpdErr.severe
             tbl_hwy.B_control = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then "S" else tbl_hwy.B_control
+
+			//updating with new values
+			B_Control = tbl_hwy.B_control
 
             //Freeway - Anything except T (thru) - Severe warning
             tbl_CapSpdErr.severe = if funcl = 1 and (TrafficDir = 1 or TrafficDir = 0) and B_Control <> "T" then 1 else tbl_CapSpdErr.severe
@@ -484,7 +501,10 @@ Macro "CapSpd" (Args)
             tbl_hwy.A_control = if (TrafficDir = 1 and A_Control <> "X") then "X" else tbl_hwy.A_control
 
             tbl_CapSpdErr.severe = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then 1 else tbl_CapSpdErr.severe
-            tbl_hwy.A_Control = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then "S" else tbl_hwy.A_Control
+            tbl_hwy.A_control = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then "S" else tbl_hwy.A_Control
+
+			//updating with new values
+			A_Control = tbl_hwy.A_control
 
             //Freeway - Anything except T (thru) - Severe warning
             tbl_CapSpdErr.severe = if funcl = 1 and (TrafficDir = -1 or TrafficDir = 0) and A_Control <> "T" then 1 else tbl_CapSpdErr.severe
@@ -509,6 +529,9 @@ Macro "CapSpd" (Args)
             tbl_hwy.B_prohibit = if ((TrafficDir = 1 or TrafficDir = 0) and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "N" else tbl_hwy.B_prohibit
             tbl_hwy.B_prohibit = if (TrafficDir = -1 and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "X" else tbl_hwy.B_prohibit
             
+			//updating with new values
+			B_prohibit = tbl_hwy.B_prohibit
+
             // A_Prohibit : A node prohibitions, ,  DEFAULT = N
             //  legalprhb = {'N','L','R','T','C','X'}
             tbl_CapSpdErr.warning = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then 1 else tbl_CapSpdErr.warning
@@ -516,6 +539,9 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errormessage = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then if tbl_CapSpdErr.errormessage = null then "Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage + "; Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage
             tbl_hwy.A_Prohibit = if ((TrafficDir = -1 or TrafficDir = 0) and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "N" else tbl_hwy.A_Prohibit
             tbl_hwy.A_Prohibit = if (TrafficDir = 1 and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "X" else tbl_hwy.A_Prohibit
+
+			//updating with new values
+			A_Prohibit = tbl_hwy.A_Prohibit
 
             /* ============================================================
                 Here, we are checking number of lanes at the intersection. 
