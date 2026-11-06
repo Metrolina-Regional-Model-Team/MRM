@@ -410,7 +410,11 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errorcode = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then if tbl_CapSpdErr.errormessage = null then "Illegal funcl" else tbl_CapSpdErr.errormessage + "; Illegal funcl" else tbl_CapSpdErr.errormessage
             tbl_hwy.funcl = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 6 else funcl
+			
+			//updating value of "funcl" with repaired values, since this "funcl" will be used in speed limit checks later
+			funcl = tbl_hwy.funcl
 
+			
             // fedfuncl : Federal functional class, DEFAULT = LU
 
             tbl_CapSpdErr.severe = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then 1 else tbl_CapSpdErr.severe
@@ -605,7 +609,7 @@ Macro "CapSpd" (Args)
             tbl_hwy.SpdLimRun = 
                 if s2i(RunYear) > BaseYear and (funcl = 4 or funcl = 5 or funcl = 6 or funcl = 7) and areatype < 5 and SpdLimit > 49 
                     then 45
-                	else tbl_hwy.SpdLimit
+                	else tbl_hwy.SpdLimRun
 
 			skipspdlimit:
 	
@@ -902,7 +906,7 @@ Macro "CapSpd" (Args)
 						SetRecordValues(HwyView, linkptr, {{badapproach, "L"}})
 					end
 				end
-				//goto skipnode3
+				goto skipnode3
 			end
 			
 			// 4-way stop - all should be 4-way
@@ -1923,7 +1927,7 @@ Macro "CapSpd" (Args)
 	
 		// Transit guideways - travel time override based on CATS schedules / plans & speed estimates from other cities
 	
-		GuidewayTT	= OpenTable("GuidewayTT", "FFA", {GuidewayFile},)
+		GuidewayTT	= OpenTable("GuidewayTT", "FFB", {GuidewayFile},)
 	
 		guidewayview = 	JoinViews("guidewayview", HwyView + ".ID", "GuidewayTT.ID",)
 		SetView(guidewayview)
