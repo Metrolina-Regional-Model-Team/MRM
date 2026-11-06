@@ -414,7 +414,7 @@ Macro "CapSpd" (Args)
 			//updating value of "funcl" with repaired values, since this "funcl" will be used in speed limit checks later
 			funcl = tbl_hwy.funcl
 
-			
+
             // fedfuncl : Federal functional class, DEFAULT = LU
 
             tbl_CapSpdErr.severe = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then 1 else tbl_CapSpdErr.severe
@@ -1540,12 +1540,6 @@ Macro "CapSpd" (Args)
 				
 					// Facility Type Capacity factor (differs by 1, 2, or 3+ lanes
 					rownum = RunMacro("FindRow",Cap_FacType, FacType)
-					if rownum = 0 then do
-						ShowMessage(
-							"FindRow failed. FacType = " + i2s(FacType) +
-							", rownum = " + i2s(rownum)
-						)
-					end
 					if LanesAB > 2 then colnum = 4
 					else if LanesAB = 2 then colnum = 3
 					else colnum = 2
