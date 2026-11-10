@@ -527,7 +527,7 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errorcode = if (B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if (B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then if tbl_CapSpdErr.errormessage = null then "Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage + "; Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage
             tbl_hwy.B_prohibit = if ((TrafficDir = 1 or TrafficDir = 0) and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "N" else tbl_hwy.B_prohibit
-            tbl_hwy.B_prohibit = if (TrafficDir = -1 and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "X" else tbl_hwy.B_prohibit
+            //tbl_hwy.B_prohibit = if (TrafficDir = -1 and B_Prohibit <> "N" and B_Prohibit <> "L" and B_Prohibit <> "R" and B_Prohibit <> "T" and B_Prohibit <> "C" and B_Prohibit <> "X") then "X" else tbl_hwy.B_prohibit
             
 			//updating with new values
 			B_prohibit = tbl_hwy.B_prohibit
@@ -538,7 +538,7 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errorcode = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if (A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then if tbl_CapSpdErr.errormessage = null then "Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage + "; Illegal B_Prohibit code, default=N (none)" else tbl_CapSpdErr.errormessage
             tbl_hwy.A_Prohibit = if ((TrafficDir = -1 or TrafficDir = 0) and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "N" else tbl_hwy.A_Prohibit
-            tbl_hwy.A_Prohibit = if (TrafficDir = 1 and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "X" else tbl_hwy.A_Prohibit
+            //tbl_hwy.A_Prohibit = if (TrafficDir = 1 and A_Prohibit <> "N" and A_Prohibit <> "L" and A_Prohibit <> "R" and A_Prohibit <> "T" and A_Prohibit <> "C" and A_Prohibit <> "X") then "X" else tbl_hwy.A_Prohibit
 
 			//updating with new values
 			A_Prohibit = tbl_hwy.A_Prohibit
