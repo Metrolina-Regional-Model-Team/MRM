@@ -317,14 +317,14 @@ Macro "CapSpd" (Args)
 		SetView(Join_AT)
 		vATypeIn = GetDataVector("Join_AT|", "AT_TAZ.ATYPE",)
 		SetDataVector("Join_AT|", "areatp", vATypeIn, )
-	
+
 		CloseView(Join_AT)
 		CloseView(AT_TAZ)
 		vATypeIn = null
 
 		tbl_hwy = CreateObject("Table", {FileName: HwyFile, LayerType: "line"})
 		tbl_node = CreateObject("Table", {FileName: HwyFile, LayerType: "node"})
-		tbl_at_taz = CreateObject("Table", {FileName: AreaTypeFile})
+
 	
 		//   33333333333333333333333333333333333333333333333333333333333333333333333333333333333333
 		//		3.  First pass through network - error checks on entry - set defaults
