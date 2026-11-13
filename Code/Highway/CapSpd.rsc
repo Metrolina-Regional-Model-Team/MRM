@@ -183,7 +183,7 @@ Macro "CapSpd" (Args)
         {FieldName: "severe", Type: "Short"},
         {FieldName: "warning", Type: "Short"},
         {FieldName: "errorcode", Type: "Short"},
-        {FieldName: "errormessage", Type: "String", Width: 200}
+        {FieldName: "errormessage", Type: "String", Width: 255}
     }
 
 	CapSpdErr = CreateObject("Table", {Fields:a_fields})
@@ -385,13 +385,13 @@ Macro "CapSpd" (Args)
 		{FieldName: "severe", Type: "Short"},
 		{FieldName: "warning", Type: "Short"},			
 		{FieldName: "errorcode", Type: "Short"},
-		{FieldName: "errormessage", Type: "String", Width: 100}
+		{FieldName: "errormessage", Type: "String", Width: 255}
 		}
 		})
 
 
 			//Area type check - is it legal?  legal = {1,2,3,4,5}
-			tbl_CapSpdErr.fatalflaw= if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.fatalflaw
+			tbl_CapSpdErr.fatalflaw= if areatype = null or areatype < 1 or areatype > 5 then 1 else 0
 			tbl_CapSpdErr.errorcode = if areatype = null or areatype < 1 or areatype > 5 then 1 else tbl_CapSpdErr.errorcode
 			tbl_CapSpdErr.errormessage = if areatype = null or areatype < 1 or areatype > 5 then "Illegal area type" else " "
 
@@ -409,7 +409,7 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.severe = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 1 else 0
             tbl_CapSpdErr.errorcode = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then if tbl_CapSpdErr.errormessage = null then "Illegal funcl" else tbl_CapSpdErr.errormessage + "; Illegal funcl" else tbl_CapSpdErr.errormessage
-            tbl_hwy.funcl = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 6 else funcl
+            //tbl_hwy.funcl = if funcl <> 1 and funcl <> 2 and funcl <> 3 and funcl <> 4 and funcl <> 5 and funcl <> 6 and funcl <> 7 and funcl <> 8 and funcl <> 9 and funcl <> 22 and funcl <> 23 and funcl <> 24 and funcl <> 25 and funcl <> 30 and funcl <> 40 and funcl <> 82 and funcl <> 83 and funcl <> 84 and funcl <> 85 and funcl <> 90 and funcl <> 92 then 6 else funcl
 			
 			//updating value of "funcl" with repaired values, since this "funcl" will be used in speed limit checks later
 			funcl = tbl_hwy.funcl
@@ -420,7 +420,7 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.severe = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then 1 else tbl_CapSpdErr.severe
             tbl_CapSpdErr.errorcode = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then if tbl_CapSpdErr.errormessage = null then "Illegal fedfuncl" else tbl_CapSpdErr.errormessage + "; Illegal fedfuncl" else tbl_CapSpdErr.errormessage
-            tbl_hwy.fedfuncl = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then "LU" else fedfuncl
+            //tbl_hwy.fedfuncl = if fedfuncl <> "IU" and fedfuncl <> "IR" and fedfuncl <> "FU" and fedfuncl <> "PU" and fedfuncl <> "PR" and fedfuncl <> "MU" and fedfuncl <> "MR" and fedfuncl <> "CU" and fedfuncl <> "CM" and fedfuncl <> "CR" and fedfuncl <> "LU" and fedfuncl <> "LR" and fedfuncl <> "TR" and fedfuncl <> "HO" then "LU" else fedfuncl
 
 			//updating with new values
 			fedfuncl = tbl_hwy.fedfuncl
@@ -428,7 +428,7 @@ Macro "CapSpd" (Args)
 			// factype : facility type,  DEFAULT = U
 			//	legalfac = {'F','E','R','D','M','B','T','C','U'}
 			chkfactype:
-            tbl_CapSpdErr.warning = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then 1 else tbl_CapSpdErr.warning
+            tbl_CapSpdErr.warning = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then 1 else 0
             tbl_CapSpdErr.errorcode = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then if tbl_CapSpdErr.errormessage = null then "Illegal facility type" else tbl_CapSpdErr.errormessage + "; Illegal facility type, default=U" else tbl_CapSpdErr.errormessage
             tbl_hwy.factype = if factype <> "F" and factype <> "E" and factype <> "R" and factype <> "D" and factype <> "M" and factype <> "B" and factype <> "T" and factype <> "C" and factype <> "U" then "U" else factype
@@ -447,7 +447,7 @@ Macro "CapSpd" (Args)
             tbl_CapSpdErr.errorcode = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if ((TrafficDir = -1 or TrafficDir = 0) and lanesBA = 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesBA = " + i2s(lanesBA) else tbl_CapSpdErr.errormessage
 
-            tbl_CapSpdErr.warning = if (TrafficDir = -1 and lanesAB > 0) then 1 else 0
+            tbl_CapSpdErr.warning = if (TrafficDir = -1 and lanesAB > 0) then 1 else tbl_CapSpdErr.warning
             tbl_CapSpdErr.errorcode = if (TrafficDir = -1 and lanesAB > 0) then 1 else tbl_CapSpdErr.errorcode
             tbl_CapSpdErr.errormessage = if (TrafficDir = -1 and lanesAB > 0) then if tbl_CapSpdErr.errormessage = null then "Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) + ", set to 0" else tbl_CapSpdErr.errormessage + "; Dir = " + i2s(TrafficDir) + " and lanesAB = " + i2s(lanesAB) + ", set to 0" else tbl_CapSpdErr.errormessage
             tbl_hwy.lanesAB = if (TrafficDir = -1 and lanesAB > 0) then 0 else tbl_hwy.lanesAB
@@ -483,7 +483,9 @@ Macro "CapSpd" (Args)
             tbl_hwy.B_control = if (TrafficDir = -1 and B_Control <> "X") then "X" else tbl_hwy.B_control
 
             tbl_CapSpdErr.severe = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then 1 else tbl_CapSpdErr.severe
-            tbl_hwy.B_control = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then "S" else tbl_hwy.B_control
+            tbl_CapSpdErr.errorcode = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then 1 else tbl_CapSpdErr.errorcode
+			tbl_CapSpdErr.errormessage = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then if tbl_CapSpdErr.errormessage = null then "Illegal B_Control" else tbl_CapSpdErr.errormessage + "; Illegal B_Control" else tbl_CapSpdErr.errormessage
+			//tbl_hwy.B_control = if ((TrafficDir <> -1 and (B_Control <> "T" and B_Control <> "L" and B_Control <> "S" and B_Control <> "F" and B_Control <> "Y" and B_Control <> "R")) or (TrafficDir = 1 and B_Control = "X")) then "S" else tbl_hwy.B_control
 
 			//updating with new values
 			B_Control = tbl_hwy.B_control
@@ -501,7 +503,9 @@ Macro "CapSpd" (Args)
             tbl_hwy.A_control = if (TrafficDir = 1 and A_Control <> "X") then "X" else tbl_hwy.A_control
 
             tbl_CapSpdErr.severe = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then 1 else tbl_CapSpdErr.severe
-            tbl_hwy.A_control = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then "S" else tbl_hwy.A_Control
+			tbl_CapSpdErr.errorcode = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then 1 else tbl_CapSpdErr.errorcode
+		    tbl_CapSpdErr.errormessage = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then if tbl_CapSpdErr.errormessage = null then "Illegal A_Control" else tbl_CapSpdErr.errormessage + "; Illegal A_Control" else tbl_CapSpdErr.errormessage
+			//tbl_hwy.A_control = if ((TrafficDir <> 1 and A_Control <> "T" and A_Control <> "L" and A_Control <> "S" and A_Control <> "F" and A_Control <> "Y" and A_Control <> "R") or (TrafficDir = -1 and A_Control = "X")) then "S" else tbl_hwy.A_Control
 
 			//updating with new values
 			A_Control = tbl_hwy.A_control
@@ -721,17 +725,22 @@ Macro "CapSpd" (Args)
 		// Write Error / warning messages
 		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link.bin"
 
-		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		nerr_link = r2i(VectorStatistic(tbl_CapSpdErr.errorcode, "Sum", ))
+		if nerr_link > 0 then do
+			tbl_CapSpdErr.SelectByQuery({SetName:"ErrRecs_link", Filter: "errorcode = 1"})
+			tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		end
 
 		vw_CapSpdErr = tbl_CapSpdErr.GetView()
 		fatal_v  = GetDataVector(vw_CapSpdErr + "|", "fatalflaw",)
 		severe_v = GetDataVector(vw_CapSpdErr + "|", "severe",)
 		warn_v   = GetDataVector(vw_CapSpdErr + "|", "warning",)
 
-		cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum",))
+		/*cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum",))
 		cnterrlvl2 = cnterrlvl2 + r2i(VectorStatistic(severe_v, "Sum",))
-		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum",))
-		if cnterrlvl3 > 0 then goto badquit
+		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum",))*/
+		link_crash = r2i(VectorStatistic(fatal_v,  "Sum", )) + r2i(VectorStatistic(severe_v, "Sum", ))
+		//if cnterrlvl3 > 0 then goto badquit
 		// End of first read 
 		ErrFileRec = null
 
@@ -755,7 +764,7 @@ Macro "CapSpd" (Args)
 				{FieldName: "fatalflaw", Type: "Short"},
 				{FieldName: "warning", Type: "Short"},
 				{FieldName: "errorcode", Type: "Short"},
-				{FieldName: "errormessage", Type: "String", Width: 200}
+				{FieldName: "errormessage", Type: "String", Width: 255}
 			}
 		})
 
@@ -771,6 +780,7 @@ Macro "CapSpd" (Args)
 				// Default: no error
 				SetRecordValues(vw, ptr, {
 					{"fatalflaw", 0},
+					{"warning", 0},
 					{"errormessage", " "},
 					{"errorcode", 0}
 				}) 
@@ -914,7 +924,7 @@ Macro "CapSpd" (Args)
 							{"errorcode", 1},
 							{"errormessage", errmsg}
 						})*/
-						rec = GetRecordValues(tbl_node_err.GetView(), ptr, {"errormessage"})
+						/*rec = GetRecordValues(tbl_node_err.GetView(), ptr, {"errormessage"})
 						oldmsg = rec[1][2]
 
 						SetRecordValues(tbl_node_err.GetView(), ptr, {
@@ -925,7 +935,25 @@ Macro "CapSpd" (Args)
 								then errmsg
 								else oldmsg + "; " + errmsg
 							}
-						})
+						})*/
+						// Log the error to the corresponding link that is changed (as in the old code)
+						if badcontrol = null then badctl_str = "blank" else badctl_str = badcontrol
+						linkmsg = badapproach + " was " + badctl_str + ", " + errmsg
+
+						vw_lerr = tbl_CapSpdErr.GetView()
+						lptr = LocateRecord(vw_lerr + "|", "ID", {badlinkid},)
+						if lptr <> null then do
+							lrec = GetRecordValues(vw_lerr, lptr, {"errormessage"})
+							loldmsg = lrec[1][2]
+							SetRecordValues(vw_lerr, lptr, {
+							{"warning", 1},
+							{"errorcode", 1},
+							{"errormessage",
+							if loldmsg = null or loldmsg = " "
+								then linkmsg
+								else loldmsg + "; " + linkmsg}
+							})
+						end
 						// Repair link
 						SetView(HwyView)
 						linkptr = LocateRecord(HwyView + "|", "ID", {badlinkid},)
@@ -946,7 +974,7 @@ Macro "CapSpd" (Args)
 							else badapproach = "B_Control"
 						
 						errmsg = "Four-way stop at node " + i2s(nodenum) + ", control changed to F"
-						rec = GetRecordValues(tbl_node_err.GetView(), ptr, {"errormessage"})
+						/*rec = GetRecordValues(tbl_node_err.GetView(), ptr, {"errormessage"})
 						oldmsg = rec[1][2]
 
 						SetRecordValues(tbl_node_err.GetView(), ptr, {
@@ -957,8 +985,25 @@ Macro "CapSpd" (Args)
 								then errmsg
 								else oldmsg + "; " + errmsg
 							}
-						})
-						
+						})*/
+						// Log the error to the corresponding link that is changed (as in the old code)
+						if badcontrol = null then badctl_str = "blank" else badctl_str = badcontrol
+						linkmsg = badapproach + " was " + badctl_str + ", " + errmsg
+
+						vw_lerr = tbl_CapSpdErr.GetView()
+						lptr = LocateRecord(vw_lerr + "|", "ID", {badlinkid},)
+						if lptr <> null then do
+							lrec = GetRecordValues(vw_lerr, lptr, {"errormessage"})
+							loldmsg = lrec[1][2]
+							SetRecordValues(vw_lerr, lptr, {
+							{"warning", 1},
+							{"errorcode", 1},
+							{"errormessage",
+							if loldmsg = null or loldmsg = " "
+								then linkmsg
+								else loldmsg + "; " + linkmsg}
+							})
+						end
 						// Repair
 						SetView(HwyView)
 						linkptr = LocateRecord(HwyView + "|", "ID", {badlinkid},)
@@ -979,7 +1024,7 @@ Macro "CapSpd" (Args)
 							else badapproach = "B_Control"
 						
 						errmsg = "Roundabout at node " + i2s(nodenum) + ", control changed to R"
-						rec = GetRecordValues(tbl_node_err.GetView(), ptr, {"errormessage"})
+						/*rec = GetRecordValues(tbl_node_err.GetView(), ptr, {"errormessage"})
 						oldmsg = rec[1][2]
 
 						SetRecordValues(tbl_node_err.GetView(), ptr, {
@@ -990,7 +1035,25 @@ Macro "CapSpd" (Args)
 								then errmsg
 								else oldmsg + "; " + errmsg
 							}
-						})
+						})*/
+						// Log the error to the corresponding link that is changed (as in the old code)
+						if badcontrol = null then badctl_str = "blank" else badctl_str = badcontrol
+						linkmsg = badapproach + " was " + badctl_str + ", " + errmsg
+
+						vw_lerr = tbl_CapSpdErr.GetView()
+						lptr = LocateRecord(vw_lerr + "|", "ID", {badlinkid},)
+						if lptr <> null then do
+							lrec = GetRecordValues(vw_lerr, lptr, {"errormessage"})
+							loldmsg = lrec[1][2]
+							SetRecordValues(vw_lerr, lptr, {
+							{"warning", 1},
+							{"errorcode", 1},
+							{"errormessage",
+							if loldmsg = null or loldmsg = " "
+								then linkmsg
+								else loldmsg + "; " + linkmsg}
+							})
+						end
 						// Repair
 						SetView(HwyView)
 						linkptr = LocateRecord(HwyView + "|", "ID", {badlinkid},)
@@ -1042,19 +1105,23 @@ Macro "CapSpd" (Args)
 		// Write Error / warning messages
 		CapSpdErrFile_node = Dir + "\\Report\\CapSpdErr_node.bin"
 
-		tbl_node_err.Export({FileName: CapSpdErrFile_node, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
-
+		nerr_node = r2i(VectorStatistic(tbl_node_err.errorcode, "Sum", ))
+		if nerr_node > 0 then do
+			tbl_node_err.SelectByQuery({SetName:"ErrRecs_node", Filter: "errorcode = 1"})
+			tbl_node_err.Export({FileName: CapSpdErrFile_node, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		end
 		vw_CapSpdErr = tbl_node_err.GetView()
 		fatal_v  = GetDataVector(vw_CapSpdErr + "|", "fatalflaw",)
 		//severe_v = GetDataVector(vw_CapSpdErr + "|", "severe",)
 		warn_v   = GetDataVector(vw_CapSpdErr + "|", "warning",)
 
-		cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum",))
+		cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum", ))
 		//cnterrlvl2 = cnterrlvl2 + r2i(VectorStatistic(severe_v, "Sum",))
-		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum",))
+		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum", ))
 
-		if cnterrlvl3 > 0 then goto badquit	
-	
+		node_crash = r2i(VectorStatistic(fatal_v,  "Sum", ))
+			
+		//if cnterrlvl3 > 0 then goto badquit
 		// Opposing functional class - choose maximum of opposing facilities (other than funcl of same)
 		//		if > 2 approaches have maximum - that is max2 as well as max1	
 		// legalfun   = { 1, 2, 3, 4, 5, 6, 7, 8, 9,22,23,24,25,30,40,82,83,84,85,90,92}
@@ -1075,13 +1142,13 @@ Macro "CapSpd" (Args)
 			// get max1
 			for k = 1 to nfuncl[nodenum].length do
 				rank = ArrayPosition(funclorder, {nfuncl[nodenum][k]},)
-				if rank < max1 then max1 = rank 
+				if rank > 0 and rank < max1 then max1 = rank 
 			end
 			countmax = 0
 			// get max2
 			for k = 1 to nfuncl[nodenum].length do
 				rank = ArrayPosition(funclorder, {nfuncl[nodenum][k]},)
-				if rank < max2 and rank > max1 then max2 = rank 
+				if rank > 0 and rank < max2 and rank > max1 then max2 = rank 
 				if rank = max1 then countmax = countmax + 1
 			end
 			if max2 = 22 or countmax > 2 then max2 = max1
@@ -1238,7 +1305,11 @@ Macro "CapSpd" (Args)
 			B_Prohibit = rec[20][2]
 			OppFunclA = rec[21][2]
 			OppFunclB = rec[22][2]
-
+			
+			// Skip calculations for links with fatal errors (run will stop at the end), these lines will avoid  calculating attributes of the filns with afatal and severe error
+			errrec = GetRecordValues(tbl_CapSpdErr.GetView(), ptrErr, {"fatalflaw", "severe"})
+			if errrec[1][2] = 1 or errrec[2][2] = 1 then goto skipfatallink
+			
 			// Initialize capspd fields
 			Alpha = 0.
 			Beta = 0.
@@ -1604,7 +1675,7 @@ Macro "CapSpd" (Args)
 							/*cnterrlvl1 = cnterrlvl1 + 1
 							ErrFileRec = ErrFileRec + {{ID, "Link", "Warning", "SPFreeAB", SPFreeAB, 
 								"Speed < minimum " + r2s(MinSpeed) + " MPH, SPFreeAB and TTFreeAB set to minimum"}}*/
-							errmsg = "Speed < minimum" + r2s(MinSpeed) + "MPH, SPFreeBA and TTFreeBA set to minimum"
+							errmsg = "Speed < minimum" + r2s(MinSpeed) + "MPH, SPFreeAB and TTFreeAB set to minimum"
 							//SetView(tbl_CapSpdErr.GetView())
 							//errptr = LocateRecord(tbl_CapSpdErr.GetView() + "|", "ID", {badlinkid},)
 
@@ -1923,6 +1994,7 @@ Macro "CapSpd" (Args)
 				}
 	
 			AddRecord (CapSpdFactor, factorvals)
+			skipfatallink:
 			setview(HwyView)
 			ptr = GetNextRecord(HwyView + "|", null,)
 			ptrErr = GetNextRecord(tbl_CapSpdErr.GetView() + "|", null,)
@@ -2030,7 +2102,13 @@ Macro "CapSpd" (Args)
 		// Write Error / warning messages
 		CapSpdErrFile_link = Dir + "\\Report\\CapSpdErr_link.bin"
 
-		tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		nerr_link = r2i(VectorStatistic(tbl_CapSpdErr.errorcode, "Sum", ))
+		if nerr_link > 0 then do
+			tbl_CapSpdErr.SelectByQuery({SetName:"ErrRecs_link", Filter: "errorcode = 1"})
+			tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
+		end
+
+		//tbl_CapSpdErr.Export({FileName: CapSpdErrFile_link, FileType: "BIN", Overwrite: 1, Append: 0, Delimiter: "|", IncludeHeader: 1, IncludeFieldNames: 1, IncludeFieldTypes: 0, IncludeFieldLengths: 0, IncludeFieldDecimals: 0, IncludeFieldFormats: 0, IncludeFieldLabels: 0})
 
 		vw_CapSpdErr = tbl_CapSpdErr.GetView()
 		fatal_v  = GetDataVector(vw_CapSpdErr + "|", "fatalflaw",)
@@ -2040,7 +2118,9 @@ Macro "CapSpd" (Args)
 		cnterrlvl3 = cnterrlvl3 + r2i(VectorStatistic(fatal_v,  "Sum",))
 		cnterrlvl2 = cnterrlvl2 + r2i(VectorStatistic(severe_v, "Sum",))
 		cnterrlvl1 = cnterrlvl1 + r2i(VectorStatistic(warn_v,   "Sum",))
-		if cnterrlvl3 > 0 then goto badquit
+		link_crash = r2i(VectorStatistic(fatal_v,  "Sum",)) + r2i(VectorStatistic(severe_v, "Sum",))
+		if link_crash > 0 or node_crash > 0 then goto badquit
+		//if cnterrlvl3 > 0 then goto badquit
 	
 		goto quit	
 		
