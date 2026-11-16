@@ -191,6 +191,19 @@ Macro "Area_Type" (Args)
 	CloseView(ZdatView)*/
 	// End of calczone replacement
 
+	// Work on a copy so the main TAZNeighbors file is not modified as it will be used to add more field in transit below
+	TAZ_tbl = TAZ_tbl.Export({FileName: Dir + "\\LandUse\\TAZtemp.bin"})
+
+	// Fields to hold neighbor-weighted pop, emp and area
+	a_fields = {
+		{FieldName: "HHPOP",  Type: "Real", Decimals: 6},
+		{FieldName: "EMPTOT", Type: "Real", Decimals: 6},
+		{FieldName: "zAREA",  Type: "Real", Decimals: 6}
+	}
+	TAZ_tbl.AddFields({Fields: a_fields})
+
+	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: true})     // refresh: copy + new fields
+	
 	a_fields = {
         {FieldName: "HHPOP", Type: "Real"},
         {FieldName: "EMPTOT", Type: "Real"},
@@ -199,8 +212,8 @@ Macro "Area_Type" (Args)
     
 	TAZ_tbl.AddFields({Fields: a_fields})
 
-	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: "true"})
-	se_specs = SEData_tbl.GetFieldSpecs({NamedArray: "true"})
+	//zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: "true"})
+	//se_specs = SEData_tbl.GetFieldSpecs({NamedArray: "true"})
 
 	join = TAZ_tbl.Join({
 		Table: SEData_tbl, 
@@ -335,6 +348,8 @@ Macro "Area_Type" (Args)
 	join1_specs = join1.GetFieldSpecs({NamedArray: "true"})*/
 	
 	tbl_TAZID = CreateObject("Table", TAZIDFile)
+	tbl_TAZID = tbl_TAZID.Export({FileName: Dir + "\\LandUse\\TAZID_temp.bin"})
+	
 	a_fields = {
 		{FieldName: "ZONE", Type: "Integer"},
 		{FieldName: "ATYPE", Type: "Integer"},
@@ -342,9 +357,10 @@ Macro "Area_Type" (Args)
 		{FieldName: "PARK_INF", Type: "Integer"},
 		{FieldName: "EXP_FLAG", Type: "Integer"}	
     }
-
 	tbl_TAZID.AddFields({Fields: a_fields})
-	TAZID_specs = tbl_TAZID.GetFieldSpecs({NamedArray: "true"})
+
+	TAZID_specs = tbl_TAZID.GetFieldSpecs({NamedArray: true})
+
 
 	// The TAZID table has information about externals, i.e. if INT_EX = 2. We join that with atype so we have the area type for all internals
 	
