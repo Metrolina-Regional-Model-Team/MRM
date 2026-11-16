@@ -53,7 +53,8 @@ Macro "Area_Type" (Args)
 	SEData_tbl.TOTEMP = SEData_tbl.LOIND + SEData_tbl.HIIND + SEData_tbl.RTL + SEData_tbl.HWY + SEData_tbl.LOSVC + SEData_tbl.HISVC + SEData_tbl.OFFGOV + SEData_tbl.EDUC
 
 	TAZ_tbl = CreateObject("Table", TAZ_file)
-
+	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: true})
+	se_specs   = SEData_tbl.GetFieldSpecs({NamedArray: true})
 	// check SE against TAZNeighbors to make sure they match (both are internal taz only
 	// first join TAZNeighbors to SE to see if Neighbors has missing TAZ
 	/*join1 = JoinViews("join1", SEDataView + ".TAZ", ZonePctView + ".TAZ",
@@ -73,19 +74,19 @@ Macro "Area_Type" (Args)
 		end
 	CloseView(join1)*/
 	//SEData_tbl.RenameField({FieldName: "TAZSEData", NewName: "TAZ"})
+	// Check 1: SE TAZ missing from TAZNeighbors
 	join = SEData_tbl.Join({
-  		Table: TAZ_tbl, 
-  		LeftFields: "TAZ", 
-  		RightFields: "TAZ",Options: {{"A"}, {"Fields",{"PercentIN", {{"Sum"}}}}}
- 	})
-
-	n1 = join.SelectByQuery({
-  		SetName: "count_set",
-  		Query: "Select * where TAZNeighbor = null"
- 	})
-
+		Table: TAZ_tbl,
+		LeftFields: "TAZ",
+		RightFields: "TAZ",
+		Options: {{"A"}, {"Fields", {"PercentIN", {{"Sum"}}}}}
+	})
+	
+	missing_1 = if join.(zone_specs.TAZ) = null then 1 else 0
+	n1 = VectorStatistic(missing_1, "Sum", )
+	
 	if n1 <> 0 then Throw("AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file")
-
+	
 	join = null
 	
 	// next join SE to TAZNeighbors to SE to see if SE has missing TAZ
@@ -104,19 +105,18 @@ Macro "Area_Type" (Args)
 			// goto badend
 		end
 	CloseView(join2)*/
+	// Check 2: TAZNeighbors TAZ missing from SE
 	join = TAZ_tbl.Join({
-  		Table: SEData_tbl, 
-  		LeftFields: "TAZ", 
-  		RightFields: "TAZ"
- 	})
-
-	n2 = join.SelectByQuery({
-  		SetName: "count_set",
-  		Query: "Select * where TAZNeighbor = null"
- 	})
-
+		Table: SEData_tbl,
+		LeftFields: "TAZ",
+		RightFields: "TAZ"
+	})
+	
+	missing_2 = if join.(se_specs.TAZ) = null then 1 else 0
+	n2 = VectorStatistic(missing_2, "Sum", )
+	
 	if n2 <> 0 then Throw("AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file")
-
+	
 	join = null
 	// Replace CalcZone Fortran beginning here
 
