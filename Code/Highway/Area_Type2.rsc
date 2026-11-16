@@ -300,14 +300,14 @@ Macro "Area_Type" (Args)
 	tbl_density.DropFields({FieldNames: "ATYPE"})
 	density_specs = tbl_density.GetFieldSpecs({NamedArray: "true"})
 	//Open TAZID file (created by Matrix_template)
-	/*tazpath = SplitPath(TAZFile)
+	tazpath = SplitPath(TAZFile)
 
-	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.asc"*/
-	TAZIDFile = METDir + "\\TAZ\\TAZ3896_TAZID.bin"
+	TAZIDFile = tazpath[1] + tazpath[2] + tazpath[3] + "_TAZID.bin"
+	//TAZIDFile = METDir + "\\TAZ\\TAZ3896_TAZID.bin"
 	exist = GetFileInfo(TAZIDFile)
 	if exist = null
 		then do
-			Throw("AreaType: ERROR! Metrolina\\TAZ\\TAZ3896_TAZID.bin not found")
+			Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.bin not found")
 			// Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AppendToLogFile(2, "AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AreaTypeOK = 0
@@ -475,7 +475,7 @@ Macro "Area_Type" (Args)
                 else if S2I(theyear) <= 2025 then (transit_AT2.PKINFLAT20)
                 else (transit_AT2.PKINFLAT30)
 
-	tbl_TAZID.EXP_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 0 else EXP_FLAG_T
+	tbl_TAZID.EXP_FLAG = if transit_AT2.(TFIn_specs.TAZ) = null then 0 else transit_AT2.EXP_FLAG_T
 
 	transit_AT2 = null
 	tbl_TAZID.Sort({FieldArray: {{"TAZ", "Ascending"}}})
