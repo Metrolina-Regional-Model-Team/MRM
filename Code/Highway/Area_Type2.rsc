@@ -26,7 +26,9 @@ Macro "Area_Type" (Args)
 
 	//table class can not be created from .asc file. So used TAZNeighbors_Pct.bin file that was copied into the location and created table from it
 	//TAZfolder = "C:\\MRM\\Metrolina\\TAZ"
-	TAZ_file = METDir + "\\TAZ\\TAZNeighbors_Pct.bin"
+	TAZFilesplit = SplitPath(TAZFile)
+	TAZ_file = TAZFilesplit[1] + TAZFilesplit[2] + "TAZNeighbors_Pct.bin"
+	//TAZ_file = METDir + "\\TAZ\\TAZNeighbors_Pct.bin"
 
 
 	// TAZ Neighbors file - percentage of neighboring TAZ within 1.5 mile buffer
