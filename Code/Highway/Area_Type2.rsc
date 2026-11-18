@@ -496,7 +496,7 @@ Macro "Area_Type" (Args)
 	transit_AT2 = null
 	tbl_TAZID.Sort({FieldArray: {{"TAZ", "Ascending"}}})
 
-	a_fields = {"TAZ", "ZONE", "ATYPE", "CBD_FLAG", "PARK_INF", "EXP_FLAG"}
+	a_fields = {"ZONE", "ATYPE", "CBD_FLAG", "PARK_INF", "EXP_FLAG"}
 	tbl_TAZID.Export({FileName: Dir + "\\TAZ_ATYPE.bin", FieldNames: a_fields})
 
 	//temp.Export({FileName: Dir + "\\holdher2.bin"})
