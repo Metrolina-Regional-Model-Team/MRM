@@ -30,7 +30,7 @@ Macro "Area_Type" (Args)
 	TAZ_file = TAZFilesplit[1] + TAZFilesplit[2] + "TAZNeighbors_Pct.bin"
 	//TAZ_file = METDir + "\\TAZ\\TAZNeighbors_Pct.bin"
 
-
+	msg = null
 	// TAZ Neighbors file - percentage of neighboring TAZ within 1.5 mile buffer
 	//  of TAZ centroid - SUM of pop and emp in this buffer used to assign area type (1-5) 
 	/*TAZFilesplit = SplitPath(TAZFile)
@@ -44,7 +44,7 @@ Macro "Area_Type" (Args)
 			// Throw(" or copy valid TAZNeighbor_pct.asc into TAZ directory")
 			// goto badend
 		end
-	msg = null
+	
 	AreaTypeOK = 1
 
 	/*SEDataView = Opentable("SEDataView","FFB",{SEDataFile,})
@@ -84,11 +84,10 @@ Macro "Area_Type" (Args)
 		Options: {{"A"}, {"Fields", {"PercentIN", {{"Sum"}}}}}
 	})
 	
-	missing_1 = if join.(zone_specs.TAZ) = null then 1 else 0
+	missing_1 = if join.PercentIN = null then 1 else 0
 	n1 = VectorStatistic(missing_1, "Sum", )
 	
 	if n1 <> 0 then Throw("AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file")
-	
 	join = null
 	
 	// next join SE to TAZNeighbors to SE to see if SE has missing TAZ
@@ -326,7 +325,6 @@ Macro "Area_Type" (Args)
 			// Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AppendToLogFile(2, "AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AreaTypeOK = 0
-			// goto badend
 		end
 	
 
@@ -507,8 +505,8 @@ Macro "Area_Type" (Args)
 	
 	badend:
 		on error, notfound default
-		AppendToLogFile(2, "Area_Type: Error ")
-		Throw("Area_Type: Error ")
+		AppendToLogFile(2, "Area_Type: Error")
+		Throw("Area_Type: Error")
 
     quit:
 		on error, notfound default
