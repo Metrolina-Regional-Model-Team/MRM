@@ -7,7 +7,6 @@ Macro "Area_Type" (Args)
 //	Altered for new user interface - McLelland - June, 2016
 //	Replaces CalcZone, fortran program written by Urbitran.  Aug, 2017
 //	Uses TAZNeighbors file replacing zone_pct 
-
 	on error goto badend
 	// LogFile = Args.[Log File].value
 	// ReportFile = Args.[Report File].value
@@ -38,11 +37,13 @@ Macro "Area_Type" (Args)
 	info = GetFileInfo(TAZ_file)
 	if info = null 
 		then do
+			//msg = "Area Type - ERROR - cannot find TAZNeighbors_pct file. Please run MRM Utilities - AreaType_TAZNeighbors or copy valid TAZNeighbor_pct.asc into TAZ directory"
+			on error default
 			Throw("Area Type - ERROR - cannot find TAZNeighbors_pct file. Please run MRM Utilities - AreaType_TAZNeighbors or copy valid TAZNeighbor_pct.asc into TAZ directory")
 			// Throw("Area Type - ERROR - cannot find TAZNeighbors_pct file")
 			// Throw("Please run MRM Utilities - AreaType_TAZNeighbors")
 			// Throw(" or copy valid TAZNeighbor_pct.asc into TAZ directory")
-			// goto badend
+			//goto badend
 		end
 	
 	AreaTypeOK = 1
@@ -87,7 +88,15 @@ Macro "Area_Type" (Args)
 	missing_1 = if join.PercentIN = null then 1 else 0
 	n1 = VectorStatistic(missing_1, "Sum", )
 	
-	if n1 <> 0 then Throw("AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file")
+	if n1 <> 0 then do
+		on error default
+		Throw("AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file")
+	end
+	/*if n1 <> 0 then do 
+		msg = "AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file"
+		Throw (msg)
+		//goto badend 
+	end*/
 	join = null
 	
 	// next join SE to TAZNeighbors to SE to see if SE has missing TAZ
@@ -116,8 +125,14 @@ Macro "Area_Type" (Args)
 	missing_2 = if join.(se_specs.TAZ) = null then 1 else 0
 	n2 = VectorStatistic(missing_2, "Sum", )
 	
-	if n2 <> 0 then Throw("AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file")
-	
+	if n2 <> 0 then do
+		on error default
+		Throw("AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file")
+	end
+	/*if n2 <> 0 then do 
+		msg = "AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file"
+		goto badend 
+	end*/
 	join = null
 	// Replace CalcZone Fortran beginning here
 
@@ -205,13 +220,13 @@ Macro "Area_Type" (Args)
 
 	zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: true})     // refresh: copy + new fields
 	
-	a_fields = {
+	/*a_fields = {
         {FieldName: "HHPOP", Type: "Real"},
         {FieldName: "EMPTOT", Type: "Real"},
         {FieldName: "zAREA", Type: "Real"}
     }
     
-	TAZ_tbl.AddFields({Fields: a_fields})
+	TAZ_tbl.AddFields({Fields: a_fields})*/
 
 	//zone_specs = TAZ_tbl.GetFieldSpecs({NamedArray: "true"})
 	//se_specs = SEData_tbl.GetFieldSpecs({NamedArray: "true"})
@@ -321,10 +336,13 @@ Macro "Area_Type" (Args)
 	exist = GetFileInfo(TAZIDFile)
 	if exist = null
 		then do
+			on error default
+			//msg = "AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.bin not found"
 			Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.bin not found")
 			// Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AppendToLogFile(2, "AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.asc not found")
 			// AreaTypeOK = 0
+			//goto badend 
 		end
 	
 
@@ -414,8 +432,11 @@ Macro "Area_Type" (Args)
 	exist = GetFileInfo(TFFile)
 	if exist = null
 		then do
+			on error default
+		//msg = "AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found"
 			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found")
-		end
+		//goto badend 
+	end
 
 	//TFIn = OpenTable("TFIn", "DBASE", {TFFile,})
 	tbl_TFIn = CreateObject("Table", TFFile)
@@ -507,7 +528,17 @@ Macro "Area_Type" (Args)
 		on error, notfound default
 		AppendToLogFile(2, "Area_Type: Error")
 		Throw("Area_Type: Error")
-
+		/*on error, notfound default
+		if msg = null then Throw ("Area_Type: Error") */
+		//else Throw (msg)
+		//Throw (msg)
+		//AppendToLogFile(2, "Area_Type: Error")
+		//goto defaulterror
+		//end
+	/*defaulterror:
+		on error, notfound default
+		//Throw("Area_Type: Error")*/
+		//Throw (msg)
     quit:
 		on error, notfound default
    		datentime = GetDateandTime()
