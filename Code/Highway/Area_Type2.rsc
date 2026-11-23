@@ -33,8 +33,10 @@ Macro "Area_Type" (Args)
 	info = GetFileInfo(TAZ_file)
 	if info = null 
 		then do
-			on error default
-			Throw("Area Type - ERROR - cannot find TAZNeighbors_pct file. Please run MRM Utilities - AreaType_TAZNeighbors or copy valid TAZNeighbor_pct.bin into TAZ directory")
+		msg = "Area Type - ERROR - cannot find TAZNeighbors_pct file. Please run MRM Utilities - AreaType_TAZNeighbors or copy valid TAZNeighbors_pct.bin into TAZ directory"
+		AppendToLogFile(2, msg)
+		on error default
+		Throw(msg)
 
 		end
 	
@@ -64,8 +66,10 @@ Macro "Area_Type" (Args)
 	n1 = VectorStatistic(missing_1, "Sum", )
 	
 	if n1 <> 0 then do
+		msg = "AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file"
+		AppendToLogFile(2, msg)
 		on error default
-		Throw("AreaType ERROR! SE file has TAZ not present in TAZNeighbors_pct file")
+		Throw(msg)
 	end
 
 	join = null
@@ -82,8 +86,10 @@ Macro "Area_Type" (Args)
 	n2 = VectorStatistic(missing_2, "Sum", )
 	
 	if n2 <> 0 then do
+		msg = "AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file"
+		AppendToLogFile(2, msg)
 		on error default
-		Throw("AreaType ERROR! TAZNeighbors_pct file has TAZ not present in SE file")
+		Throw(msg)
 	end
 
 	join = null
@@ -135,7 +141,7 @@ Macro "Area_Type" (Args)
 	TAZ_agg_tbl.EMPDEN = if TAZ_agg_tbl.zAREA >0 then TAZ_agg_tbl.EMPTOT/TAZ_agg_tbl.zAREA else 0
 	TAZ_agg_tbl.POPDEN = if TAZ_agg_tbl.zAREA >0 then TAZ_agg_tbl.HHPOP/TAZ_agg_tbl.zAREA else 0
 
-	TAZ_agg_tbl.Export({FileName: {Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin"}, FieldNames: {"TAZ", "zAREA", "EMPTOT", "HHPOP", "EMPDEN", "POPDEN", "AREATYPE"}})
+	TAZ_agg_tbl.Export({FileName: Dir + "\\LandUse\\SE"+theyear+"_DENSITY.bin", FieldNames: {"TAZ", "zAREA", "EMPTOT", "HHPOP", "EMPDEN", "POPDEN", "AREATYPE"}})
 
 	//In order to set the width of a field of this table below, this table must be set to null first.
 	TAZ_agg_tbl = null
@@ -165,8 +171,10 @@ Macro "Area_Type" (Args)
 	exist = GetFileInfo(TAZIDFile)
 	if exist = null
 		then do
+			msg = "AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.bin not found"
+			AppendToLogFile(2, msg)
 			on error default
-			Throw("AreaType: ERROR! \\TAZ\\" + tazpath[3] + "_TAZID.bin not found")
+			Throw(msg)
 		end
 	
 	tbl_TAZID = CreateObject("Table", TAZIDFile)
@@ -202,8 +210,10 @@ Macro "Area_Type" (Args)
 	exist = GetFileInfo(TFFile)
 	if exist = null
 		then do
+			msg = "AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found"
+			AppendToLogFile(2, msg)
 			on error default
-			Throw("AreaType: ERROR! \\MS_Control_Template\\TAZ_ATYPE_TRANSIT_FLAGS.bin not found")
+			Throw(msg)
 	end
 
 	tbl_TFIn = CreateObject("Table", TFFile)
