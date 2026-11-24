@@ -1,8 +1,8 @@
 Macro "Open Delete Files Tool Dbox" (Args)
-	RunDbox("Delete Files Tool", Args)
+	RunDbox("Scenario Output Cleanup", Args)
 endmacro
 
-dBox "Delete Files Tool" (Args) center, center, 92, 17 Title: "Delete Files Tool" Help: "test" toolbox
+dBox "Scenario Output Cleanup" (Args) center, center, 92, 17 Title: "Scenario Output Cleanup" Help: "test" toolbox
 
     close do
         return()
@@ -29,8 +29,8 @@ dBox "Delete Files Tool" (Args) center, center, 92, 17 Title: "Delete Files Tool
     // Select files to be deleted
     Popdown Menu "Model Output Profile" 1, 3, 15 Prompt: "Model Output Profile" 
         List: action_list Variable: action_index do
-        if action_index = 1 then typehelp = "Only Network, SE data, TAZ, and summaries will be retained."
-		else typehelp = "In addition to Network, SE data, TAZ, trip generation, summaries and other files necessary for running tools will also be retained."
+        if action_index = 1 then typehelp = "Retains the scenario network, forecasted traffic volumes from the final assignment iteration, socioeconomic data, TAZ files, and summary reports. Intermediate assignment iterations and diagnostic outputs are removed."
+		else typehelp = "Retains the scenario network, forecasted traffic volumes from the final assignment, socioeconomic data, TAZ files, summary reports, OD matrices, and other supporting files needed for running analysis tools and post-processing."
     enditem 
 
 
@@ -40,7 +40,7 @@ dBox "Delete Files Tool" (Args) center, center, 92, 17 Title: "Delete Files Tool
 	return(1)
     enditem
 
-    Radio List "Help" 30,.75,43,12 Prompt: "Help"
+    Radio List "Note" 30,.75,43,12 Prompt: "Note"
 
 	// Help text boxes
 	Text" " 30.5,2,40,10 Variable:typehelp
@@ -49,7 +49,7 @@ dBox "Delete Files Tool" (Args) center, center, 92, 17 Title: "Delete Files Tool
         Return()
     enditem
 
-    Button 9,15.5,12 Prompt: "Help" do
+    Button 9,15.5,12 Prompt: "Note" do
         ShowMessage(
         "This tool creates two slimmed-down versions of the model output folder by removing unnecessary files." +
          "Doing such helps reduce scenario folder size by approximately 60-65 GB.\n\n"

@@ -77,7 +77,7 @@ menu "MRM Utilities"
         mr.RunCode("Open Select Link Dbox", Args)
     enditem
    
-   MenuItem "delete_files" text: "Delete Files" do
+   MenuItem "delete_files" text: "Scenario Output Cleanup" do
         mr = CreateObject("Model.Runtime")
         Args = mr.GetValues()
         mr.RunCodeEx("Open Delete Files Tool Dbox", Args)
